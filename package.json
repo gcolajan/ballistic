@@ -1,0 +1,14 @@
+{
+  "name": "ballistic",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.11.0",
+    "pg": "^4.2.0",
+    "sequelize": "^2.0.0-rc7",
+    "sequelize-cli": "^1.0.4"
+  }
+}
