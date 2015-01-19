@@ -1,11 +1,15 @@
+"use strict";
+
 var express = require('express')
+var models = require('./models')
+var debug = require('debug')('ballistic');
 var app = express()
 
 app.use(express.static('public'));
 
-var server = app.listen(3000, function () {
-  var host = server.address().address
-  var port = server.address().port
-  console.log('Listening at http://%s:%s', host, port)
-})
+models.sequelize.sync().then(function () {
+  var server = app.listen(3000, function() {
+    debug('Express server listening on port ' + server.address().port);
+  });
+});
 

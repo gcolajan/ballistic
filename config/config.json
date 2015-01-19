@@ -1,20 +1,20 @@
 {
   "development": {
-    "username": "root",
+    "username": "jeremy",
     "password": null,
     "database": "ballistic_development",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "root",
+    "username": "jeremy",
     "password": null,
     "database": "ballistic_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
-    "username": "root",
+    "username": "jeremy",
     "password": null,
     "database": "ballistic_production",
     "host": "127.0.0.1",
