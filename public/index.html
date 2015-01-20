@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="ballistic">
 <head>
-
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
@@ -21,6 +20,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/custom.css">
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -37,40 +37,41 @@
   <script src="/js/libs/chart.js"></script>
 </head>
 <body>
-
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="one-half column" style="margin-top: 25%">
-        <h4>Basic Page</h4>
-        <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton documentation</a>.</p>
+      <div class="one-half column login">
+        <h4>Login</h4>
+        <form>
+          <div class="row">
+            <div class="six columns">
+              <label for="username">Username</label>
+              <input class="u-full-width" type="text" placeholder="username" id="username">
+            </div>
+            <div class="six columns">
+              <label for="username">Password</label>
+              <input class="u-full-width" type="password" placeholder="password" id="password">
+            </div>
+          </div>
+          <input class="button-primary" type="submit" value="Login">
+        </form>
       </div>
-      <canvas id="myChart" width="400" height="400"></canvas>
-      <script>
-        var data = [
-    {
-        value: 300,
-        color:'#F7464A',
-        highlight: '#FF5A5E',
-        label: 'Red'
-    },
-    {
-        value: 50,
-        color: '#46BFBD',
-        highlight: '#5AD3D1',
-        label: 'Green'
-    }
-];
-
-        // Get the context of the canvas element we want to select
-        var ctx = document.getElementById("myChart").getContext("2d");
-        var myNewChart = new Chart(ctx).PolarArea(data);  
-      </script>
+      <div class="one-half column login">
+        <h4>Register</h4>
+        <form>
+          <div class="row">
+            <div class="six columns">
+              <label for="username">Username</label>
+              <input class="u-full-width" type="text" placeholder="username" id="username">
+            </div>
+            <div class="six columns">
+              <label for="username">Password</label>
+              <input class="u-full-width" type="password" placeholder="password" id="password">
+            </div>
+          </div>
+          <input class="button-primary" type="submit" value="Register">
+        </form>
+      </div>
     </div>
   </div>
-
-<!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>
 </html>

@@ -11,5 +11,8 @@
     "pg": "^4.2.0",
     "sequelize": "^2.0.0-rc7",
     "sequelize-cli": "^1.0.4"
+  },
+  "scripts": {
+    "run": "DEBUG=ballistic node app.js"
   }
 }
