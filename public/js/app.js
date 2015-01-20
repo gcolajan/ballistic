@@ -1,1 +1,7 @@
-var app = angular.module('ballistic', []);
+var app = angular.module('ballistic', [
+  'ngCookies',
+  'ngResource',
+  'ngSanitize',
+  'ngRoute',
+  'ngAnimate',
+]);
