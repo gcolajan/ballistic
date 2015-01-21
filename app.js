@@ -7,10 +7,9 @@ var app = express()
 
 app.use(express.static('public'));
 
-app.route('/*')
-  .get(function(req, res) {
-    res.sendFile('public/index.html');
-  });
+app.route('/*').get(function(req, res) {
+  res.sendFile(__dirname + '/public/index.html');
+});
 
 models.sequelize.sync().then(function () {
   var server = app.listen(3000, function() {

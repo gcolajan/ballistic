@@ -1,4 +1,3 @@
-var app = angular.module('ballistic', []);
-
-app.controller('MainCtrl', function ($scope) {
-});
+angular.module('ballistic').controller('LoginRegisterCtrl', ['$scope', function ($scope) {
+  
+}]);

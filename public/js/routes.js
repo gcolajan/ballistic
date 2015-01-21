@@ -1,6 +1,7 @@
-angular.module('ballistic', ['ngRoute']).config(function($routeProvider, $locationProvider) {
+angular.module('ballistic').config(function($routeProvider, $locationProvider) {
   $routeProvider.when('/', {
-    templateUrl: 'views/login.html'
+    templateUrl: 'views/login.html',
+    controller: 'LoginRegisterCtrl'
   }).when('/404', {
     templateUrl: 'views/login.html'
   }).otherwise({
