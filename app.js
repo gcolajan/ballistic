@@ -3,15 +3,35 @@
 var express = require('express')
 var models = require('./models')
 var debug = require('debug')('ballistic');
+var cookieParser = require('cookie-parser')
 var app = express()
 var session = require('express-session')
+var config = require(__dirname + '/config/security.json');
 
 app.use(express.static('public'));
 app.use(session({
-  secret: 'tempsecret',
+  secret: config.session.secret,
   resave: false,
   saveUninitialized: true
 }))
+app.use(cookieParser())
+
+app.use ('/', function (req, res, next) {
+  if (req.method === 'POST' || req.method === 'PUT') {
+    debug('Post or put request, testing CSRF token...')
+    if(req.get('X-XSRF-TOKEN') == req.session.XSRFToken){
+      debug('Token match.')
+      next();
+    } else {
+      res.send("XSRF Token mismatch.")
+    }
+  } else if (req.method === 'GET' && !req.cookies['XSRF-TOKEN') {
+    debug('Get request missing CSRF token. Generating and saving...');
+    res.cookie('XSRF-TOKEN', 'test');
+    //generate and save CSRF token
+    next();
+  }
+});
 
 app.use ('/api', function (req, res, next) {
   //req.models.session.find({id: req.session.id}, function (err, sessions) {

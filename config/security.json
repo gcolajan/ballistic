@@ -1,0 +1,8 @@
+{
+  "session": {
+    "secret": "tempsecret"
+  },
+  "csrf": {
+    "secret": "tempsecret"
+  }
+}
