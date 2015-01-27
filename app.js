@@ -1,20 +1,24 @@
 "use strict";
 
 var express = require('express')
-var models = require('./models')
 var debug = require('debug')('ballistic');
 var cookieParser = require('cookie-parser')
-var app = express()
 var session = require('express-session')
+var crypto = require('crypto')
+
+var models = require('./models')
 var config = require(__dirname + '/config/security.json');
+
+
+var app = express()
 
 app.use(express.static('public'));
 app.use(session({
   secret: config.session.secret,
   resave: false,
   saveUninitialized: true
-}))
-app.use(cookieParser())
+}));
+app.use(cookieParser());
 
 app.use ('/', function (req, res, next) {
   if (req.method === 'POST' || req.method === 'PUT') {
@@ -23,11 +27,14 @@ app.use ('/', function (req, res, next) {
       debug('Token match.')
       next();
     } else {
-      res.send("XSRF Token mismatch.")
+      debug('Token mismatch.')
+      res.send({success: false, error: "XSRF Token mismatch."})
     }
-  } else if (req.method === 'GET' && !req.cookies['XSRF-TOKEN') {
+  } else if (req.method === 'GET' && !req.cookies['XSRF-TOKEN']) {
     debug('Get request missing CSRF token. Generating and saving...');
-    res.cookie('XSRF-TOKEN', 'test');
+    var csrf = crypto.randomBytes(20).toString('hex');
+    res.cookie('XSRF-TOKEN', csrf);
+    req.session.XSRFToken = csrf;
     //generate and save CSRF token
     next();
   }

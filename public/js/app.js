@@ -63,27 +63,4 @@ var app = angular.module('ballistic', [
     return authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1;
   };
   return authService;
-}).run(function($rootScope, API, authService) {
-  API.get({
-    resource: 'auth',
-    action: 'getcsrftoken'
-  }, function(response, err) {
-    var csrfToken;
-    csrfToken = response.data.csrfToken;
-    console.log(csrfToken);
-    $rootScope.csrfToken = csrfToken;
-    return console.log($rootScope.csrfToken);
-  });
-  return $rootScope.$on('$locationChangeStart', function(event) {
-    return API.get({
-      resource: 'auth',
-      action: 'getcsrftoken'
-    }, function(response, err) {
-      var csrfToken;
-      csrfToken = response.data.csrfToken;
-      console.log(csrfToken);
-      $rootScope.csrfToken = csrfToken;
-      return console.log($rootScope.csrfToken);
-    });
-  });
-});
+})
