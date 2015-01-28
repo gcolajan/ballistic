@@ -2,15 +2,16 @@
   <div class = "dashboard">
     <h1>Welcome username.</h1>
     <div class="row">
-      <div class="five columns">
+      <div class="six columns">
         <h3>Net Worth <span class = "heading-small">+$500 (12%)</span></h3>
         <canvas id="myChart"></canvas>
+        <div id = "worth-legend" class = "legend"></div>
         <script>
         var data = {
     labels: ["January", "February", "March", "April", "May", "June", "July"],
     datasets: [
         {
-            label: "My First dataset",
+            label: "Net Worth",
             fillColor: "rgba(220,220,220,0.2)",
             strokeColor: "rgba(220,220,220,1)",
             pointColor: "rgba(220,220,220,1)",
@@ -20,7 +21,7 @@
             data: [30, 34, 38, null, null, null, null]
         },
         {
-            label: "My Second dataset",
+            label: "Net Worth (Projected)",
             fillColor: "rgba(151,187,205,0.2)",
             strokeColor: "rgba(151,187,205,1)",
             pointColor: "rgba(151,187,205,1)",
@@ -28,7 +29,27 @@
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(151,187,205,1)",
             data: [null, null, 38, 45, 60, 70, 90]
-        }
+        },
+        {
+            label: "Assets",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: [30, 34, 38, 39, 100, 150, 160]
+        },
+        {
+            label: "Liabilities",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            data: [210, 110, 90, 70, 22, 11, 1]
+        },
     ]
 };
           // Get context with jQuery - using jQuery's .get() method.
@@ -37,8 +58,10 @@
           var myNewChart = new Chart(ctx);
 
           var myLineChart = new Chart(ctx).Line(data);
+
+          $('#worth-legend').html(myLineChart.generateLegend());
         </script>
-        <h3>Monthly Income</h3>
+        <h3>Monthly Savings</h3>
         <canvas id="income"></canvas>
         <script>
         var data = {
@@ -86,11 +109,8 @@
           $('#income-legend').html(myLineChart.generateLegend());
         </script>
         <div id = "income-legend" class = "legend"></div>
-        <h3>Total Assets</h3>
-        <h3>Total Assets</h3>
-        <h3>Total Liabilities</h3>
       </div>
-      <div class="seven columns">
+      <div class="six columns">
         <h3>Accounts</h3>
         <a class="button button-primary" href = "/account/add">Add an account</a>
       </div>
