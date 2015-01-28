@@ -40,6 +40,8 @@ app.use ('/', function (req, res, next) {
     req.session.XSRFToken = csrf;
     //generate and save CSRF token
     next();
+  } else {
+    next();
   }
 });
 
