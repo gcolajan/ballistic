@@ -3,15 +3,15 @@
     <div class="row">
       <div class="one-half column">
         <h4>Login</h4>
-        <form>
+        <form ng-submit="login(logCredentials)">
           <div class="row">
             <div class="six columns">
               <label for="username">Username</label>
-              <input class="u-full-width" type="text" placeholder="username" id="username">
+              <input class="u-full-width" type="text" placeholder="username" id="username" ng-model="logCredentials.username">
             </div>
             <div class="six columns">
               <label for="username">Password</label>
-              <input class="u-full-width" type="password" placeholder="password" id="password">
+              <input class="u-full-width" type="password" placeholder="password" id="password" ng-model="logCredentials.password">
             </div>
           </div>
           <input class="button-primary" type="submit" value="Login">
