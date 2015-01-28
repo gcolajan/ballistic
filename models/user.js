@@ -9,9 +9,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        User.hasMany(models.Asset),
         User.hasMany(models.Account),
-        User.hasMany(models.Liability),
         User.hasOne(models.UserMeta)
       },
       hash: function(password, callback) {

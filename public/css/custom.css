@@ -17,3 +17,10 @@ canvas {
   max-width: 800px;
   height: auto !important;
 }
+
+.legend span {
+  width: 10px;
+  display: inline-block;
+  margin-right: 7px;
+  height: 10px;
+}

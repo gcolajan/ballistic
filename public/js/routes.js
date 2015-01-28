@@ -4,6 +4,8 @@ angular.module('ballistic').config(function($routeProvider, $locationProvider) {
     controller: 'LoginRegisterCtrl'
   }).when('/dashboard', {
     templateUrl: 'views/dashboard.html'
+  }).when('/account/add', {
+    templateUrl: 'views/addaccount.html'
   }).when('/404', {
     templateUrl: 'views/login.html'
   }).otherwise({

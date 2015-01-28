@@ -38,12 +38,61 @@
 
           var myLineChart = new Chart(ctx).Line(data);
         </script>
+        <h3>Monthly Income</h3>
+        <canvas id="income"></canvas>
+        <script>
+        var data = {
+    labels: ["January", "February", "March", "April", "May", "June", "July"],
+    datasets: [
+        {
+            label: "Income",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: [30, 34, 38, 39, 40, 50, 60]
+        },
+        {
+            label: "Spend",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            data: [12, 33, 38, 45, 60, 70, 90]
+        },
+        {
+            label: "Savings",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            data: [2, 4, 5, 3, 3, 5, 6]
+        }
+    ]
+};
+          // Get context with jQuery - using jQuery's .get() method.
+          var ctx = $("#income").get(0).getContext("2d");
+          // This will get the first returned node in the jQuery collection.
+          var myNewChart = new Chart(ctx);
+
+          var myLineChart = new Chart(ctx).Line(data);
+
+          $('#income-legend').html(myLineChart.generateLegend());
+        </script>
+        <div id = "income-legend" class = "legend"></div>
+        <h3>Total Assets</h3>
         <h3>Total Assets</h3>
         <h3>Total Liabilities</h3>
       </div>
       <div class="seven columns">
         <h3>Accounts</h3>
-        <input class="button-primary" type="submit" value="Add an account">
+        <a class="button button-primary" href = "/account/add">Add an account</a>
       </div>
     </div>
   </div>
