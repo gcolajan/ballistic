@@ -45,14 +45,16 @@ app.use ('/', function (req, res, next) {
   }
 });
 
+//load user for api requests
 app.use ('/api', function (req, res, next) {
-  //req.models.session.find({id: req.session.id}, function (err, sessions) {
-    // if(!err && sessions.length > 0){
-    // } else {
-    //   next();
-    // }
-  //});
-  next();
+  if(req.session.userID){
+    models.User.find(req.session.userID).then(function(user) {
+      req.user = user;
+      next();
+    });
+  } else {
+    next();
+  }
 });
 
 app.use('/api/users', require('./api/user'));

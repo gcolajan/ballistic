@@ -21,7 +21,6 @@ exports.authenticate = function(req, res) {
         if(match){
           debug('authenticated');
           req.session.userID = user.id;
-          req.session.username = user.username;
           res.send({success: true, user: {id: user.id, username: user.username}});
         } else {
           debug('password did not match');
@@ -33,8 +32,8 @@ exports.authenticate = function(req, res) {
 }
 
 exports.session = function(req, res) {
-  if(req.session.userID){
-    res.send({success: true, user: {id: req.session.userID, username: req.session.username}});
+  if(req.user){
+    res.send({success: true, user: {id: req.user.id, username: req.user.username}});
   } else {
     debug('session expired');
     res.send({success: false, error: 'session expired'});
@@ -42,9 +41,8 @@ exports.session = function(req, res) {
 }
 
 exports.logout = function(req, res) {
-  if(req.session.userID){
+  if(req.user){
     req.session.userID = null;
-    req.session.username = null;
     res.send({success: true});
   } else {
     res.send({success: false, error: 'session expired'});
