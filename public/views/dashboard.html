@@ -1,6 +1,6 @@
 <div class="container">
+  <div class = "navbar" ng-include="'/views/navbar.html'"></div>  
   <div class = "dashboard">
-    <h1>Welcome username.</h1>
     <div class="row">
       <div class="six columns">
         <h3>Net Worth <span class = "heading-small">+$500 (12%)</span></h3>
@@ -32,22 +32,22 @@
         },
         {
             label: "Assets",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
+            fillColor: "rgba(123,122,212,0.2)",
+            strokeColor: "rgba(123,122,212,1)",
+            pointColor: "rgba(123,122,212,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
+            pointHighlightStroke: "rgba(123,122,212,1)",
             data: [30, 34, 38, 39, 100, 150, 160]
         },
         {
             label: "Liabilities",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
+            fillColor: "rgba(43,222,31,0.2)",
+            strokeColor: "rgba(43,222,31,1)",
+            pointColor: "rgba(43,222,31,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
+            pointHighlightStroke: "rgba(43,222,31,1)",
             data: [210, 110, 90, 70, 22, 11, 1]
         },
     ]
@@ -61,7 +61,7 @@
 
           $('#worth-legend').html(myLineChart.generateLegend());
         </script>
-        <h3>Monthly Savings</h3>
+        <h3>Income &amp; Spend</h3>
         <canvas id="income"></canvas>
         <script>
         var data = {
@@ -88,13 +88,13 @@
             data: [12, 33, 38, 45, 60, 70, 90]
         },
         {
-            label: "Savings",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
+            label: "Profit",
+            fillColor: "rgba(84,111,231,0.2)",
+            strokeColor: "rgba(84,111,231,1)",
+            pointColor: "rgba(84,111,231,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
+            pointHighlightStroke: "rgba(84,111,231,1)",
             data: [2, 4, 5, 3, 3, 5, 6]
         }
     ]
@@ -111,6 +111,24 @@
         <div id = "income-legend" class = "legend"></div>
       </div>
       <div class="six columns">
+        <h3>Goal Progress</h3>
+        <p>Your goal of $10,000 in passive income requires an investment of approximately $153,846.15. Here's how you're doing so far:</p>
+        <div class = "row">
+            <div class = "one-half column">
+                <h6>Current Investments:</h6>
+                <h5>$5000</h5> 
+                <h6>Current Yearly Income:</h6>
+                <h5>$300</h5> 
+                <h6>Percentage of Goal:</h6>
+                <h5>3%</h5> 
+            </div>
+            <div class = "one-half column">
+                <h6>Time Until Goal Reached:</h6> 
+                <h4>45 Years</h4>
+                <p class = "small-gray">(you will be 68 at this time)</p>
+            </div>
+        </div>
+        <p class = "small-gray">These estimates are made with the interest rates set on your investments. They also assume that you maintain your current distribution of funds between accounts.
         <h3>Accounts</h3>
         <a class="button button-primary" href = "/account/add">Add an account</a>
       </div>

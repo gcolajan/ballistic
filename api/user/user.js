@@ -20,12 +20,33 @@ exports.authenticate = function(req, res) {
       models.User.checkPassword(req.body.password, user.password, function(err, match) {
         if(match){
           debug('authenticated');
-          res.send({success: true, user: {id: user.id}});
+          req.session.userID = user.id;
+          req.session.username = user.username;
+          res.send({success: true, user: {id: user.id, username: user.username}});
         } else {
           debug('password did not match');
           res.send({success: false, error: 'password did not match'});
         }
       });
     });
+  }
+}
+
+exports.session = function(req, res) {
+  if(req.session.userID){
+    res.send({success: true, user: {id: req.session.userID, username: req.session.username}});
+  } else {
+    debug('session expired');
+    res.send({success: false, error: 'session expired'});
+  }
+}
+
+exports.logout = function(req, res) {
+  if(req.session.userID){
+    req.session.userID = null;
+    req.session.username = null;
+    res.send({success: true});
+  } else {
+    res.send({success: false, error: 'session expired'});
   }
 }

@@ -12,10 +12,18 @@ h1 .heading-small, h2 .heading-small, h3 .heading-small, h4 .heading-small, h5 .
   letter-spacing: normal;
 }
 
+a {
+  cursor: pointer;
+}
+
 canvas {
   width: 100% !important;
   max-width: 800px;
   height: auto !important;
+}
+
+h6, h4 {
+  margin-bottom: 0.2rem;
 }
 
 .legend span {
@@ -23,4 +31,32 @@ canvas {
   display: inline-block;
   margin-right: 7px;
   height: 10px;
+}
+
+.legend ul {
+  margin: 10px 0;
+  padding: 0;
+}
+
+.legend ul li {
+  display: inline-block;
+  margin: 0;
+  padding-right: 10px;
+}
+
+ul.nav {
+  margin: 30px 0;
+  padding: 0;
+}
+
+ul.nav li {
+  display: inline-block;
+  margin: 0;
+  padding-right: 20px;
+  font-size: 1.5rem;
+}
+
+p.small-gray {
+  color: #888;
+  font-size: 1.2rem;
 }
