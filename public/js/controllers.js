@@ -1,3 +1,20 @@
+angular.module('ballistic').controller('MainCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
+  $scope.user = {}
+  $scope.user.id = Session.userID
+  $scope.user.username = Session.username
+
+  $scope.logout = function () {
+    API.save({resource: 'users', action: 'logout'},
+      {},
+      function (response, err) {
+        console.log(response)
+        Session.destroy();
+        $location.path('/');
+      }
+    );
+  }
+}]);
+
 angular.module('ballistic').controller('LoginRegisterCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
 
   if(Session.userID){
@@ -31,25 +48,22 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$scope', '$locatio
       );
     }
   }
-  
 }]);
 
 angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
-  console.log(Session.userID);
-  console.log(Session.username);
-  $scope.user = {}
-  $scope.user.id = Session.userID
-  $scope.user.username = Session.username
-
-  $scope.logout = function () {
-    API.save({resource: 'users', action: 'logout'},
-      {},
-      function (response, err) {
-        console.log(response)
-        Session.destroy();
-        $location.path('/');
-      }
-    );
-  }
   
+}]);
+
+angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
+  $scope.createAccount = function (account) {
+    console.log(account);
+    if(account && account.name && account.type && (account.type != 4 || account.interest)){
+      API.save({resource: 'accounts', action: 'create'},
+        {name: account.name, type: account.type, interest: account.interest},
+        function (response, err) {
+          console.log(response)
+        }
+      );
+    }
+  }
 }]);
