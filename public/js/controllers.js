@@ -51,7 +51,12 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$scope', '$locatio
 }]);
 
 angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
-  
+  API.get({resource: 'accounts', action: 'list'},
+    function (response, err) {
+      $scope.accounts = response.accounts;
+      console.log(response);
+    }
+  );
 }]);
 
 angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {

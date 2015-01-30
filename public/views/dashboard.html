@@ -130,6 +130,9 @@
         </div>
         <p class = "small-gray">These estimates are made with the interest rates set on your investments. They also assume that you maintain your current distribution of funds between accounts.
         <h3>Accounts</h3>
+        <ul>
+            <li ng-repeat="account in accounts">{{account.name}}</li>
+        </ul>
         <a class="button button-primary" href = "/account/add">Add an account</a>
       </div>
     </div>

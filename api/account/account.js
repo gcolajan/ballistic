@@ -8,8 +8,21 @@ exports.create = function(req, res) {
     res.send({success: false, error: 'fields left empty'});
   } else {
     models.Account.create({ name: req.body.name, type: req.body.type, interest: req.body.interest}).then(function(account) {
+      account.setUser(req.user);
       debug(account);
       res.send({success: true, account: account});
+    });
+  }
+}
+
+exports.list = function(req, res) {
+  debug(req.body)
+  if(!req.user){
+    res.send({success: false, error: 'must be logged in'});
+  } else {
+    req.user.getAccounts().then(function(accounts) {
+      debug(accounts);
+      res.send({success: true, accounts: accounts});
     });
   }
 }
