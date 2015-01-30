@@ -17,6 +17,7 @@ exports.authenticate = function(req, res) {
   debug(req.body)
   if(req.body.username && req.body.password){
     models.User.find({ where: {username: req.body.username} }).then(function(user) {
+      console.log(user)
       models.User.checkPassword(req.body.password, user.password, function(err, match) {
         if(match){
           debug('authenticated');

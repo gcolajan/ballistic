@@ -3,7 +3,7 @@
   <div class = "dashboard">
     <div class="row">
       <div class="six columns">
-        <h1>Account Name</h1>
+        <h1>{{account.name}}</h1>
         <h3>Income &amp; Spend</h3>
         <canvas id="income"></canvas>
         <script>
@@ -71,7 +71,28 @@
             </div>
         </div>
         <h3>Add Transaction</h3>
-        <a class="button button-primary" href = "/account/1/transactions">Add</a>
+        <form ng-submit="createTransaction(transaction)">
+          <div class="row">
+            <div class = "one-half column">
+              <label for="amount">Amount</label>
+              <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="transaction.amount">
+            </div>
+            <div class = "one-half column">
+              <label for="date">Date</label>
+              <input class="u-full-width" type="text" placeholder="30-12-2015" id="date" ng-model="transaction.date">
+            </div>
+          </div>
+          <div class="row">
+            <label for="type">Type</label>
+            <select class="u-full-width" id="type"  ng-model="transaction.type">
+              <option value="1">Spend</option>
+              <option value="2">Income</option>
+            </select>
+            <label for="description">Description</label>
+            <textarea class="u-full-width" placeholder="Details..." id="description" ng-model="transaction.description"></textarea>
+            <input class="button-primary" type="submit" value="Add">
+          </div>
+        </form>
         <h3>Recent Transactions</h3>
         <a class="button" href = "/account/1/transactions">View More</a>
       </div>

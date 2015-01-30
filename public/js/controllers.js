@@ -1,8 +1,4 @@
 angular.module('ballistic').controller('MainCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
-  $scope.user = {}
-  $scope.user.id = Session.userID
-  $scope.user.username = Session.username
-
   $scope.logout = function () {
     API.save({resource: 'users', action: 'logout'},
       {},
@@ -59,12 +55,40 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
   );
 }]);
 
-angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
+angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$routeParams', 'API', 'Session', function ($scope, $location, $routeParams, API, Session) {
+  $scope.transaction = {type: 1}
+  if($routeParams.id){
+    console.log("getting account info")
+    API.get({resource: 'accounts', action: $routeParams.id},
+      function(response, err) {
+        if(response.success){
+          $scope.account = response.account;
+        }
+        console.log(response);
+    });
+  } else {
+    console.log("no id")
+    $scope.account = {type: 1}
+  }
+
+
   $scope.createAccount = function (account) {
     console.log(account);
     if(account && account.name && account.type && (account.type != 4 || account.interest)){
       API.save({resource: 'accounts', action: 'create'},
         {name: account.name, type: account.type, interest: account.interest},
+        function (response, err) {
+          console.log(response.data)
+        }
+      );
+    }
+  }
+
+  $scope.createTransaction = function (transaction) {
+    console.log(transaction);
+    if(transaction && transaction.amount && transaction.date && transaction.type){
+      API.save({resource: 'transaction', action: 'create'},
+        {amount: transaction.amount, date: transaction.date, type: transaction.type},
         function (response, err) {
           console.log(response)
         }

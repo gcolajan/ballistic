@@ -26,3 +26,14 @@ exports.list = function(req, res) {
     });
   }
 }
+
+exports.get = function(req, res) {
+  if(!req.user){
+    res.send({success: false, error: 'must be logged in'});
+  } else {
+    models.Account.find(req.params.id).then(function(account) {
+      debug(account);
+      res.send({success: true, account: account});
+    });
+  }
+}
