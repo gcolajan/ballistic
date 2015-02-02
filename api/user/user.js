@@ -6,7 +6,9 @@ exports.create = function(req, res) {
   if(req.body.username && req.body.password){
     models.User.hash(req.body.password, function(err, hash){
       models.User.create({ username: req.body.username, password: hash }).then(function(user) {
-        debug(user);
+        models.UserMeta.create({}).then(function(usermeta){
+          usermeta.setUser(user);
+        });
         res.send({success: true, user: {id: user.id}});
       });
     });
