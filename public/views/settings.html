@@ -1,0 +1,27 @@
+<div class="container">
+  <div class = "navbar" ng-include="'/views/navbar.html'"></div> 
+  <div class="row">
+    <div class="four columns">
+      <h4>My Settings</h4>
+      <form ng-submit="saveUserMeta(usermeta)">
+        <div class="row">
+          <label for="name">Goal</label>
+          <input class="u-full-width" type="text" placeholder="$26,000.00" id="name" ng-model="usermeta.goal">
+          <label for="name">Age</label>
+          <input class="u-full-width" type="text" placeholder="26" id="name" ng-model="usermeta.age">
+          <label for="name">Currency Symbol</label>
+          <input class="u-full-width" type="text" placeholder="$" id="name" ng-model="usermeta.currency">
+        </div>
+        <input class="button-primary" type="submit" value="Save">
+      </form>
+    </div>
+    <div class="eight columns">
+      <h5>Goal</h5>
+      <p>This is the yearly amount you want to earn from your investments.</p>
+      <h5>Age</h5>
+      <p>Your current age. It's used to figure out how old you will be when you reach your goal.</p>
+      <h5>Currency Symbol</h5>
+      <p>This is the currency symbol used when displaying amounts. It does not change the actual function of the application in any way.</p>
+    </div>
+  </div>
+</div>

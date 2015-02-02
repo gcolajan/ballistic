@@ -11,6 +11,12 @@ angular.module('ballistic').config(function($routeProvider, $locationProvider, U
     data: {
       authorizedRoles: [USER_ROLES.user]
     }
+  }).when('/settings', {
+    templateUrl: 'views/settings.html',
+    controller: 'SettingsCtrl',
+    data: {
+      authorizedRoles: [USER_ROLES.user]
+    }
   }).when('/account/add', {
     templateUrl: 'views/addaccount.html',
     controller: 'AccountCtrl',

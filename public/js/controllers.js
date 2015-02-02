@@ -55,6 +55,9 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
   );
 }]);
 
+angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
+}]);
+
 angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$routeParams', 'API', 'Session', function ($scope, $location, $routeParams, API, Session) {
   $scope.transaction = {type: 1}
   if($routeParams.id){
