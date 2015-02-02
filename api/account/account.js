@@ -32,8 +32,20 @@ exports.get = function(req, res) {
     res.send({success: false, error: 'must be logged in'});
   } else {
     models.Account.find(req.params.id).then(function(account) {
-      debug(account);
-      res.send({success: true, account: account});
+      account.getTransactions().then(function(transactions) {
+        generateStatistics(account, transactions, function(statistics){
+          res.send({success: true, account: account, transactions: transactions, statistics: statistics});
+        })
+      });
     });
   }
+}
+
+function generateStatistics(account, transactions, callback){
+  statistics = {};
+  models.Transaction.sum('amount', { where: { AccountId:  account.id} }).then(function(sum) {
+    console.log(sum);
+    statistics.sum = sum;
+    callback(statistics);
+  })
 }

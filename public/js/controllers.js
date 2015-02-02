@@ -63,6 +63,8 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
       function(response, err) {
         if(response.success){
           $scope.account = response.account;
+          $scope.transactions = response.transactions;
+          $scope.statistics = response.statistics;
         }
         console.log(response);
     });

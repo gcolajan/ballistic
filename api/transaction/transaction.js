@@ -16,15 +16,3 @@ exports.create = function(req, res) {
     });
   }
 }
-
-exports.list = function(req, res) {
-  debug(req.body)
-  if(!req.user){
-    res.send({success: false, error: 'must be logged in'});
-  } else {
-    req.user.getAccounts().then(function(accounts) {
-      debug(accounts);
-      res.send({success: true, accounts: accounts});
-    });
-  }
-}
