@@ -9,8 +9,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        User.hasMany(models.Account),
-        User.hasOne(models.UserMeta)
+        User.hasMany(models.Account);
+        User.hasOne(models.UserMeta);
       },
       hash: function(password, callback) {
         bcrypt.genSalt(11, function (err, salt) {

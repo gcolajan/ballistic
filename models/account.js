@@ -8,9 +8,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Account.hasMany(models.Transaction),
-        Account.hasMany(models.Category),
-        Account.belongsTo(models.User)
+        Account.hasMany(models.Transaction);
+        Account.hasMany(models.Category);
+        Account.belongsTo(models.User);
       }
     }
   });

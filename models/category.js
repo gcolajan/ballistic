@@ -6,8 +6,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Category.hasMany(models.Transaction),
-        Category.belongsTo(models.Account)
+        Category.hasMany(models.Transaction);
+        Category.belongsTo(models.Account);
       }
     }
   });

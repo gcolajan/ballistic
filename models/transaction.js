@@ -9,8 +9,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Transaction.belongsTo(models.Account)
-        Transaction.belongsTo(models.Category)
+        Transaction.belongsTo(models.Account);
+        Transaction.belongsTo(models.Category);
       }
     }
   });

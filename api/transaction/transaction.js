@@ -16,3 +16,25 @@ exports.create = function(req, res) {
     });
   }
 }
+
+exports.update = function(req, res) {
+  debug(req.body)
+  if(!req.body.amount || !req.body.date || !req.body.type){
+    res.send({success: false, error: 'fields left empty'});
+  } else {
+    models.Transaction.find(req.params.id).then(function(transaction){
+      transaction.amount = req.body.amount;
+      transaction.date = req.body.date;
+      transaction.type = req.body.type;
+      transaction.save().then(function(transaction){
+        req.send({success: true, transaction: transaction})
+      });
+    });
+  }
+}
+
+exports.get = function(req, res) {
+  models.Transaction.find(req.params.id).then(function(transaction){
+    req.send({success: true, transaction: transaction})
+  }); 
+}

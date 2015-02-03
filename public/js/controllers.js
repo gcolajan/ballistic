@@ -11,7 +11,7 @@ angular.module('ballistic').controller('MainCtrl', ['$scope', '$location', 'API'
   }
 }]);
 
-angular.module('ballistic').controller('LoginRegisterCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
+angular.module('ballistic').controller('LoginRegisterCtrl', ['$rootScope', '$scope', '$location', 'API', 'Session', function ($rootScope, $scope, $location, API, Session) {
 
   if(Session.userID){
     $location.path('/dashboard')
@@ -22,7 +22,13 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$scope', '$locatio
       API.save({resource: 'users', action: 'create'},
         {username: credentials.username, password: credentials.password},
         function (response, err) {
-          console.log(response)
+          if(response.success == true){
+            console.log("true: creating session");
+            Session.create(response.user.id, response.user.username);
+            $rootScope.user = response.user;
+            console.log("true: redirecting");
+            $location.path('/dashboard')
+          }
         }
       );
     }
@@ -36,6 +42,8 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$scope', '$locatio
           if(response.success == true){
             console.log("true: creating session");
             Session.create(response.user.id, response.user.username);
+            console.log(response.user)
+            $rootScope.user = response.user;
             console.log("true: redirecting");
             $location.path('/dashboard')
           }

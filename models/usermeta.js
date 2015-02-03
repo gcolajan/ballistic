@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        UserMeta.belongsTo(models.User)
+        UserMeta.belongsTo(models.User);
       }
     }
   });

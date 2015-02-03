@@ -30,9 +30,7 @@ var app = angular.module('ballistic', [
       console.log(response)
       if(response.success){
         Session.create(response.user.id, response.user.username);
-        $rootScope.user = {};
-        $rootScope.user.id = Session.userID;
-        $rootScope.user.username = Session.username;
+        $rootScope.user = response.user;
       } else {
         Session.destroy();
         $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
