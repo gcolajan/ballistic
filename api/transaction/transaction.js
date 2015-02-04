@@ -26,7 +26,7 @@ exports.update = function(req, res) {
       transaction.date = req.body.date;
       transaction.type = req.body.type;
       transaction.save().then(function(transaction){
-        req.send({success: true, transaction: transaction})
+        res.send({success: true, transaction: transaction})
       });
     });
   }
@@ -34,6 +34,14 @@ exports.update = function(req, res) {
 
 exports.get = function(req, res) {
   models.Transaction.find(req.params.id).then(function(transaction){
-    req.send({success: true, transaction: transaction})
+    res.send({success: true, transaction: transaction});
+  }); 
+}
+
+exports.delete = function(req, res) {
+  models.Transaction.find(req.params.id).then(function(transaction){
+    transaction.destroy().then(function(){
+      res.send({success: true});
+    });
   }); 
 }

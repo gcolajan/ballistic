@@ -36,7 +36,7 @@ exports.get = function(req, res) {
       account.getTransactions().then(function(transactions) {
         switch(account.type){
           case ACCOUNT.Investment:
-            generateInvestmentStatistics(account, transactions, function(statistics){
+            generateInvestmentStatistics(account, function(statistics){
               res.send({success: true, account: account, transactions: transactions, statistics: statistics});
             });
           break;
@@ -46,9 +46,9 @@ exports.get = function(req, res) {
   }
 }
 
-function generateInvestmentStatistics(account, transactions, callback){
+function generateInvestmentStatistics(account, callback){
   var today = new Date();
-  var yearStart = new Date(today.getFullYear(), 1, 1, 0, 0, 0, 1);
+  var yearStart = new Date(today.getFullYear(), 0, 0, 0, 0, 0, 0);
   var statistics = {};
 
   models.Transaction.sum('amount', { where: { AccountId:  account.id, type: {ne: TRANSACTION.Withdrawal}} }).then(function(totalDeposits) {

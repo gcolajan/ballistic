@@ -97,7 +97,7 @@
       <h3>Recent Transactions</h3>
       <ul>
           <li ng-repeat="transaction in transactions | orderBy:'date':true">
-              <p>{{transaction.amount}} - {{transaction.date | date:'longDate'}}</p>
+              <p>{{transaction.amount}} - {{transaction.date | date:'longDate'}} - <a ng-click="deleteTransaction(transaction)">delete</a></p>
           </li>
       </ul>
       <a class="button" href = "/account/1/transactions">View More</a>

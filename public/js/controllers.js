@@ -131,7 +131,21 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
         function (response, err) {
           if(response.success) {
             refresh();
-            $scope.transaction = {};
+            $scope.transaction = {type: 1};
+          }
+        }
+      );
+    }
+  }
+
+  $scope.deleteTransaction = function (transaction) {
+    console.log(transaction);
+    if(transaction){
+      API.delete({resource: 'transactions', action: transaction.id},
+        function (response, err) {
+          console.log(response);
+          if(response.success) {
+            refresh();
           }
         }
       );
