@@ -85,21 +85,27 @@ angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', '
 }]);
 
 angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$routeParams', 'API', 'Session', function ($scope, $location, $routeParams, API, Session) {
-  $scope.transaction = {type: 1}
-  if($routeParams.id){
-    console.log("getting account info")
-    API.get({resource: 'accounts', action: $routeParams.id},
-      function(response, err) {
-        if(response.success){
-          $scope.account = response.account;
-          $scope.transactions = response.transactions;
-          $scope.statistics = response.statistics;
-        }
-        console.log(response);
-    });
-  } else {
-    console.log("no id")
-    $scope.account = {type: 1}
+  refresh();
+  
+  function refresh() {
+    $scope.today = new Date();
+    $scope.transaction = {type: 1}
+
+    if($routeParams.id){
+      console.log("getting account info")
+      API.get({resource: 'accounts', action: $routeParams.id},
+        function(response, err) {
+          if(response.success){
+            $scope.account = response.account;
+            $scope.transactions = response.transactions;
+            $scope.statistics = response.statistics;
+          }
+          console.log(response);
+      });
+    } else {
+      console.log("no id")
+      $scope.account = {type: 1}
+    }
   }
 
 
@@ -123,7 +129,10 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
       API.save({resource: 'transactions', action: 'create'},
         {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type},
         function (response, err) {
-          console.log(response)
+          if(response.success) {
+            refresh();
+            $scope.transaction = {};
+          }
         }
       );
     }

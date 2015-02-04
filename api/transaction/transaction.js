@@ -1,6 +1,5 @@
 var models  = require('../../models');
 var debug = require('debug')('ballistic');
-var TRANSACTION = {Spend:1, Income: 2, Purchase: 1, Depreciation: 2, Investment: 1, Interest: 2, Withdrawl: 3}
 
 exports.create = function(req, res) {
   debug(req.body)
