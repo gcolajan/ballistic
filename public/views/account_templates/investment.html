@@ -96,7 +96,7 @@
       </form>
       <h3>Recent Transactions</h3>
       <ul>
-          <li ng-repeat="transaction in transactions | orderBy:date">
+          <li ng-repeat="transaction in transactions | orderBy:'date':true">
               <p>{{transaction.amount}} - {{transaction.date | date:'longDate'}}</p>
           </li>
       </ul>
