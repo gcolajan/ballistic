@@ -59,7 +59,8 @@ app.use ('/api', function (req, res, next) {
 
 app.use('/api/users', require('./api/user'));
 app.use('/api/accounts', require('./api/account'));
-app.use('/api/transaction', require('./api/transaction'));
+app.use('/api/transactions', require('./api/transaction'));
+app.use('/api/usermeta', require('./api/usermeta'));
 
 app.route('/*').get(function(req, res) {
   res.sendFile(__dirname + '/public/index.html');

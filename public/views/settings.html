@@ -3,14 +3,14 @@
   <div class="row">
     <div class="four columns">
       <h4>My Settings</h4>
-      <form ng-submit="saveUserMeta(usermeta)">
+      <form ng-submit="saveMeta(meta)">
         <div class="row">
-          <label for="name">Goal</label>
-          <input class="u-full-width" type="text" placeholder="$26,000.00" id="name" ng-model="usermeta.goal">
-          <label for="name">Age</label>
-          <input class="u-full-width" type="text" placeholder="26" id="name" ng-model="usermeta.age">
-          <label for="name">Currency Symbol</label>
-          <input class="u-full-width" type="text" placeholder="$" id="name" ng-model="usermeta.currency">
+          <label for="goal">Goal</label>
+          <input class="u-full-width" type="text" placeholder="26000.00" id="goal" ng-model="meta.goal">
+          <label for="age">Age</label>
+          <input class="u-full-width" type="text" placeholder="26" id="age" ng-model="meta.age">
+          <label for="currency">Currency Symbol</label>
+          <input class="u-full-width" type="text" placeholder="$" id="currency" ng-model="meta.currency">
         </div>
         <input class="button-primary" type="submit" value="Save">
       </form>

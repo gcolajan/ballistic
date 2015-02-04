@@ -54,6 +54,8 @@
 };
           // Get context with jQuery - using jQuery's .get() method.
           var ctx = $("#myChart").get(0).getContext("2d");
+          ctx.canvas.width = 461;
+          ctx.canvas.height = 240;
           // This will get the first returned node in the jQuery collection.
           var myNewChart = new Chart(ctx);
 
@@ -102,6 +104,8 @@
           // Get context with jQuery - using jQuery's .get() method.
           var ctx = $("#income").get(0).getContext("2d");
           // This will get the first returned node in the jQuery collection.
+          ctx.canvas.width = 461;
+          ctx.canvas.height = 240;
           var myNewChart = new Chart(ctx);
 
           var myLineChart = new Chart(ctx).Line(data);
@@ -112,7 +116,7 @@
       </div>
       <div class="six columns">
         <h3>Goal Progress</h3>
-        <p>Your goal of $10,000 in passive income requires an investment of approximately $153,846.15. Here's how you're doing so far:</p>
+        <p>Your goal of {{user.meta.goal | currency:user.meta.currency}} in passive income requires an investment of approximately $153,846.15. Here's how you're doing so far:</p>
         <div class = "row">
             <div class = "one-half column">
                 <h6>Current Investments:</h6>
@@ -128,7 +132,7 @@
                 <p class = "small-gray">(you will be 68 at this time)</p>
             </div>
         </div>
-        <p class = "small-gray">These estimates are made with the interest rates set on your investments. They also assume that you maintain your current distribution of funds between accounts.
+        <p class = "small-gray">These estimates are made with the interest rates set on your investments. They also assume that you maintain your current distribution of funds.
         <h3>Accounts</h3>
         <ul>
             <li ng-repeat="account in accounts">

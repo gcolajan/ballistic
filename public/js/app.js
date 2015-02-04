@@ -7,9 +7,13 @@ var app = angular.module('ballistic', [
   'ngRoute',
   'ngAnimate',
 ]).factory('API', function($resource) {
-  return $resource(APIURL);
+  return $resource(APIURL, null,
+    {
+        'update': { method:'PUT' }
+    });
 }).constant('AUTH_EVENTS', {
   notAuthenticated: 'auth-not-authenticated',
+  authenticated: 'auth-authenticated',
   expired: 'auth-expired'
 }).constant('USER_ROLES', {
   all: '*',
@@ -31,6 +35,7 @@ var app = angular.module('ballistic', [
       if(response.success){
         Session.create(response.user.id, response.user.username);
         $rootScope.user = response.user;
+        $rootScope.$broadcast(AUTH_EVENTS.Authenticated);
       } else {
         Session.destroy();
         $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
@@ -46,8 +51,6 @@ var app = angular.module('ballistic', [
         }
       });
   });
-
-  
 
   $rootScope.$on(AUTH_EVENTS.notAuthenticated, function (event, next) {
     event.preventDefault();

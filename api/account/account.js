@@ -45,7 +45,7 @@ function generateStatistics(account, transactions, callback){
   statistics = {};
   models.Transaction.sum('amount', { where: { AccountId:  account.id} }).then(function(sum) {
     console.log(sum);
-    statistics.sum = sum;
+    statistics.sum = sum || 0;
     callback(statistics);
   })
 }
