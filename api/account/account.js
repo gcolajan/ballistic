@@ -32,14 +32,23 @@ exports.get = function(req, res) {
   if(!req.user){
     res.send({success: false, error: 'must be logged in'});
   } else {
+    var today = new Date();
+    var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 1, 0, 0, 0, 0);
+    debug(today)
+    debug(sixMonthsAgo)
+
     models.Account.find(req.params.id).then(function(account) {
       account.getTransactions({ limit: 5, order: 'date DESC' }).then(function(transactions) {
         switch(account.type){
           case ACCOUNT.Investment:
-            generateInvestmentStatistics(account, function(investmentStatistics){
+            //get investment statistics
+            generateInvestmentStatistics(account, null, function(investmentStatistics){
               generateYearlyInvestmentStatistics(account, function(yearlyInvestmentStatistics){
-                statistics = mergeObjects(investmentStatistics, yearlyInvestmentStatistics);
-                res.send({success: true, account: account, transactions: transactions, statistics: statistics});
+                //get historical statistics
+                generateHistoricalInvestmentStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
+                  statistics = mergeObjects(investmentStatistics, yearlyInvestmentStatistics);
+                  res.send({success: true, account: account, transactions: transactions, statistics: statistics, historicalStatistics: historicalSatistics});
+                });
               });
             });
           break;
@@ -82,18 +91,43 @@ exports.statistics = function(req, res) {
   }
 }
 
-function generateInvestmentStatistics(account, callback){
+function generateInvestmentStatistics(account, date, callback){
   var statistics = {};
+  if(date === null){
+    date = new Date();
+  }
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: {ne: TRANSACTION.Withdrawal}} }).then(function(totalDeposits) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal} }).then(function(totalWithdrawals) {
-      statistics.totalDeposits = totalDeposits || 0;
-      statistics.totalWithdrawals = totalWithdrawals || 0;
-      statistics.balance = statistics.totalDeposits - statistics.totalWithdrawals;
-      callback(statistics);
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {lt: date}} }).then(function(totalInvestments) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {lt: date}} }).then(function(totalInterest) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {lt: date}} }).then(function(totalWithdrawals) {
+        statistics.totalInvestments = totalInvestments || 0;
+        statistics.totalInterest = totalInterest || 0;
+        statistics.totalWithdrawals = totalWithdrawals || 0;
+        statistics.balance = statistics.totalInvestments + statistics.totalInterest - statistics.totalWithdrawals;
+        callback(statistics);
+      });
     });
   });
 }
+
+function generateMonthlyInvestmentStatistics(account, date, callback){
+  var statistics = {};
+  var nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1, 0, 0, 0, 0);
+
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gt: date.toDateString()}, date: {lt: nextMonth.toDateString()}} }).then(function(monthlyInvestments) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gt: date.toDateString()}, date: {lt: nextMonth.toDateString()}} }).then(function(monthlyInterest) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gt: date.toDateString()}, date: {lt: nextMonth.toDateString()}} }).then(function(monthlyWithdrawls) {
+        statistics.monthlyInvestments = monthlyInvestments || 0;
+        statistics.monthlyInterest = monthlyInterest || 0;
+        statistics.monthlyWithdrawls = monthlyWithdrawls || 0;
+        statistics.net = statistics.monthlyInvestments + statistics.monthlyInterest - statistics.monthlyWithdrawls;
+        callback(statistics);
+      });
+    });
+  });
+}
+
+
 
 function generateYearlyInvestmentStatistics(account, callback){
   var today = new Date();
@@ -114,12 +148,47 @@ function generateYearlyInvestmentStatistics(account, callback){
   });
 }
 
+function generateHistoricalInvestmentStatistics(account, historicalSatistics, date, callback) {
+  var today = new Date();
+  var nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1, 0, 0, 0, 0);
+  var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
+  debug("historical investment loop")
+
+  debug(today)
+  debug(date)
+
+  if(historicalSatistics === null){
+    historicalSatistics = {contributions: {data: []}, withdrawals: {data: []}, interest: {data: []}, balance: {data: []}, labels: []};
+    generateInvestmentStatistics(account, date, function(statistics){
+      debug(statistics)
+      historicalSatistics.startingBalance = statistics.balance;
+      generateHistoricalInvestmentStatistics(account, historicalSatistics, date, callback);
+    });
+  } else if(date < nextMonth){
+    generateMonthlyInvestmentStatistics(account, date, function(statistics){
+      nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1, 0, 0, 0, 0);
+      debug(nextMonth);
+      debug(statistics);
+      historicalSatistics.labels.push(monthNames[date.getMonth()]);
+      historicalSatistics.contributions.data.push(statistics.monthlyInvestments);
+      historicalSatistics.withdrawals.data.push(statistics.monthlyWithdrawls);
+      historicalSatistics.interest.data.push(statistics.monthlyInterest);
+      historicalSatistics.balance.data.push(statistics.net + historicalSatistics.startingBalance);
+      generateHistoricalInvestmentStatistics(account, historicalSatistics, nextMonth, callback);
+    });
+    
+  } else {
+    callback(historicalSatistics);
+  }
+}
+
 function generateUserStatistics(accounts, statistics, index, callback){
   if (index < accounts.length) {
     accounts[index] = accounts[index].values;
     switch(accounts[index].type){
       case ACCOUNT.Investment:
-        generateInvestmentStatistics(accounts[index], function(accountStatistics){
+        generateInvestmentStatistics(accounts[index], null, function(accountStatistics){
           generateYearlyInvestmentStatistics(accounts[index], function(accountYearlyStatistics){
             accounts[index].statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
             statistics.netWorth += accountStatistics.balance;

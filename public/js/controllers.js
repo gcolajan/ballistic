@@ -156,6 +156,44 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
             $scope.statistics = response.statistics;
           }
           console.log(response);
+          $scope.historicalInvestmentData = {
+            labels: response.historicalStatistics.labels,
+            datasets: [
+              {
+                label: "Withdrawls",
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                data: response.historicalStatistics.withdrawals.data
+              },
+              {
+                label: "Contributions",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                data: response.historicalStatistics.contributions.data
+              },
+              
+              {
+                label: "Interest",
+                fillColor: "rgba(123,122,212,0.2)",
+                strokeColor: "rgba(123,122,212,1)",
+                pointColor: "rgba(123,122,212,1)",
+                pointStrokeColor: "#fff",
+                data: response.historicalStatistics.interest.data
+              },
+              {
+                label: "Balance",
+                fillColor: "rgba(43,222,31,0.2)",
+                strokeColor: "rgba(43,222,31,1)",
+                pointColor: "rgba(43,222,31,1)",
+                pointStrokeColor: "#fff",
+                data: response.historicalStatistics.balance.data
+              },
+            ]
+          }
       });
     } else {
       console.log("no id")

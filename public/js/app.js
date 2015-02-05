@@ -42,6 +42,7 @@ var app = angular.module('ballistic', [
       ctx.canvas.width = 461;
       ctx.canvas.height = 240;
       // This will get the first returned node in the jQuery collection.
+      Chart.defaults.global.showTooltips = false;
       var myNewChart = new Chart(ctx);
       switch(type){
         case 'line':
