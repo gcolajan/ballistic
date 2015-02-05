@@ -1,0 +1,53 @@
+<div class="container">
+  <div class = "navbar" ng-include="'/views/navbar.html'"></div>  
+  <div class = "dashboard" ng-switch="account.type">
+    <div class="row">
+      <div class="six columns">
+        <h1>{{account.name}} Transactions</h1>
+        <ul class = "transaction-list">
+          <li ng-repeat="transaction in transactions | orderBy:'date':true">
+            <div class="row">
+              <div class = "one-half column">
+                <p><b>Amount:</b> {{transaction.amount}}
+                <br><b>Type:</b> {{transaction.amount}}
+                <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span></p>
+              </div>
+              <div class = "one-half column">
+                <p><b>Date:</b> {{transaction.date | date:'longDate'}}
+                <br><b>Category:</b> <span ng-show = "transaction.category">{{transaction.category}}</span><span ng-hide = "transaction.category">n/a</span></p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="six columns">
+        <div ng-show = "transaction">
+          <h3>Edit Transaction</h3>
+          <form ng-submit="createTransaction(transaction)">
+            <div class="row">
+              <div class = "one-half column">
+                <label for="amount">Amount</label>
+                <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="transaction.amount">
+              </div>
+              <div class = "one-half column">
+                <label for="date">Date</label>
+                <input class="u-full-width" type="text" placeholder="yyyy-mm-dd" id="date" ng-model="transaction.date">
+              </div>
+            </div>
+            <div class="row">
+              <label for="type">Type</label>
+              <select class="u-full-width" id="type"  ng-model="transaction.type">
+                <option value="1">Investment</option>
+                <option value="2">Interest</option>
+                <option value="3">Withdrawal</option>
+              </select>
+              <label for="description">Description (optional)</label>
+              <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
+              <input class="button-primary" type="submit" value="Add">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
