@@ -128,7 +128,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
     console.log(transaction);
     if(transaction && transaction.amount && transaction.date && transaction.type){
       API.save({resource: 'transactions', action: 'create'},
-        {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type},
+        {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type, description: transaction.description},
         function (response, err) {
           if(response.success) {
             refresh();

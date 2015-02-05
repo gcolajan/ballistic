@@ -33,7 +33,7 @@ exports.get = function(req, res) {
     res.send({success: false, error: 'must be logged in'});
   } else {
     models.Account.find(req.params.id).then(function(account) {
-      account.getTransactions().then(function(transactions) {
+      account.getTransactions({ limit: 5, order: 'date DESC' }).then(function(transactions) {
         switch(account.type){
           case ACCOUNT.Investment:
             generateInvestmentStatistics(account, function(statistics){
