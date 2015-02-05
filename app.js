@@ -50,7 +50,10 @@ app.use ('/api', function (req, res, next) {
   if(req.session.userID){
     models.User.find(req.session.userID).then(function(user) {
       req.user = user;
-      next();
+      user.getUserMetum().then(function(meta){
+        req.usermeta = meta;
+        next();
+      });
     });
   } else {
     next();
