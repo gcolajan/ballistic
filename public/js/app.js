@@ -18,6 +18,14 @@ var app = angular.module('ballistic', [
 }).constant('USER_ROLES', {
   all: '*',
   user: 'user'
+}).constant('ACCOUNT_TYPES', {
+  1: 'General',
+  2: 'Asset',
+  3: 'Liability',
+  4: 'Investment'
+}).constant('TRANSACTION_TYPES', {
+  all: '*',
+  user: 'user'
 }).service('Session', function () {
   this.create = function (userID, username) {
     this.userID = userID;

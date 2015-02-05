@@ -134,12 +134,23 @@
         </div>
         <p class = "small-gray">These estimates are made with the interest rates set on your investments. They also assume that you maintain your current distribution of funds.
         <h3>Accounts</h3>
-        <ul>
-            <li ng-repeat="account in accounts">
-                <a ng-href="/account/{{account.id}}">{{account.name}}</a>
-                <p>Balance: $44.44 (+$44)</p>
-                <p>Chart?</p>
-            </li>
+        <ul class = "account-list">
+          <li ng-repeat="account in accounts | orderBy:'name'" ng-click = "changePath('account/' + account.id)">
+            <h5>{{account.name}} <span class = "heading-small">{{ACCOUNT_TYPES[account.type]}}</span></h5>
+            <div class="row" ng-switch="account.type">
+              <div ng-switch-when="4">
+                <div class = "one-half column">
+                  <p><b>Balance:</b> {{account.statistics.balance | currency:user.meta.currency}}
+                  <br><b>Share of Investments:</b> {{account.statistics.percentOfInvestments | number:2}} %</p>
+                </div>
+                <div class = "one-half column">
+                  <p><b>Contributions for {{today.getFullYear()}}:</b> {{account.statistics.yearlyContributions | currency:user.meta.currency}}
+                  <br><b>Withdrawals for {{today.getFullYear()}}:</b> {{account.statistics.yearlyWithdrawals | currency:user.meta.currency}}
+                  <br><b>Interest for {{today.getFullYear()}}:</b> {{account.statistics.yearlyGrowth | currency:user.meta.currency}}</p>
+                </div>
+              </div>
+            </div>
+          </li>
         </ul>
         <a class="button button-primary" href = "/account/add">Add an account</a>
       </div>
