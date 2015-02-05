@@ -36,8 +36,11 @@ exports.get = function(req, res) {
       account.getTransactions({ limit: 5, order: 'date DESC' }).then(function(transactions) {
         switch(account.type){
           case ACCOUNT.Investment:
-            generateInvestmentStatistics(account, function(statistics){
-              res.send({success: true, account: account, transactions: transactions, statistics: statistics});
+            generateInvestmentStatistics(account, function(investmentStatistics){
+              generateYearlyInvestmentStatistics(account, function(yearlyInvestmentStatistics){
+                statistics = mergeObjects(investmentStatistics, yearlyInvestmentStatistics);
+                res.send({success: true, account: account, transactions: transactions, statistics: statistics});
+              });
             });
           break;
         }
@@ -80,29 +83,32 @@ exports.statistics = function(req, res) {
 }
 
 function generateInvestmentStatistics(account, callback){
+  var statistics = {};
+
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: {ne: TRANSACTION.Withdrawal}} }).then(function(totalDeposits) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal} }).then(function(totalWithdrawals) {
+      statistics.totalDeposits = totalDeposits || 0;
+      statistics.totalWithdrawals = totalWithdrawals || 0;
+      statistics.balance = statistics.totalDeposits - statistics.totalWithdrawals;
+      callback(statistics);
+    });
+  });
+}
+
+function generateYearlyInvestmentStatistics(account, callback){
   var today = new Date();
   var yearStart = new Date(today.getFullYear(), 0, 0, 0, 0, 0, 0);
   var statistics = {};
   var daysDifferent = dateDiffInDays(yearStart, today);
-  if(daysDifferent < 30){
-    daysDifferent = 30;
-  }
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: {ne: TRANSACTION.Withdrawal}} }).then(function(totalDeposits) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal} }).then(function(totalWithdrawals) {
-      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gt: yearStart} } }).then(function(yearlyWithdrawals) {
-        models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gt: yearStart} } }).then(function(yearlyContributions) {
-          models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gt: yearStart} } }).then(function(yearlyGrowth) {
-            statistics.totalDeposits = totalDeposits || 0;
-            statistics.totalWithdrawals = totalWithdrawals || 0;
-            statistics.balance = statistics.totalDeposits - statistics.totalWithdrawals;
-            statistics.yearlyWithdrawals = yearlyWithdrawals || 0;
-            statistics.yearlyContributions = yearlyContributions || 0;
-            statistics.yearlyGrowth = yearlyGrowth || 0;
-            statistics.estimatedYearlyGrowth = ((statistics.yearlyContributions + statistics.yearlyGrowth - statistics.yearlyWithdrawals) / daysDifferent) * 365;
-            callback(statistics);
-          });
-        });
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gt: yearStart} } }).then(function(yearlyWithdrawals) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gt: yearStart} } }).then(function(yearlyContributions) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gt: yearStart} } }).then(function(yearlyGrowth) {
+        statistics.yearlyWithdrawals = yearlyWithdrawals || 0;
+        statistics.yearlyContributions = yearlyContributions || 0;
+        statistics.yearlyGrowth = yearlyGrowth || 0;
+        statistics.estimatedYearlyGrowth = ((statistics.yearlyContributions + statistics.yearlyGrowth - statistics.yearlyWithdrawals) / daysDifferent) * 365;
+        callback(statistics);
       });
     });
   });
@@ -114,11 +120,13 @@ function generateUserStatistics(accounts, statistics, index, callback){
     switch(accounts[index].type){
       case ACCOUNT.Investment:
         generateInvestmentStatistics(accounts[index], function(accountStatistics){
-          accounts[index].statistics = accountStatistics;
-          statistics.netWorth += accountStatistics.balance;
-          statistics.totalInvestments += accountStatistics.balance;
-          statistics.estimatedYearlyGrowth += accountStatistics.estimatedYearlyGrowth;
-          generateUserStatistics(accounts, statistics, ++index, callback);
+          generateYearlyInvestmentStatistics(accounts[index], function(accountYearlyStatistics){
+            accounts[index].statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
+            statistics.netWorth += accountStatistics.balance;
+            statistics.totalInvestments += accountStatistics.balance;
+            statistics.estimatedYearlyGrowth += accountStatistics.estimatedYearlyGrowth;
+            generateUserStatistics(accounts, statistics, ++index, callback);
+          });
         });
       break;
       default:
@@ -147,4 +155,9 @@ function dateDiffInDays(a, b) {
   var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
   var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
   return Math.floor((utc2 - utc1) / 86400000);
+}
+
+function mergeObjects(a, b) {
+  for (var attrname in a) { b[attrname] = a[attrname]; }
+  return b;
 }

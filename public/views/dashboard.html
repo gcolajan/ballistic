@@ -82,13 +82,13 @@
             <div class="row" ng-switch="account.type">
               <div ng-switch-when="4">
                 <div class = "one-half column">
-                  <p><b>Balance:</b> {{account.statistics.balance | currency:user.meta.currency}}
-                  <br><b>Share of Investments:</b> {{account.statistics.percentOfInvestments | number:2}} %</p>
+                  <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
+                  <br><b>Share of Investments:</b><br> {{account.statistics.percentOfInvestments | number:2}} %</p>
                 </div>
                 <div class = "one-half column">
-                  <p><b>Contributions for {{today.getFullYear()}}:</b> {{account.statistics.yearlyContributions | currency:user.meta.currency}}
-                  <br><b>Withdrawals for {{today.getFullYear()}}:</b> {{account.statistics.yearlyWithdrawals | currency:user.meta.currency}}
-                  <br><b>Interest for {{today.getFullYear()}}:</b> {{account.statistics.yearlyGrowth | currency:user.meta.currency}}</p>
+                  <p><b>Contributions for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyContributions | currency:user.meta.currency}}
+                  <br><b>Withdrawals for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyWithdrawals | currency:user.meta.currency}}
+                  <br><b>Interest for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyGrowth | currency:user.meta.currency}}</p>
                 </div>
               </div>
             </div>
