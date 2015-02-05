@@ -26,6 +26,39 @@ var app = angular.module('ballistic', [
 }).constant('TRANSACTION_TYPES', {
   all: '*',
   user: 'user'
+}).directive('graph', function() {
+  var data;
+
+  function link(scope, element, attrs) {
+    scope.$watch(attrs.graph, function(value) {
+      element.html('<canvas id="' + attrs.graph +'"></canvas><div id = "' + attrs.graph + '-legend" class = "legend"></div>');
+      data = value;
+      renderGraph(data, attrs.graph, attrs.type);
+    });
+
+    function renderGraph(data, elementName, type){
+      // Get context with jQuery - using jQuery's .get() method.
+      var ctx = $('#' + elementName).get(0).getContext("2d");
+      ctx.canvas.width = 461;
+      ctx.canvas.height = 240;
+      // This will get the first returned node in the jQuery collection.
+      var myNewChart = new Chart(ctx);
+      switch(type){
+        case 'line':
+          var chart = new Chart(ctx).Line(data);
+          break;
+        default:
+          var chart = new Chart(ctx).Line(data);
+          break;
+      }
+        
+      $('#' + elementName + '-legend').html(chart.generateLegend());
+    }
+  }
+
+  return {
+    link: link
+  };
 }).service('Session', function () {
   this.create = function (userID, username) {
     this.userID = userID;
