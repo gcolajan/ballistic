@@ -62,20 +62,12 @@ exports.get = function(req, res) {
 }
 
 exports.statistics = function(req, res) {
-  statistics = {
-    netWorth: 0, 
-    totalInvestments: 0, 
-    investmentInterest: 0, 
-    yearlyInvestmentIncome: 0,
-    goalPercentage: 0,
-    estimatedYearlyGrowth: 0
-  };
   if(!req.user){
     res.send({success: false, error: 'must be logged in'});
   } else {
     req.user.getAccounts().then(function(accounts) {
       //recurses over accounts and calculates global and account stats
-      generateUserStatistics(accounts, statistics, 0, function(accounts, statistics){
+      generateUserStatistics(accounts, null, 0, function(accounts, statistics){
         for (var i = 0; i < accounts.length; ++i) {
           if(accounts[i].type == ACCOUNT.Investment){
             accounts[i].statistics.percentOfInvestments = accounts[i].statistics.balance / statistics.totalInvestments * 100;
@@ -100,9 +92,9 @@ function generateInvestmentStatistics(account, date, callback){
     date = new Date();
   }
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {lte: date}} }).then(function(totalInvestments) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {lte: date}} }).then(function(totalInterest) {
-      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {lte: date}} }).then(function(totalWithdrawals) {
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {lte: date.toDateString()}} }).then(function(totalInvestments) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {lte: date.toDateString()}} }).then(function(totalInterest) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {lte: date.toDateString()}} }).then(function(totalWithdrawals) {
         statistics.totalInvestments = totalInvestments || 0;
         statistics.totalInterest = totalInterest || 0;
         statistics.totalWithdrawals = totalWithdrawals || 0;
@@ -138,9 +130,9 @@ function generateYearlyInvestmentStatistics(account, callback){
   var statistics = {};
   var daysDifferent = dateDiffInDays(yearStart, today);
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gte: yearStart} } }).then(function(yearlyWithdrawals) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gte: yearStart} } }).then(function(yearlyContributions) {
-      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gte: yearStart} } }).then(function(yearlyGrowth) {
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gt: yearStart} } }).then(function(yearlyWithdrawals) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gt: yearStart} } }).then(function(yearlyContributions) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gt: yearStart} } }).then(function(yearlyGrowth) {
         statistics.yearlyWithdrawals = yearlyWithdrawals || 0;
         statistics.yearlyContributions = yearlyContributions || 0;
         statistics.yearlyGrowth = yearlyGrowth || 0;
@@ -186,6 +178,17 @@ function generateHistoricalInvestmentStatistics(account, historicalSatistics, da
 }
 
 function generateUserStatistics(accounts, statistics, index, callback){
+  if(statistics === null){
+    statistics = {
+      netWorth: 0, 
+      totalInvestments: 0, 
+      investmentInterest: 0, 
+      yearlyInvestmentIncome: 0,
+      goalPercentage: 0,
+      estimatedYearlyGrowth: 0
+    };
+  }
+  
   if (index < accounts.length) {
     accounts[index] = accounts[index].values;
     switch(accounts[index].type){
@@ -193,9 +196,9 @@ function generateUserStatistics(accounts, statistics, index, callback){
         generateInvestmentStatistics(accounts[index], null, function(accountStatistics){
           generateYearlyInvestmentStatistics(accounts[index], function(accountYearlyStatistics){
             accounts[index].statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
-            statistics.netWorth += accountStatistics.balance;
-            statistics.totalInvestments += accountStatistics.balance;
-            statistics.estimatedYearlyGrowth += accountStatistics.estimatedYearlyGrowth;
+            statistics.netWorth += accounts[index].statistics.balance;
+            statistics.totalInvestments += accounts[index].statistics.balance;
+            statistics.estimatedYearlyGrowth += accounts[index].statistics.estimatedYearlyGrowth;
             generateUserStatistics(accounts, statistics, ++index, callback);
           });
         });
