@@ -9,9 +9,6 @@ exports.create = function(req, res) {
     res.send({success: false, error: 'fields left empty'});
   } else {
     models.Account.create({ name: req.body.name, type: req.body.type, interest: req.body.interest}).then(function(account) {
-      if(req.body.category) {
-        //models.Category.find()
-      }
       account.setUser(req.user);
       debug(account);
       res.send({success: true, account: account});
@@ -41,19 +38,25 @@ exports.get = function(req, res) {
     debug(sixMonthsAgo)
 
     models.Account.find(req.params.id).then(function(account) {
-      account.getTransactions({ limit: 5, order: 'date DESC' }).then(function(transactions) {
+      account.getTransactions({ include: [ models.Category ], limit: 5, order: 'date DESC' }).then(function(transactions) {
         switch(account.type){
           case ACCOUNT.Investment:
-            //get investment statistics
-            generateInvestmentStatistics(account, null, function(investmentStatistics){
-              generateYearlyInvestmentStatistics(account, function(yearlyInvestmentStatistics){
-                //get historical statistics
-                generateHistoricalInvestmentStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
-                  statistics = mergeObjects(investmentStatistics, yearlyInvestmentStatistics);
-                  res.send({success: true, account: account, transactions: transactions, statistics: statistics, historicalStatistics: historicalSatistics});
+            account.getCategories().then(function(categories){
+              generateInvestmentStatistics(account, null, function(investmentStatistics){
+                generateYearlyInvestmentStatistics(account, function(yearlyInvestmentStatistics){
+                  generateInvestmentDistributionStatistics(categories, investmentStatistics, null, function(distributionStatistics){
+                    //get historical statistics
+                    generateHistoricalInvestmentStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
+                      statistics = mergeObjects(investmentStatistics, yearlyInvestmentStatistics);
+                      statistics.distributionStatistics = distributionStatistics;
+                      res.send({success: true, account: account, transactions: transactions, statistics: statistics, historicalStatistics: historicalSatistics});
+                    });
+                  });
                 });
               });
             });
+            //get investment statistics
+            
           break;
         }
       });
@@ -103,6 +106,33 @@ function generateInvestmentStatistics(account, date, callback){
       });
     });
   });
+}
+
+function generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback){
+  if(statistics == null) {
+    statistics = {
+      count: 0,
+      categories: []
+    };
+  }
+
+  if(statistics.count < categories.length){
+    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id}}).then(function(sum){
+      var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
+      statistics.categories.push({value: sum, label: categories[statistics.count].name, percentage: percentOfInvestments});
+      statistics.count++;
+      generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
+    });
+  } else if (statistics.count == categories.length){
+    models.Transaction.sum('amount', {where: {CategoryId: null}}).then(function(sum){
+      var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
+      statistics.categories.push({value: sum, label: 'None', percentage: percentOfInvestments});
+      statistics.count++;
+      generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
+    });
+  } else {
+    callback(statistics);
+  }
 }
 
 function generateMonthlyInvestmentStatistics(account, date, callback){

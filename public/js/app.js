@@ -31,6 +31,11 @@ var app = angular.module('ballistic', [
   5: 'Income',
   6: 'Purchase',
   7: 'Depreciation'
+}).constant('SOLID_COLORS', {
+  0: '#1abc9c',
+  1: '#3498db',
+  2: '#9b59b6',
+  3: '#e74c3c'
 }).directive('graph', function() {
   var data;
 
@@ -52,6 +57,9 @@ var app = angular.module('ballistic', [
       switch(type){
         case 'line':
           var chart = new Chart(ctx).Line(data);
+          break;
+        case 'pie':
+          var chart = new Chart(ctx).Pie(data);
           break;
         default:
           var chart = new Chart(ctx).Line(data);

@@ -3,9 +3,8 @@
       <h1>{{account.name}}</h1>
       <h3>Contributions &amp; Growth</h3>
       <span graph="historicalInvestmentData" type = "line"></span>
-      <div id = "income-legend" class = "legend"></div>
-      <h3>Investments</h3>
       <h3>Portfolio Distribution</h3>
+      <span graph="distributionData" type = "pie"></span>
     </div>
     <div class="six columns">
       <h3>Account Info</h3>
@@ -66,7 +65,7 @@
             </div>
             <div class = "one-half column">
               <p><b>Date:</b> {{transaction.date | date:'longDate'}}
-              <br><b>Category:</b> <span ng-show = "transaction.category">{{transaction.category}}</span><span ng-hide = "transaction.category">n/a</span></p>
+              <br><b>Category:</b> <span ng-show = "transaction.Category">{{transaction.Category.name}}</span><span ng-hide = "transaction.Category">None</span></p>
             </div>
           </div>
         </li>

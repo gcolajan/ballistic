@@ -9,8 +9,27 @@ exports.create = function(req, res) {
     models.Transaction.create({ amount: req.body.amount, date: req.body.date, type: req.body.type, description: req.body.description}).then(function(transaction) {
       models.Account.find(req.body.accountID).then(function(account){
         transaction.setAccount(account);
-        debug(transaction);
-        res.send({success: true, transaction: transaction});
+
+        if(req.body.category) {
+          models.Category.find({where: {AccountId: account.id, name: {ilike: req.body.category}}}).then(function(category){
+            if(!category){
+              models.Category.create({name: req.body.category}).then(function(category){
+                category.setAccount(account);
+                transaction.setCategory(category);
+                debug(transaction);
+                debug(category);
+                res.send({success: true, transaction: transaction});
+              });
+            } else {
+              transaction.setCategory(category);
+              debug(transaction);
+              res.send({success: true, transaction: transaction});
+            }
+          });
+        } else {
+          debug(transaction);
+          res.send({success: true, transaction: transaction});
+        }
       });
     });
   }

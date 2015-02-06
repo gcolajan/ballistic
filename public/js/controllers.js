@@ -139,7 +139,7 @@ angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', '
   }
 }]);
 
-angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$routeParams', 'API', 'Session', function ($scope, $location, $routeParams, API, Session) {
+angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$routeParams', '$filter', 'API', 'Session', 'SOLID_COLORS', function ($scope, $location, $routeParams, $filter, API, Session, SOLID_COLORS) {
   refresh();
   
   function refresh() {
@@ -154,46 +154,52 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
             $scope.account = response.account;
             $scope.transactions = response.transactions;
             $scope.statistics = response.statistics;
-          }
-          console.log(response);
-          $scope.historicalInvestmentData = {
-            labels: response.historicalStatistics.labels,
-            datasets: [
-              {
-                label: "Withdrawls",
-                fillColor: "rgba(151,187,205,0.2)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(151,187,205,1)",
-                pointStrokeColor: "#fff",
-                data: response.historicalStatistics.withdrawals.data
-              },
-              {
-                label: "Contributions",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                data: response.historicalStatistics.contributions.data
-              },
+            for(var i = 0; i < response.statistics.distributionStatistics.categories.length; i++){
+              response.statistics.distributionStatistics.categories[i].color = SOLID_COLORS[i];
+              response.statistics.distributionStatistics.categories[i].label += ' - ' + $filter('number')(response.statistics.distributionStatistics.categories[i].percentage, 2) + ' %';
+            }
               
-              {
-                label: "Interest",
-                fillColor: "rgba(123,122,212,0.2)",
-                strokeColor: "rgba(123,122,212,1)",
-                pointColor: "rgba(123,122,212,1)",
-                pointStrokeColor: "#fff",
-                data: response.historicalStatistics.interest.data
-              },
-              {
-                label: "Balance",
-                fillColor: "rgba(43,222,31,0.2)",
-                strokeColor: "rgba(43,222,31,1)",
-                pointColor: "rgba(43,222,31,1)",
-                pointStrokeColor: "#fff",
-                data: response.historicalStatistics.balance.data
-              },
-            ]
+            $scope.distributionData = response.statistics.distributionStatistics.categories;
+            $scope.historicalInvestmentData = {
+              labels: response.historicalStatistics.labels,
+              datasets: [
+                {
+                  label: "Withdrawls",
+                  fillColor: "rgba(151,187,205,0.2)",
+                  strokeColor: "rgba(151,187,205,1)",
+                  pointColor: "rgba(151,187,205,1)",
+                  pointStrokeColor: "#fff",
+                  data: response.historicalStatistics.withdrawals.data
+                },
+                {
+                  label: "Contributions",
+                  fillColor: "rgba(220,220,220,0.2)",
+                  strokeColor: "rgba(220,220,220,1)",
+                  pointColor: "rgba(220,220,220,1)",
+                  pointStrokeColor: "#fff",
+                  data: response.historicalStatistics.contributions.data
+                },
+                
+                {
+                  label: "Interest",
+                  fillColor: "rgba(123,122,212,0.2)",
+                  strokeColor: "rgba(123,122,212,1)",
+                  pointColor: "rgba(123,122,212,1)",
+                  pointStrokeColor: "#fff",
+                  data: response.historicalStatistics.interest.data
+                },
+                {
+                  label: "Balance",
+                  fillColor: "rgba(43,222,31,0.2)",
+                  strokeColor: "rgba(43,222,31,1)",
+                  pointColor: "rgba(43,222,31,1)",
+                  pointStrokeColor: "#fff",
+                  data: response.historicalStatistics.balance.data
+                },
+              ]
+            }
           }
+        console.log(response);
       });
     } else {
       console.log("no id")
@@ -220,7 +226,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
     console.log(transaction);
     if(transaction && transaction.amount && transaction.date && transaction.type){
       API.save({resource: 'transactions', action: 'create'},
-        {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type, description: transaction.description},
+        {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type, category: transaction.category, description: transaction.description},
         function (response, err) {
           if(response.success) {
             refresh();
