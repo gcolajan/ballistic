@@ -33,7 +33,7 @@ exports.get = function(req, res) {
     res.send({success: false, error: 'must be logged in'});
   } else {
     var today = new Date();
-    var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 1, 0, 0, 0, 0);
+    var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 0, 0, 0, 0, 0);
     debug(today)
     debug(sixMonthsAgo)
 
@@ -97,9 +97,9 @@ function generateInvestmentStatistics(account, date, callback){
     date = new Date();
   }
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {lt: date}} }).then(function(totalInvestments) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {lt: date}} }).then(function(totalInterest) {
-      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {lt: date}} }).then(function(totalWithdrawals) {
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {lte: date}} }).then(function(totalInvestments) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {lte: date}} }).then(function(totalInterest) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {lte: date}} }).then(function(totalWithdrawals) {
         statistics.totalInvestments = totalInvestments || 0;
         statistics.totalInterest = totalInterest || 0;
         statistics.totalWithdrawals = totalWithdrawals || 0;
@@ -112,11 +112,11 @@ function generateInvestmentStatistics(account, date, callback){
 
 function generateMonthlyInvestmentStatistics(account, date, callback){
   var statistics = {};
-  var nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1, 0, 0, 0, 0);
+  var nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 0, 0, 0, 0);
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gt: date.toDateString()}, date: {lt: nextMonth.toDateString()}} }).then(function(monthlyInvestments) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gt: date.toDateString()}, date: {lt: nextMonth.toDateString()}} }).then(function(monthlyInterest) {
-      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gt: date.toDateString()}, date: {lt: nextMonth.toDateString()}} }).then(function(monthlyWithdrawls) {
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyInvestments) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyInterest) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyWithdrawls) {
         statistics.monthlyInvestments = monthlyInvestments || 0;
         statistics.monthlyInterest = monthlyInterest || 0;
         statistics.monthlyWithdrawls = monthlyWithdrawls || 0;
@@ -135,9 +135,9 @@ function generateYearlyInvestmentStatistics(account, callback){
   var statistics = {};
   var daysDifferent = dateDiffInDays(yearStart, today);
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gt: yearStart} } }).then(function(yearlyWithdrawals) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gt: yearStart} } }).then(function(yearlyContributions) {
-      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gt: yearStart} } }).then(function(yearlyGrowth) {
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gte: yearStart} } }).then(function(yearlyWithdrawals) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gte: yearStart} } }).then(function(yearlyContributions) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gte: yearStart} } }).then(function(yearlyGrowth) {
         statistics.yearlyWithdrawals = yearlyWithdrawals || 0;
         statistics.yearlyContributions = yearlyContributions || 0;
         statistics.yearlyGrowth = yearlyGrowth || 0;
@@ -150,7 +150,7 @@ function generateYearlyInvestmentStatistics(account, callback){
 
 function generateHistoricalInvestmentStatistics(account, historicalSatistics, date, callback) {
   var today = new Date();
-  var nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1, 0, 0, 0, 0);
+  var nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 0, 0, 0, 0);
   var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 
   debug("historical investment loop")
