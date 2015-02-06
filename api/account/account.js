@@ -36,7 +36,7 @@ exports.get = function(req, res) {
     res.send({success: false, error: 'must be logged in'});
   } else {
     var today = new Date();
-    var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 4, 0, 0, 0, 0, 0);
+    var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1, 0, 0, 0, 0);
     debug(today)
     debug(sixMonthsAgo)
 
@@ -156,14 +156,12 @@ function generateHistoricalInvestmentStatistics(account, historicalSatistics, da
   var nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 0, 0, 0, 0);
   var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 
-  debug("historical investment loop")
-
-  debug(today)
-  debug(date)
+  debug("historical investment loop");
 
   if(historicalSatistics === null){
     historicalSatistics = {contributions: {data: []}, withdrawals: {data: []}, interest: {data: []}, balance: {data: []}, labels: []};
-    generateInvestmentStatistics(account, date, function(statistics){
+    var lastMonth = new Date(date.getFullYear(), date.getMonth(), 0, 0, 0, 0, 0);
+    generateInvestmentStatistics(account, lastMonth, function(statistics){
       debug(statistics)
       historicalSatistics.startingBalance = statistics.balance;
       generateHistoricalInvestmentStatistics(account, historicalSatistics, date, callback);
