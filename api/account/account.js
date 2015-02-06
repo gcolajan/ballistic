@@ -178,6 +178,7 @@ function generateHistoricalInvestmentStatistics(account, historicalSatistics, da
       historicalSatistics.withdrawals.data.push(statistics.monthlyWithdrawls);
       historicalSatistics.interest.data.push(statistics.monthlyInterest);
       historicalSatistics.balance.data.push(statistics.net + historicalSatistics.startingBalance);
+      historicalSatistics.startingBalance += statistics.net;
       generateHistoricalInvestmentStatistics(account, historicalSatistics, nextMonth, callback);
     });
     
