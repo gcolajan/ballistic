@@ -68,6 +68,10 @@ ul.transaction-list li {
   padding: 0;
 }
 
+ul.transaction-list li:hover {
+  background-color: #EEE;
+}
+
 ul.transaction-list li p {
   padding-bottom: 1rem;
 }

@@ -24,8 +24,13 @@ var app = angular.module('ballistic', [
   3: 'Liability',
   4: 'Investment'
 }).constant('TRANSACTION_TYPES', {
-  all: '*',
-  user: 'user'
+  1: 'Investment',
+  2: 'Interest',
+  3: 'Withdrawal',
+  4: 'Spend',
+  5: 'Income',
+  6: 'Purchase',
+  7: 'Depreciation'
 }).directive('graph', function() {
   var data;
 

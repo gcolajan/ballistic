@@ -1,7 +1,7 @@
 var models  = require('../../models');
 var debug = require('debug')('ballistic');
-var ACCOUNT = {General:1, Asset: 2, Liability: 3, Investment: 4}
-var TRANSACTION = {Spend:1, Income: 2, Purchase: 1, Depreciation: 2, Investment: 1, Interest: 2, Withdrawal: 3}
+var ACCOUNT = {General:1, Asset: 2, Liability: 3, Investment: 4};
+var TRANSACTION = {Investment: 1, Interest: 2, Withdrawal: 3, Spend: 4, Income: 5, Purchase: 6, Depreciation: 7};
 
 exports.create = function(req, res) {
   debug(req.body)
@@ -9,6 +9,9 @@ exports.create = function(req, res) {
     res.send({success: false, error: 'fields left empty'});
   } else {
     models.Account.create({ name: req.body.name, type: req.body.type, interest: req.body.interest}).then(function(account) {
+      if(req.body.category) {
+        //models.Category.find()
+      }
       account.setUser(req.user);
       debug(account);
       res.send({success: true, account: account});
@@ -33,7 +36,7 @@ exports.get = function(req, res) {
     res.send({success: false, error: 'must be logged in'});
   } else {
     var today = new Date();
-    var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 6, 0, 0, 0, 0, 0);
+    var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 4, 0, 0, 0, 0, 0);
     debug(today)
     debug(sixMonthsAgo)
 

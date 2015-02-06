@@ -38,12 +38,18 @@
           </div>
         </div>
         <div class="row">
-          <label for="type">Type</label>
-          <select class="u-full-width" id="type"  ng-model="transaction.type">
-            <option value="1">Investment</option>
-            <option value="2">Interest</option>
-            <option value="3">Withdrawal</option>
-          </select>
+          <div class = "one-half column">
+            <label for="type">Type</label>
+            <select class="u-full-width" id="type"  ng-model="transaction.type">
+              <option value="1">Investment</option>
+              <option value="2">Interest</option>
+              <option value="3">Withdrawal</option>
+            </select>
+          </div>
+          <div class = "one-half column">
+            <label for="category">Fund Name</label>
+            <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.category">
+          </div>
           <label for="description">Description (optional)</label>
           <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
           <input class="button-primary" type="submit" value="Add">
@@ -51,11 +57,11 @@
       </form>
       <h3>Recent Transactions</h3>
       <ul class = "transaction-list">
-        <li ng-repeat="transaction in transactions | orderBy:'date':true">
+        <li ng-repeat="transaction in transactions | orderBy:'date':true" ng-click = "changePath('account/' + account.id + '/transactions/' + transaction.id)">
           <div class="row">
             <div class = "one-half column">
               <p><b>Amount:</b> {{transaction.amount}}
-              <br><b>Type:</b> {{transaction.amount}}
+              <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
               <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span></p>
             </div>
             <div class = "one-half column">
