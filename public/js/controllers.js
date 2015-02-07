@@ -242,23 +242,18 @@ angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location
   refresh();
   
   function refresh() {
-    $scope.today = new Date();
     $scope.transaction = null
 
     if($routeParams.id){
       console.log("getting account info")
-      API.get({resource: 'accounts', action: $routeParams.id},
+      API.get({resource: 'accounts', action: $routeParams.id, action2: 'listtransactions'},
         function(response, err) {
           if(response.success){
             $scope.account = response.account;
             $scope.transactions = response.transactions;
-            $scope.statistics = response.statistics;
           }
           console.log(response);
       });
-    } else {
-      console.log("no id")
-      $scope.account = {type: 1}
     }
   }
 

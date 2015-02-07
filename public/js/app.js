@@ -1,4 +1,4 @@
-var APIURL = '/api/:resource/:action';
+var APIURL = '/api/:resource/:action/:action2';
 
 var app = angular.module('ballistic', [
   'ngCookies',

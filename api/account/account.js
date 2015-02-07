@@ -64,6 +64,18 @@ exports.get = function(req, res) {
   }
 }
 
+exports.getTransactions = function(req, res) {
+  if(!req.user){
+    res.send({success: false, error: 'must be logged in'});
+  } else {
+    models.Account.find(req.params.id).then(function(account) {
+      account.getTransactions({ include: [ models.Category ], order: 'date DESC' }).then(function(transactions) {
+        res.send({success: true, account: account, transactions: transactions});
+      });
+    });
+  }
+}
+
 exports.statistics = function(req, res) {
   if(!req.user){
     res.send({success: false, error: 'must be logged in'});
