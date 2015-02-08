@@ -54,10 +54,13 @@ exports.get = function(req, res) {
                   });
                 });
               });
-            });
-            //get investment statistics
-            
-          break;
+            });      
+            break;
+          case ACCOUNT.General:
+            account.getCategories().then(function(categories){
+              res.send({success: true, account: account, transactions: transactions});
+            });      
+            break;
         }
       });
     });
