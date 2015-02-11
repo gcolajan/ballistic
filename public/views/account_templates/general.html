@@ -1,27 +1,23 @@
 <div class="row">
     <div class="six columns">
       <h1>{{account.name}}</h1>
-      <h3>Contributions &amp; Growth</h3>
+      <h3>Income &amp; Spend</h3>
       <span graph="historicalInvestmentData" type = "line"></span>
-      <h3>Portfolio Distribution</h3>
+      <h3>Last Month's Spend</h3>
       <span graph="distributionData" type = "pie"></span>
     </div>
     <div class="six columns">
       <h3>Account Info</h3>
       <div class = "row">
           <div class = "one-half column">
-              <h6>Contributions for {{today.getFullYear()}}:</h6>
-              <h5>{{statistics.yearlyContributions | currency:user.meta.currency}}</h5> 
-              <h6>Withdrawals for {{today.getFullYear()}}:</h6>
-              <h5>{{statistics.yearlyWithdrawals | currency:user.meta.currency}}</h5>
-              <h6>Interest for {{today.getFullYear()}}:</h6>
-              <h5>{{statistics.yearlyGrowth | currency:user.meta.currency}}</h5> 
+              <h6>Income for {{today.getFullYear()}}:</h6>
+              <h5>{{statistics.yearlyIncome | currency:user.meta.currency}}</h5> 
+              <h6>Spending for {{today.getFullYear()}}:</h6>
+              <h5>{{statistics.yearlySpend | currency:user.meta.currency}}</h5>
           </div>
           <div class = "one-half column">
               <h6>Balance:</h6> 
               <h4>{{statistics.balance | currency:user.meta.currency}}</h4>
-              <h6>Estimated Yearly Interest:</h6> 
-              <h4>{{statistics.balance * account.interest / 100 | currency:user.meta.currency}}</h4>
           </div>
       </div>
       <h3>Add Transaction</h3>

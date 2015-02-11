@@ -22,7 +22,11 @@ var app = angular.module('ballistic', [
   1: 'General',
   2: 'Asset',
   3: 'Liability',
-  4: 'Investment'
+  4: 'Investment',
+  'General': 1,
+  'Asset': 2,
+  'Liability': 3,
+  'Investment': 4
 }).constant('TRANSACTION_TYPES', {
   1: 'Investment',
   2: 'Interest',
@@ -30,7 +34,18 @@ var app = angular.module('ballistic', [
   4: 'Spend',
   5: 'Income',
   6: 'Purchase',
-  7: 'Depreciation'
+  7: 'Depreciation',
+  8: 'Debt',
+  9: 'Payment',
+  'Investment': 1,
+  'Interest': 2,
+  'Withdrawal': 3,
+  'Spend': 4,
+  'Income': 5,
+  'Purchase': 6,
+  'Depreciation': 7,
+  'Debt': 8,
+  'Payment': 9
 }).constant('SOLID_COLORS', {
   0: '#1abc9c',
   1: '#3498db',

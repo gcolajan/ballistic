@@ -144,7 +144,6 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
   
   function refresh() {
     $scope.today = new Date();
-    $scope.transaction = {type: 1}
 
     if($routeParams.id){
       console.log("getting account info")
@@ -158,52 +157,94 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
               response.statistics.distributionStatistics.categories[i].color = SOLID_COLORS[i];
               response.statistics.distributionStatistics.categories[i].label += ' - ' + $filter('number')(response.statistics.distributionStatistics.categories[i].percentage, 2) + ' %';
             }
-              
             $scope.distributionData = response.statistics.distributionStatistics.categories;
-            $scope.historicalInvestmentData = {
-              labels: response.historicalStatistics.labels,
-              datasets: [
-                {
-                  label: "Withdrawls",
-                  fillColor: "rgba(151,187,205,0.2)",
-                  strokeColor: "rgba(151,187,205,1)",
-                  pointColor: "rgba(151,187,205,1)",
-                  pointStrokeColor: "#fff",
-                  data: response.historicalStatistics.withdrawals.data
-                },
-                {
-                  label: "Contributions",
-                  fillColor: "rgba(220,220,220,0.2)",
-                  strokeColor: "rgba(220,220,220,1)",
-                  pointColor: "rgba(220,220,220,1)",
-                  pointStrokeColor: "#fff",
-                  data: response.historicalStatistics.contributions.data
-                },
-                
-                {
-                  label: "Interest",
-                  fillColor: "rgba(123,122,212,0.2)",
-                  strokeColor: "rgba(123,122,212,1)",
-                  pointColor: "rgba(123,122,212,1)",
-                  pointStrokeColor: "#fff",
-                  data: response.historicalStatistics.interest.data
-                },
-                {
-                  label: "Balance",
-                  fillColor: "rgba(43,222,31,0.2)",
-                  strokeColor: "rgba(43,222,31,1)",
-                  pointColor: "rgba(43,222,31,1)",
-                  pointStrokeColor: "#fff",
-                  data: response.historicalStatistics.balance.data
-                },
-              ]
+
+            switch($scope.account.type){
+              case $scope.ACCOUNT_TYPES.General:
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Spend};
+                $scope.historicalInvestmentData = {
+                  labels: response.historicalStatistics.labels,
+                  datasets: [
+                    {
+                      label: "Income",
+                      fillColor: "rgba(151,187,205,0.2)",
+                      strokeColor: "rgba(151,187,205,1)",
+                      pointColor: "rgba(151,187,205,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.income.data
+                    },
+                    {
+                      label: "Spend",
+                      fillColor: "rgba(220,220,220,0.2)",
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(220,220,220,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.spend.data
+                    },
+                    {
+                      label: "Balance",
+                      fillColor: "rgba(43,222,31,0.2)",
+                      strokeColor: "rgba(43,222,31,1)",
+                      pointColor: "rgba(43,222,31,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.balance.data
+                    },
+                  ]
+                }
+              break;
+              case $scope.ACCOUNT_TYPES.Asset:
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Depreciation};
+              break;
+              case $scope.ACCOUNT_TYPES.Liability:
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Payment};
+              break;
+              case $scope.ACCOUNT_TYPES.Investment:
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Investment};
+                $scope.historicalInvestmentData = {
+                  labels: response.historicalStatistics.labels,
+                  datasets: [
+                    {
+                      label: "Withdrawls",
+                      fillColor: "rgba(151,187,205,0.2)",
+                      strokeColor: "rgba(151,187,205,1)",
+                      pointColor: "rgba(151,187,205,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.withdrawals.data
+                    },
+                    {
+                      label: "Contributions",
+                      fillColor: "rgba(220,220,220,0.2)",
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(220,220,220,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.contributions.data
+                    },
+                    {
+                      label: "Interest",
+                      fillColor: "rgba(123,122,212,0.2)",
+                      strokeColor: "rgba(123,122,212,1)",
+                      pointColor: "rgba(123,122,212,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.interest.data
+                    },
+                    {
+                      label: "Balance",
+                      fillColor: "rgba(43,222,31,0.2)",
+                      strokeColor: "rgba(43,222,31,1)",
+                      pointColor: "rgba(43,222,31,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.balance.data
+                    },
+                  ]
+                }
+              break;
             }
           }
         console.log(response);
       });
     } else {
       console.log("no id")
-      $scope.account = {type: 1}
+      $scope.account = {type: $scope.ACCOUNT_TYPES.General}
     }
   }
 

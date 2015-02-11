@@ -80,6 +80,15 @@
           <li ng-repeat="account in accounts | orderBy:'name'" ng-click = "changePath('account/' + account.id)">
             <h5>{{account.name}} <span class = "heading-small">{{ACCOUNT_TYPES[account.type]}}</span></h5>
             <div class="row" ng-switch="account.type">
+              <div ng-switch-when="1">
+                <div class = "one-half column">
+                  <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
+                </div>
+                <div class = "one-half column">
+                  <p><b>Income for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyIncome | currency:user.meta.currency}}
+                  <br><b>Spend for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlySpend | currency:user.meta.currency}}
+                </div>
+              </div>
               <div ng-switch-when="4">
                 <div class = "one-half column">
                   <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
