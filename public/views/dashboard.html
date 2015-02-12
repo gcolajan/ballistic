@@ -6,55 +6,7 @@
         <h3>Net Worth: {{statistics.netWorth | currency:user.meta.currency}} <span class = "heading-small">+$500 (12%)</span></h3>
         <span graph="testData" type = "line"></span>
         <h3>Income &amp; Spend</h3>
-        <canvas id="income"></canvas>
-        <script>
-        var data = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-        {
-            label: "Income",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
-            data: [30, 34, 38, 39, 40, 50, 60]
-        },
-        {
-            label: "Spend",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
-            data: [12, 33, 38, 45, 60, 70, 90]
-        },
-        {
-            label: "Profit",
-            fillColor: "rgba(84,111,231,0.2)",
-            strokeColor: "rgba(84,111,231,1)",
-            pointColor: "rgba(84,111,231,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(84,111,231,1)",
-            data: [2, 4, 5, 3, 3, 5, 6]
-        }
-    ]
-};
-          // Get context with jQuery - using jQuery's .get() method.
-          var ctx = $("#income").get(0).getContext("2d");
-          // This will get the first returned node in the jQuery collection.
-          ctx.canvas.width = 461;
-          ctx.canvas.height = 240;
-          var myNewChart = new Chart(ctx);
-
-          var myLineChart = new Chart(ctx).Line(data);
-
-          $('#income-legend').html(myLineChart.generateLegend());
-        </script>
-        <div id = "income-legend" class = "legend"></div>
+        <span graph="incomeSpendData" type = "line"></span>
       </div>
       <div class="six columns">
         <h3>Goal Progress</h3>

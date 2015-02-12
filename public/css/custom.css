@@ -97,6 +97,10 @@ ul.account-list li p {
   padding-bottom: 1rem;
 }
 
+ul.account-list li h5 {
+  margin-bottom: 0.2rem;
+}
+
 p.small-gray {
   color: #888;
   font-size: 1.2rem;

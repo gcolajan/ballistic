@@ -22,7 +22,16 @@ module.exports.getAccountInfo = function (account, transactions, callback){
       });
     });
   }); 
-}  
+}
+
+module.exports.generateAccountStatistics = function(account, callback){
+  generateInvestmentStatistics(account, null, function(accountStatistics){
+    generateYearlyInvestmentStatistics(account, function(accountYearlyStatistics){
+      var statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
+      callback(statistics);
+    });
+  });
+}
 
 function generateInvestmentStatistics(account, date, callback){
   var statistics = {};

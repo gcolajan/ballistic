@@ -69,6 +69,35 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
     function (response, err) {
       $scope.accounts = response.accounts;
       $scope.statistics = response.statistics;
+      $scope.incomeSpendData = {
+        labels: response.statistics.historicalIncomeSpend.labels,
+        datasets: [
+          {
+            label: "Income",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalIncomeSpend.income.data
+          },
+          {
+            label: "Spend",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalIncomeSpend.spend.data
+          },
+          {
+            label: "Balance",
+            fillColor: "rgba(43,222,31,0.2)",
+            strokeColor: "rgba(43,222,31,1)",
+            pointColor: "rgba(43,222,31,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalIncomeSpend.balance.data
+          },
+        ]
+      }
       console.log(response);
     }
   );

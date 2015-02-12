@@ -24,8 +24,23 @@ module.exports.getAccountInfo = function (account, transactions, callback){
         });
       });
     });
-  }); 
-}  
+  });
+}
+
+module.exports.generateAccountStatistics = function(account, callback){
+  var today = new Date();
+  var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1, 0, 0, 0, 0);
+
+  generateGeneralStatistics(account, null, function(accountStatistics){
+    generateYearlyGeneralStatistics(account, function(accountYearlyStatistics){
+      generateHistoricalGeneralStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
+        var statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
+        statistics.historicalSatistics = historicalSatistics;
+        callback(statistics);
+      });
+    });
+  });
+}
 
 function generateGeneralStatistics(account, date, callback){
   var statistics = {};

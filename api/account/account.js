@@ -69,15 +69,29 @@ function generateUserStatistics(accounts, statistics, index, callback){
   if (index < accounts.length) {
     accounts[index] = accounts[index].values;
     switch(accounts[index].type){
+      case ACCOUNT.General:
+        generalFunctions.generateAccountStatistics(accounts[index], function(accountStatistics){
+          accounts[index].statistics = accountStatistics;
+          statistics.netWorth += accounts[index].statistics.balance;
+          if(!statistics.historicalIncomeSpend){
+            statistics.historicalIncomeSpend = accounts[index].statistics.historicalSatistics;
+          } else {
+            for (var i = statistics.historicalIncomeSpend.income.data.length - 1; i >= 0; i--) {
+              statistics.historicalIncomeSpend.income.data[i] += accounts[index].statistics.historicalSatistics.income.data[i];
+              statistics.historicalIncomeSpend.spend.data[i] += accounts[index].statistics.historicalSatistics.spend.data[i];
+              statistics.historicalIncomeSpend.balance.data[i] += accounts[index].statistics.historicalSatistics.balance.data[i];
+            };
+          }
+          generateUserStatistics(accounts, statistics, ++index, callback);
+        });
+      break;
       case ACCOUNT.Investment:
-        generateInvestmentStatistics(accounts[index], null, function(accountStatistics){
-          generateYearlyInvestmentStatistics(accounts[index], function(accountYearlyStatistics){
-            accounts[index].statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
-            statistics.netWorth += accounts[index].statistics.balance;
-            statistics.totalInvestments += accounts[index].statistics.balance;
-            statistics.estimatedYearlyGrowth += accounts[index].statistics.estimatedYearlyGrowth;
-            generateUserStatistics(accounts, statistics, ++index, callback);
-          });
+        investmentFunctions.generateAccountStatistics(accounts[index], function(accountStatistics){
+          accounts[index].statistics = accountStatistics;
+          statistics.netWorth += accounts[index].statistics.balance;
+          statistics.totalInvestments += accounts[index].statistics.balance;
+          statistics.estimatedYearlyGrowth += accounts[index].statistics.estimatedYearlyGrowth;
+          generateUserStatistics(accounts, statistics, ++index, callback);
         });
       break;
       default:
@@ -107,19 +121,20 @@ exports.statistics = function(req, res) {
   } else {
     req.user.getAccounts().then(function(accounts) {
       generateUserStatistics(accounts, null, 0, function(accounts, statistics){
-      for (var i = 0; i < accounts.length; ++i) {
-        if(accounts[i].type == ACCOUNT.Investment){
-          accounts[i].statistics.percentOfInvestments = accounts[i].statistics.balance / statistics.totalInvestments * 100;
-          statistics.investmentInterest += accounts[i].statistics.percentOfInvestments * accounts[i].interest / 100;
+        for (var i = 0; i < accounts.length; ++i) {
+          if(accounts[i].type == ACCOUNT.Investment){
+            accounts[i].statistics.percentOfInvestments = accounts[i].statistics.balance / statistics.totalInvestments * 100;
+            statistics.investmentInterest += accounts[i].statistics.percentOfInvestments * accounts[i].interest / 100;
+          }
         }
-      }
-      statistics.investmentGoal = req.usermeta.goal / (statistics.investmentInterest / 100);
-      statistics.goalPercentage = statistics.totalInvestments / statistics.investmentGoal * 100;
-      statistics.yearlyInvestmentIncome = statistics.totalInvestments * (statistics.investmentInterest / 100);
-      statistics.estimatedMonthsRemaining = estimateMonthsRemaining(statistics.totalInvestments, statistics.estimatedYearlyGrowth / 12, statistics.investmentGoal, statistics.investmentInterest / 100, 0);
-      statistics.estimatedYearsRemaining = statistics.estimatedMonthsRemaining / 12;
-      statistics.goalAge = req.usermeta.age + statistics.estimatedYearsRemaining;
-      res.send({success: true, accounts: accounts, statistics: statistics});
+        statistics.investmentGoal = req.usermeta.goal / (statistics.investmentInterest / 100);
+        statistics.goalPercentage = statistics.totalInvestments / statistics.investmentGoal * 100;
+        statistics.yearlyInvestmentIncome = statistics.totalInvestments * (statistics.investmentInterest / 100);
+        statistics.estimatedMonthsRemaining = estimateMonthsRemaining(statistics.totalInvestments, statistics.estimatedYearlyGrowth / 12, statistics.investmentGoal, statistics.investmentInterest / 100, 0);
+        statistics.estimatedYearsRemaining = statistics.estimatedMonthsRemaining / 12;
+        statistics.goalAge = req.usermeta.age + statistics.estimatedYearsRemaining;
+        res.send({success: true, accounts: accounts, statistics: statistics});
+      });
     });
   }
 }
