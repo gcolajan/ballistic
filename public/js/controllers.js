@@ -98,55 +98,47 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
           },
         ]
       }
-      console.log(response);
-    }
-  );
 
-  $scope.testData = {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [
-        {
-            label: "Net Worth",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
-            data: [30, 34, 38, null, null, null, null]
-        },
-        {
-            label: "Net Worth (Projected)",
+      $scope.investmentData = {
+        labels: response.statistics.historicalInvestments.labels,
+        datasets: [
+          {
+            label: "Withdrawls",
             fillColor: "rgba(151,187,205,0.2)",
             strokeColor: "rgba(151,187,205,1)",
             pointColor: "rgba(151,187,205,1)",
             pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
-            data: [null, null, 38, 45, 60, 70, 90]
-        },
-        {
-            label: "Assets",
+            data: response.statistics.historicalInvestments.withdrawals.data
+          },
+          {
+            label: "Contributions",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalInvestments.contributions.data
+          },
+          {
+            label: "Interest",
             fillColor: "rgba(123,122,212,0.2)",
             strokeColor: "rgba(123,122,212,1)",
             pointColor: "rgba(123,122,212,1)",
             pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(123,122,212,1)",
-            data: [30, 34, 38, 39, 100, 150, 160]
-        },
-        {
-            label: "Liabilities",
+            data: response.statistics.historicalInvestments.interest.data
+          },
+          {
+            label: "Balance",
             fillColor: "rgba(43,222,31,0.2)",
             strokeColor: "rgba(43,222,31,1)",
             pointColor: "rgba(43,222,31,1)",
             pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(43,222,31,1)",
-            data: [210, 110, 90, 70, 22, 11, 1]
-        },
-    ]
-};
+            data: response.statistics.historicalInvestments.balance.data
+          },
+        ]
+      }
+      console.log(response);
+    }
+  );
 }]);
 
 angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', 'API', 'Session', 'AUTH_EVENTS', function ($scope, $location, API, Session, AUTH_EVENTS) {

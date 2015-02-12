@@ -91,6 +91,16 @@ function generateUserStatistics(accounts, statistics, index, callback){
           statistics.netWorth += accounts[index].statistics.balance;
           statistics.totalInvestments += accounts[index].statistics.balance;
           statistics.estimatedYearlyGrowth += accounts[index].statistics.estimatedYearlyGrowth;
+          if(!statistics.historicalInvestments){
+            statistics.historicalInvestments = accounts[index].statistics.historicalSatistics;
+          } else {
+            for (var i = statistics.historicalInvestments.contributions.data.length - 1; i >= 0; i--) {
+              statistics.historicalInvestments.contributions.data[i] += accounts[index].statistics.historicalSatistics.contributions.data[i];
+              statistics.historicalInvestments.withdrawals.data[i] += accounts[index].statistics.historicalSatistics.withdrawals.data[i];
+              statistics.historicalInvestments.interest.data[i] += accounts[index].statistics.historicalSatistics.interest.data[i];
+              statistics.historicalInvestments.balance.data[i] += accounts[index].statistics.historicalSatistics.balance.data[i];
+            };
+          }
           generateUserStatistics(accounts, statistics, ++index, callback);
         });
       break;

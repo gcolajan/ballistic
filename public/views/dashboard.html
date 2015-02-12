@@ -3,12 +3,13 @@
   <div class = "dashboard">
     <div class="row">
       <div class="six columns">
-        <h3>Net Worth: {{statistics.netWorth | currency:user.meta.currency}} <span class = "heading-small">+$500 (12%)</span></h3>
-        <span graph="testData" type = "line"></span>
-        <h3>Income &amp; Spend</h3>
+        <h3>Investment Accounts</h3>
+        <span graph="investmentData" type = "line"></span>
+        <h3>General Accounts</h3>
         <span graph="incomeSpendData" type = "line"></span>
       </div>
       <div class="six columns">
+        <h3>Net Worth: {{statistics.netWorth | currency:user.meta.currency}}</h3>
         <h3>Goal Progress</h3>
         <p>Your goal of {{user.meta.goal | currency:user.meta.currency}} in passive income requires an investment of approximately {{statistics.investmentGoal | currency:user.meta.currency}}. Here's how you're doing so far:</p>
         <div class = "row">

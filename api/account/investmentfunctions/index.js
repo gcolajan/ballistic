@@ -25,10 +25,16 @@ module.exports.getAccountInfo = function (account, transactions, callback){
 }
 
 module.exports.generateAccountStatistics = function(account, callback){
+  var today = new Date();
+  var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1, 0, 0, 0, 0);
+  
   generateInvestmentStatistics(account, null, function(accountStatistics){
     generateYearlyInvestmentStatistics(account, function(accountYearlyStatistics){
-      var statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
-      callback(statistics);
+      generateHistoricalInvestmentStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
+        var statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
+        statistics.historicalSatistics = historicalSatistics;
+        callback(statistics);
+      });
     });
   });
 }
