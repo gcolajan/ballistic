@@ -6,31 +6,33 @@ exports.create = function(req, res) {
   if(!req.body.accountID || !req.body.amount || !req.body.date || !req.body.type){
     res.send({success: false, error: 'fields left empty'});
   } else {
-    models.Transaction.create({ amount: req.body.amount, date: req.body.date, type: req.body.type, description: req.body.description}).then(function(transaction) {
-      models.Account.find(req.body.accountID).then(function(account){
-        transaction.setAccount(account);
+    models.Account.find({where: {id: req.body.accountID, UserId: req.user.id}}).then(function(account){
+      if(account){
+        models.Transaction.create({ amount: req.body.amount, date: req.body.date, type: req.body.type, description: req.body.description}).then(function(transaction) {
+          transaction.setAccount(account);
 
-        if(req.body.category) {
-          models.Category.find({where: {AccountId: account.id, name: {ilike: req.body.category}}}).then(function(category){
-            if(!category){
-              models.Category.create({name: req.body.category}).then(function(category){
-                category.setAccount(account);
+          if(req.body.category) {
+            models.Category.find({where: {AccountId: account.id, name: {ilike: req.body.category}}}).then(function(category){
+              if(!category){
+                models.Category.create({name: req.body.category}).then(function(category){
+                  category.setAccount(account);
+                  transaction.setCategory(category);
+                  debug(transaction);
+                  debug(category);
+                  res.send({success: true, transaction: transaction});
+                });
+              } else {
                 transaction.setCategory(category);
                 debug(transaction);
-                debug(category);
                 res.send({success: true, transaction: transaction});
-              });
-            } else {
-              transaction.setCategory(category);
-              debug(transaction);
-              res.send({success: true, transaction: transaction});
-            }
-          });
-        } else {
-          debug(transaction);
-          res.send({success: true, transaction: transaction});
-        }
-      });
+              }
+            });
+          } else {
+            debug(transaction);
+            res.send({success: true, transaction: transaction});
+          }
+        });
+      }
     });
   }
 }

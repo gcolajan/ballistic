@@ -214,7 +214,36 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                 }
               break;
               case $scope.ACCOUNT_TYPES.Asset:
-                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Depreciation};
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Appreciation};
+                $scope.historicalInvestmentData = {
+                  labels: response.historicalStatistics.labels,
+                  datasets: [
+                    {
+                      label: "Purchases &amp; Appreciation",
+                      fillColor: "rgba(151,187,205,0.2)",
+                      strokeColor: "rgba(151,187,205,1)",
+                      pointColor: "rgba(151,187,205,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.purchasesAndAppreciation.data
+                    },
+                    {
+                      label: "Sales &amp; Depreciation",
+                      fillColor: "rgba(220,220,220,0.2)",
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(220,220,220,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.salesAndDepreciation.data
+                    },
+                    {
+                      label: "Balance",
+                      fillColor: "rgba(43,222,31,0.2)",
+                      strokeColor: "rgba(43,222,31,1)",
+                      pointColor: "rgba(43,222,31,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.balance.data
+                    },
+                  ]
+                }
               break;
               case $scope.ACCOUNT_TYPES.Liability:
                 $scope.transaction = {type: $scope.TRANSACTION_TYPES.Payment};

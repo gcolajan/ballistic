@@ -64,7 +64,8 @@ function generateUserStatistics(accounts, statistics, index, callback){
   if(statistics === null){
     statistics = {
       netWorth: 0, 
-      totalInvestments: 0, 
+      totalAssets: 0,
+      totalInvestments: 0,
       investmentInterest: 0, 
       yearlyInvestmentIncome: 0,
       goalPercentage: 0,
@@ -88,6 +89,23 @@ function generateUserStatistics(accounts, statistics, index, callback){
               statistics.historicalIncomeSpend.balance.data[i] += accounts[index].statistics.historicalSatistics.balance.data[i];
             };
           }
+          generateUserStatistics(accounts, statistics, ++index, callback);
+        });
+      break;
+      case ACCOUNT.Asset:
+        assetFunctions.generateAccountStatistics(accounts[index], function(accountStatistics){
+          accounts[index].statistics = accountStatistics;
+          statistics.totalAssets += accounts[index].statistics.balance;
+          statistics.netWorth += accounts[index].statistics.balance;
+          // if(!statistics.historicalIncomeSpend){
+          //   statistics.historicalIncomeSpend = accounts[index].statistics.historicalSatistics;
+          // } else {
+          //   for (var i = statistics.historicalIncomeSpend.income.data.length - 1; i >= 0; i--) {
+          //     statistics.historicalIncomeSpend.income.data[i] += accounts[index].statistics.historicalSatistics.income.data[i];
+          //     statistics.historicalIncomeSpend.spend.data[i] += accounts[index].statistics.historicalSatistics.spend.data[i];
+          //     statistics.historicalIncomeSpend.balance.data[i] += accounts[index].statistics.historicalSatistics.balance.data[i];
+          //   };
+          // }
           generateUserStatistics(accounts, statistics, ++index, callback);
         });
       break;
@@ -141,6 +159,8 @@ exports.statistics = function(req, res) {
           if(accounts[i].type == ACCOUNT.Investment){
             accounts[i].statistics.percentOfInvestments = accounts[i].statistics.balance / statistics.totalInvestments * 100;
             statistics.investmentInterest += accounts[i].statistics.percentOfInvestments * accounts[i].interest / 100;
+          } else if(accounts[i].type == ACCOUNT.Asset){
+            accounts[i].statistics.percentOfAssets = accounts[i].statistics.balance / statistics.totalAssets * 100;
           }
         }
         statistics.investmentGoal = req.usermeta.goal / (statistics.investmentInterest / 100);

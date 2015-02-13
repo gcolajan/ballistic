@@ -11,23 +11,19 @@
     <div class = "row">
       <div class = "one-half column">
         <h6>Purchases for {{today.getFullYear()}}:</h6>
-        <h5>{{statistics.yearlyContributions | currency:user.meta.currency}}</h5>
+        <h5>{{statistics.yearlyPurchases | currency:user.meta.currency}}</h5>
         <h6>Sales for {{today.getFullYear()}}:</h6>
-        <h5>{{statistics.yearlyContributions | currency:user.meta.currency}}</h5>
+        <h5>{{statistics.yearlySales | currency:user.meta.currency}}</h5>
         <h6>Appreciation for {{today.getFullYear()}}:</h6>
-        <h5>{{statistics.yearlyWithdrawals | currency:user.meta.currency}}</h5>
+        <h5>{{statistics.yearlyAppreciation | currency:user.meta.currency}}</h5>
         <h6>Depreciation for {{today.getFullYear()}}:</h6>
-        <h5>{{statistics.yearlyGrowth | currency:user.meta.currency}}</h5> 
+        <h5>{{statistics.yearlyDepreciation | currency:user.meta.currency}}</h5>
       </div>
       <div class = "one-half column">
         <h6>Worth of Assets:</h6> 
         <h4>{{statistics.balance | currency:user.meta.currency}}</h4>
-        <h6>Estimated Yearly Appreciation:</h6> 
-        <h4>{{statistics.balance * account.interest / 100 | currency:user.meta.currency}}</h4>
-        <h6>Estimated Yearly Depreciation:</h6> 
-        <h4>{{statistics.balance * account.interest / 100 | currency:user.meta.currency}}</h4>
-        <h6>Estimated Yearly Net:</h6> 
-        <h4>{{statistics.balance * account.interest / 100 | currency:user.meta.currency}}</h4>
+        <h6>Net for {{today.getFullYear()}}:</h6>
+        <h4>{{statistics.yearlyNet | currency:user.meta.currency}}</h4>
       </div>
     </div>
     <h3>Add Transaction</h3>
@@ -45,15 +41,16 @@
       <div class="row">
         <div class = "one-half column">
           <label for="type">Type</label>
-          <select class="u-full-width" id="type"  ng-model="transaction.type">
-            <option value="1">Investment</option>
-            <option value="2">Interest</option>
-            <option value="3">Withdrawal</option>
+          <select class="u-full-width" id="type" ng-model="transaction.type">
+            <option value="7">Appreciation</option>
+            <option value="8">Depreciation</option>
+            <option value="6">Purchase</option>
+            <option value="9">Sale</option>
           </select>
         </div>
         <div class = "one-half column">
-          <label for="category">Fund Name</label>
-          <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.category">
+          <label for="category">Asset Name</label>
+          <input class="u-full-width" type="text" placeholder="House, car, etc" id="category" ng-model="transaction.category">
         </div>
         <label for="description">Description (optional)</label>
         <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
@@ -65,13 +62,13 @@
       <li ng-repeat="transaction in transactions | orderBy:'date':true" ng-click = "changePath('account/' + account.id + '/transactions/' + transaction.id)">
         <div class="row">
           <div class = "one-half column">
-            <p><b>Amount:</b> {{transaction.amount}}
+            <p><b>Amount:</b> {{transaction.amount | currency:user.meta.currency}}
             <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
             <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span></p>
           </div>
           <div class = "one-half column">
             <p><b>Date:</b> {{transaction.date | date:'longDate'}}
-            <br><b>Category:</b> <span ng-show = "transaction.Category">{{transaction.Category.name}}</span><span ng-hide = "transaction.Category">None</span></p>
+            <br><b>Asset:</b> <span ng-show = "transaction.Category">{{transaction.Category.name}}</span><span ng-hide = "transaction.Category">None</span></p>
           </div>
         </div>
       </li>

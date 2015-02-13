@@ -35,11 +35,21 @@
             <div class="row" ng-switch="account.type">
               <div ng-switch-when="1">
                 <div class = "one-half column">
-                  <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
+                  <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}</p>
                 </div>
                 <div class = "one-half column">
                   <p><b>Income for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyIncome | currency:user.meta.currency}}
                   <br><b>Spend for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlySpend | currency:user.meta.currency}}
+                </div>
+              </div>
+              <div ng-switch-when="2">
+                <div class = "one-half column">
+                  <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
+                  <br><b>Share of Assets:</b><br> {{account.statistics.percentOfAssets | number:2}} %</p>
+                </div>
+                <div class = "one-half column">
+                  <p><b>Purchases &amp; Appreciation for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyPurchases + account.statistics.yearlyAppreciation | currency:user.meta.currency}}
+                  <br><b>Sale &amp; Depreciation for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlySales + account.statistics.yearlyDepreciation | currency:user.meta.currency}}
                 </div>
               </div>
               <div ng-switch-when="4">

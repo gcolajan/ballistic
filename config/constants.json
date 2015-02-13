@@ -14,8 +14,9 @@
     "Purchase": 6,
     "Appreciation": 7,
     "Depreciation": 8,
-    "Debt": 9,
-    "PrincipalPayment": 10,
-    "InterestPayment": 11
+    "Sale": 9,
+    "Debt": 10,
+    "PrincipalPayment": 11,
+    "InterestPayment": 12
   }
 }

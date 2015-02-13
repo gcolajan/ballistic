@@ -36,9 +36,10 @@ var app = angular.module('ballistic', [
   6: 'Purchase',
   7: 'Appreciation',
   8: 'Depreciation',
-  9: 'Debt',
-  10: 'PrincipalPayment',
-  11: 'InterestPayment',
+  9: 'Sale',
+  10: 'Debt',
+  11: 'PrincipalPayment',
+  12: 'InterestPayment',
   'Investment': 1,
   'Interest': 2,
   'Withdrawal': 3,
@@ -47,9 +48,10 @@ var app = angular.module('ballistic', [
   'Purchase': 6,
   'Appreciation': 7,
   'Depreciation': 8,
-  'Debt': 9,
-  'PrincipalPayment': 10,
-  'InterestPayment': 11
+  'Sale': 9,
+  'Debt': 10,
+  'PrincipalPayment': 11,
+  'InterestPayment': 12
 }).constant('SOLID_COLORS', {
   0: '#1abc9c',
   1: '#3498db',
@@ -66,13 +68,12 @@ var app = angular.module('ballistic', [
     });
 
     function renderGraph(data, elementName, type){
-      // Get context with jQuery - using jQuery's .get() method.
       var ctx = $('#' + elementName).get(0).getContext("2d");
       ctx.canvas.width = 461;
       ctx.canvas.height = 240;
-      // This will get the first returned node in the jQuery collection.
       Chart.defaults.global.showTooltips = false;
       var myNewChart = new Chart(ctx);
+      
       switch(type){
         case 'line':
           var chart = new Chart(ctx).Line(data);
