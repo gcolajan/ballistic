@@ -34,18 +34,22 @@ var app = angular.module('ballistic', [
   4: 'Spend',
   5: 'Income',
   6: 'Purchase',
-  7: 'Depreciation',
-  8: 'Debt',
-  9: 'Payment',
+  7: 'Appreciation',
+  8: 'Depreciation',
+  9: 'Debt',
+  10: 'PrincipalPayment',
+  11: 'InterestPayment',
   'Investment': 1,
   'Interest': 2,
   'Withdrawal': 3,
   'Spend': 4,
   'Income': 5,
   'Purchase': 6,
-  'Depreciation': 7,
-  'Debt': 8,
-  'Payment': 9
+  'Appreciation': 7
+  'Depreciation': 8,
+  'Debt': 9,
+  'PrincipalPayment': 10,
+  'InterestPayment': 11
 }).constant('SOLID_COLORS', {
   0: '#1abc9c',
   1: '#3498db',

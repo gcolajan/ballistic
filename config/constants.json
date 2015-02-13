@@ -7,13 +7,15 @@
   },
   "TRANSACTION": {
     "Investment": 1,
-    "Interest": 2, 
-    "Withdrawal": 3, 
-    "Spend": 4, 
-    "Income": 5, 
-    "Purchase": 6, 
-    "Depreciation": 7,
-    "Debt": 8, 
-    "Payment": 9
+    "Interest": 2,
+    "Withdrawal": 3,
+    "Spend": 4,
+    "Income": 5,
+    "Purchase": 6,
+    "Appreciation": 7,
+    "Depreciation": 8,
+    "Debt": 9,
+    "PrincipalPayment": 10,
+    "InterestPayment": 11
   }
 }
