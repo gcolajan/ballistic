@@ -23,7 +23,7 @@ canvas {
   height: auto !important;
 }
 
-h6, h4 {
+h4, h5, h6 {
   margin-bottom: 0.2rem;
 }
 
@@ -74,7 +74,7 @@ ul.transaction-list li:hover {
 }
 
 ul.transaction-list li p {
-  padding-bottom: 1rem;
+  padding-bottom: 0rem;
 }
 
 ul.account-list {
@@ -94,11 +94,7 @@ ul.account-list li:hover {
 }
 
 ul.account-list li p {
-  padding-bottom: 1rem;
-}
-
-ul.account-list li h5 {
-  margin-bottom: 0.2rem;
+  padding-bottom: 0rem;
 }
 
 p.small-gray {

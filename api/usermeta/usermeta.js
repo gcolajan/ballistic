@@ -12,6 +12,5 @@ exports.update = function(req, res) {
         res.send({success: true, usermeta: usermeta});
       });
     });
-    
   }
 }

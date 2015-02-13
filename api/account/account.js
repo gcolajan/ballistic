@@ -1,6 +1,7 @@
 var models  = require('../../models');
 var investmentFunctions  = require('./investmentfunctions');
 var generalFunctions  = require('./generalfunctions');
+var assetFunctions  = require('./assetfunctions');
 var debug = require('debug')('ballistic');
 var constants = require(__dirname + '/../../config/constants.json');
 var ACCOUNT = constants.ACCOUNT;
@@ -35,7 +36,7 @@ exports.get = function(req, res) {
   if(!req.user){
     res.send({success: false, error: 'must be logged in'});
   } else {
-    models.Account.find(req.params.id).then(function(account) {
+    models.Account.find({where: {id: req.params.id, UserId: req.user.id}}).then(function(account) {
       account.getTransactions({ include: [ models.Category ], limit: 5, order: 'date DESC' }).then(function(transactions) {
         switch(account.type){
           case ACCOUNT.Investment:
@@ -45,6 +46,11 @@ exports.get = function(req, res) {
           break;
           case ACCOUNT.General:
             generalFunctions.getAccountInfo(account, transactions, function(account, transactions, statistics, historicalSatistics){
+              res.send({success: true, account: account, transactions: transactions, statistics: statistics, historicalStatistics: historicalSatistics});
+            });
+          break;
+          case ACCOUNT.Asset:
+            assetFunctions.getAccountInfo(account, transactions, function(account, transactions, statistics, historicalSatistics){
               res.send({success: true, account: account, transactions: transactions, statistics: statistics, historicalStatistics: historicalSatistics});
             });
           break;
@@ -117,7 +123,7 @@ exports.getTransactions = function(req, res) {
   if(!req.user){
     res.send({success: false, error: 'must be logged in'});
   } else {
-    models.Account.find(req.params.id).then(function(account) {
+    models.Account.find({where: {id: req.params.id, UserId: req.user.id}}).then(function(account) {
       account.getTransactions({ include: [ models.Category ], order: 'date DESC' }).then(function(transactions) {
         res.send({success: true, account: account, transactions: transactions});
       });

@@ -45,7 +45,7 @@ var app = angular.module('ballistic', [
   'Spend': 4,
   'Income': 5,
   'Purchase': 6,
-  'Appreciation': 7
+  'Appreciation': 7,
   'Depreciation': 8,
   'Debt': 9,
   'PrincipalPayment': 10,

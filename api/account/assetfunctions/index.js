@@ -9,11 +9,11 @@ module.exports.getAccountInfo = function (account, transactions, callback){
   var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1, 0, 0, 0, 0);
 
   account.getCategories().then(function(categories){
-    generateInvestmentStatistics(account, null, function(investmentStatistics){
-      generateYearlyInvestmentStatistics(account, function(yearlyInvestmentStatistics){
-        generateInvestmentDistributionStatistics(categories, investmentStatistics, null, function(distributionStatistics){
+    generateAssetStatistics(account, null, function(investmentStatistics){
+      generateYearlyAssetStatistics(account, function(yearlyInvestmentStatistics){
+        generateAssetDistributionStatistics(categories, investmentStatistics, null, function(distributionStatistics){
           //get historical statistics
-          generateHistoricalInvestmentStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
+          generateHistoricalAssetStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
             statistics = mergeObjects(investmentStatistics, yearlyInvestmentStatistics);
             statistics.distributionStatistics = distributionStatistics;
             callback(account, transactions, statistics, historicalSatistics);
@@ -28,9 +28,9 @@ module.exports.generateAccountStatistics = function(account, callback){
   var today = new Date();
   var sixMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 5, 1, 0, 0, 0, 0);
   
-  generateInvestmentStatistics(account, null, function(accountStatistics){
-    generateYearlyInvestmentStatistics(account, function(accountYearlyStatistics){
-      generateHistoricalInvestmentStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
+  generateAssetStatistics(account, null, function(accountStatistics){
+    generateYearlyAssetStatistics(account, function(accountYearlyStatistics){
+      generateHistoricalAssetStatistics(account, null, sixMonthsAgo, function(historicalSatistics){
         var statistics = mergeObjects(accountStatistics, accountYearlyStatistics);
         statistics.historicalSatistics = historicalSatistics;
         callback(statistics);
@@ -39,7 +39,7 @@ module.exports.generateAccountStatistics = function(account, callback){
   });
 }
 
-function generateInvestmentStatistics(account, date, callback){
+function generateAssetStatistics(account, date, callback){
   var statistics = {};
   if(date === null){
     date = new Date();
@@ -58,7 +58,7 @@ function generateInvestmentStatistics(account, date, callback){
   });
 }
 
-function generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback){
+function generateAssetDistributionStatistics(categories, investmentStatistics, statistics, callback){
   if(statistics == null) {
     statistics = {
       count: 0,
@@ -73,7 +73,7 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
         statistics.categories.push({value: sum, label: categories[statistics.count].name, percentage: percentOfInvestments});
       }
       statistics.count++;
-      generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
+      generateAssetDistributionStatistics(categories, investmentStatistics, statistics, callback);
     });
   } else if (statistics.count == categories.length){
     models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Investment}}).then(function(sum){
@@ -82,14 +82,14 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
         statistics.categories.push({value: sum, label: 'None', percentage: percentOfInvestments});
       }
       statistics.count++;
-      generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
+      generateAssetDistributionStatistics(categories, investmentStatistics, statistics, callback);
     });
   } else {
     callback(statistics);
   }
 }
 
-function generateMonthlyInvestmentStatistics(account, date, callback){
+function generateMonthlyAssetStatistics(account, date, callback){
   var statistics = {};
   var nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 0, 0, 0, 0);
 
@@ -106,7 +106,7 @@ function generateMonthlyInvestmentStatistics(account, date, callback){
   });
 }
 
-function generateYearlyInvestmentStatistics(account, callback){
+function generateYearlyAssetStatistics(account, callback){
   var today = new Date();
   var yearStart = new Date(today.getFullYear(), 0, 0, 0, 0, 0, 0);
   var statistics = {};
@@ -125,7 +125,7 @@ function generateYearlyInvestmentStatistics(account, callback){
   });
 }
 
-function generateHistoricalInvestmentStatistics(account, historicalSatistics, date, callback) {
+function generateHistoricalAssetStatistics(account, historicalSatistics, date, callback) {
   var today = new Date();
   var nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 0, 0, 0, 0);
   var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
@@ -135,13 +135,13 @@ function generateHistoricalInvestmentStatistics(account, historicalSatistics, da
   if(historicalSatistics === null){
     historicalSatistics = {contributions: {data: []}, withdrawals: {data: []}, interest: {data: []}, balance: {data: []}, labels: []};
     var lastMonth = new Date(date.getFullYear(), date.getMonth(), 0, 0, 0, 0, 0);
-    generateInvestmentStatistics(account, lastMonth, function(statistics){
+    generateAssetStatistics(account, lastMonth, function(statistics){
       debug(statistics)
       historicalSatistics.startingBalance = statistics.balance;
-      generateHistoricalInvestmentStatistics(account, historicalSatistics, date, callback);
+      generateHistoricalAssetStatistics(account, historicalSatistics, date, callback);
     });
   } else if(date < nextMonth){
-    generateMonthlyInvestmentStatistics(account, date, function(statistics){
+    generateMonthlyAssetStatistics(account, date, function(statistics){
       nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 1, 0, 0, 0, 0);
       debug(nextMonth);
       debug(statistics);
@@ -151,7 +151,7 @@ function generateHistoricalInvestmentStatistics(account, historicalSatistics, da
       historicalSatistics.interest.data.push(statistics.monthlyInterest);
       historicalSatistics.balance.data.push(statistics.net + historicalSatistics.startingBalance);
       historicalSatistics.startingBalance += statistics.net;
-      generateHistoricalInvestmentStatistics(account, historicalSatistics, nextMonth, callback);
+      generateHistoricalAssetStatistics(account, historicalSatistics, nextMonth, callback);
     });
     
   } else {

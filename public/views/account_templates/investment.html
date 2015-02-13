@@ -1,76 +1,75 @@
 <div class="row">
-    <div class="six columns">
-      <h1>{{account.name}}</h1>
-      <h3>Contributions &amp; Growth</h3>
-      <span graph="historicalInvestmentData" type = "line"></span>
-      <h3>Portfolio Distribution</h3>
-      <span graph="distributionData" type = "pie"></span>
-    </div>
-    <div class="six columns">
-      <h3>Account Info</h3>
-      <div class = "row">
-          <div class = "one-half column">
-              <h6>Contributions for {{today.getFullYear()}}:</h6>
-              <h5>{{statistics.yearlyContributions | currency:user.meta.currency}}</h5> 
-              <h6>Withdrawals for {{today.getFullYear()}}:</h6>
-              <h5>{{statistics.yearlyWithdrawals | currency:user.meta.currency}}</h5>
-              <h6>Interest for {{today.getFullYear()}}:</h6>
-              <h5>{{statistics.yearlyGrowth | currency:user.meta.currency}}</h5> 
-          </div>
-          <div class = "one-half column">
-              <h6>Balance:</h6> 
-              <h4>{{statistics.balance | currency:user.meta.currency}}</h4>
-              <h6>Estimated Yearly Interest:</h6> 
-              <h4>{{statistics.balance * account.interest / 100 | currency:user.meta.currency}}</h4>
-          </div>
+  <div class="six columns">
+    <h1>{{account.name}}</h1>
+    <h3>Contributions &amp; Growth</h3>
+    <span graph="historicalInvestmentData" type = "line"></span>
+    <h3>Portfolio Distribution</h3>
+    <span graph="distributionData" type = "pie"></span>
+  </div>
+  <div class="six columns">
+    <h3>Account Info</h3>
+    <div class = "row">
+      <div class = "one-half column">
+        <h6>Contributions for {{today.getFullYear()}}:</h6>
+        <h5>{{statistics.yearlyContributions | currency:user.meta.currency}}</h5> 
+        <h6>Withdrawals for {{today.getFullYear()}}:</h6>
+        <h5>{{statistics.yearlyWithdrawals | currency:user.meta.currency}}</h5>
+        <h6>Interest for {{today.getFullYear()}}:</h6>
+        <h5>{{statistics.yearlyGrowth | currency:user.meta.currency}}</h5> 
       </div>
-      <h3>Add Transaction</h3>
-      <form ng-submit="createTransaction(transaction)">
-        <div class="row">
-          <div class = "one-half column">
-            <label for="amount">Amount</label>
-            <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="transaction.amount">
-          </div>
-          <div class = "one-half column">
-            <label for="date">Date</label>
-            <input class="u-full-width" type="text" placeholder="yyyy-mm-dd" id="date" ng-model="transaction.date">
-          </div>
-        </div>
-        <div class="row">
-          <div class = "one-half column">
-            <label for="type">Type</label>
-            <select class="u-full-width" id="type"  ng-model="transaction.type">
-              <option value="1">Investment</option>
-              <option value="2">Interest</option>
-              <option value="3">Withdrawal</option>
-            </select>
-          </div>
-          <div class = "one-half column">
-            <label for="category">Fund Name</label>
-            <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.category">
-          </div>
-          <label for="description">Description (optional)</label>
-          <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
-          <input class="button-primary" type="submit" value="Add">
-        </div>
-      </form>
-      <h3>Recent Transactions</h3>
-      <ul class = "transaction-list">
-        <li ng-repeat="transaction in transactions | orderBy:'date':true" ng-click = "changePath('account/' + account.id + '/transactions/' + transaction.id)">
-          <div class="row">
-            <div class = "one-half column">
-              <p><b>Amount:</b> {{transaction.amount}}
-              <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
-              <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span></p>
-            </div>
-            <div class = "one-half column">
-              <p><b>Date:</b> {{transaction.date | date:'longDate'}}
-              <br><b>Category:</b> <span ng-show = "transaction.Category">{{transaction.Category.name}}</span><span ng-hide = "transaction.Category">None</span></p>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <a class="button" href = "/account/{{account.id}}/transactions">Review Transactions</a>
+      <div class = "one-half column">
+        <h6>Balance:</h6> 
+        <h4>{{statistics.balance | currency:user.meta.currency}}</h4>
+        <h6>Estimated Yearly Interest:</h6> 
+        <h4>{{statistics.balance * account.interest / 100 | currency:user.meta.currency}}</h4>
+      </div>
     </div>
+    <h3>Add Transaction</h3>
+    <form ng-submit="createTransaction(transaction)">
+      <div class="row">
+        <div class = "one-half column">
+          <label for="amount">Amount</label>
+          <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="transaction.amount">
+        </div>
+        <div class = "one-half column">
+          <label for="date">Date</label>
+          <input class="u-full-width" type="text" placeholder="yyyy-mm-dd" id="date" ng-model="transaction.date">
+        </div>
+      </div>
+      <div class="row">
+        <div class = "one-half column">
+          <label for="type">Type</label>
+          <select class="u-full-width" id="type"  ng-model="transaction.type">
+            <option value="1">Investment</option>
+            <option value="2">Interest</option>
+            <option value="3">Withdrawal</option>
+          </select>
+        </div>
+        <div class = "one-half column">
+          <label for="category">Fund Name</label>
+          <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.category">
+        </div>
+        <label for="description">Description (optional)</label>
+        <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
+        <input class="button-primary" type="submit" value="Add">
+      </div>
+    </form>
+    <h3>Recent Transactions</h3>
+    <ul class = "transaction-list">
+      <li ng-repeat="transaction in transactions | orderBy:'date':true" ng-click = "changePath('account/' + account.id + '/transactions/' + transaction.id)">
+        <div class="row">
+          <div class = "one-half column">
+            <p><b>Amount:</b> {{transaction.amount}}
+            <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
+            <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span></p>
+          </div>
+          <div class = "one-half column">
+            <p><b>Date:</b> {{transaction.date | date:'longDate'}}
+            <br><b>Category:</b> <span ng-show = "transaction.Category">{{transaction.Category.name}}</span><span ng-hide = "transaction.Category">None</span></p>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <a class="button" href = "/account/{{account.id}}/transactions">Review Transactions</a>
   </div>
 </div>

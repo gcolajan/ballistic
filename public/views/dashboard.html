@@ -30,7 +30,7 @@
         <p class = "small-gray">These estimates are made with the interest rates set on your investments. They also assume that you maintain your current distribution of funds.
         <h3>Accounts</h3>
         <ul class = "account-list">
-          <li ng-repeat="account in accounts | orderBy:'name'" ng-click = "changePath('account/' + account.id)">
+          <li ng-repeat="account in accounts | orderBy:['type', 'name']" ng-click = "changePath('account/' + account.id)">
             <h5>{{account.name}} <span class = "heading-small">{{ACCOUNT_TYPES[account.type]}}</span></h5>
             <div class="row" ng-switch="account.type">
               <div ng-switch-when="1">
