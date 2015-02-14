@@ -125,3 +125,7 @@ p.small-gray {
   color: #888;
   font-size: 1.2rem;
 }
+
+.money-align {
+  text-align: right;
+}
