@@ -84,7 +84,7 @@ function generateAssetDistributionStatistics(categories, assetStatistics, statis
         generateAssetDistributionStatistics(categories, assetStatistics, statistics, callback);
       });
     });
-  } else if (statistics.count == categories.length){
+  } else if (statistics.count == categories.length && categories.length > 0){
     models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Purchase, TRANSACTION.Appreciation], AccountId: categories[statistics.count - 1].AccountId}}).then(function(categoryValue){
       models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Sale, TRANSACTION.Depreciation], AccountId: categories[statistics.count - 1].AccountId}}).then(function(categoryValueLost){
         categoryValue = categoryValue || 0;

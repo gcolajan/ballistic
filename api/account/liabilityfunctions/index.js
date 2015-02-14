@@ -81,7 +81,7 @@ function generateLiabilityDistributionStatistics(categories, liabilityStatistics
         generateLiabilityDistributionStatistics(categories, liabilityStatistics, statistics, callback);
       });
     });
-  } else if (statistics.count == categories.length){
+  } else if (statistics.count == categories.length && categories.length > 0){
     models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Debt, TRANSACTION.Interest], AccountId: categories[statistics.count - 1].AccountId}}).then(function(categoryValue){
       models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Payment, AccountId: categories[statistics.count -1].AccountId}}).then(function(categoryValuePaid){
         categoryValue = categoryValue || 0;

@@ -78,7 +78,7 @@ function generateGeneralDistributionStatistics(categories, generalStatistics, da
       statistics.count++;
       generateGeneralDistributionStatistics(categories, generalStatistics, date, statistics, callback);
     });
-  } else if (statistics.count == categories.length){
+  } else if (statistics.count == categories.length && categories.length > 0){
     models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Spend, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}, AccountId: categories[statistics.count - 1].AccountId}}).then(function(sum){
       var percentOfSpend = (sum / generalStatistics.monthlySpend) * 100;
       if(percentOfSpend > 0) {

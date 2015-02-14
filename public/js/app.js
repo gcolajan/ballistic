@@ -29,7 +29,7 @@ var app = angular.module('ballistic', [
   'Investment': 4
 }).constant('TRANSACTION_TYPES', {
   1: 'Investment',
-  2: 'Interest',
+  2: 'Growth',
   3: 'Withdrawal',
   4: 'Spend',
   5: 'Income',
@@ -41,7 +41,7 @@ var app = angular.module('ballistic', [
   11: 'Payment',
   12: 'Interest',
   'Investment': 1,
-  'Interest': 2,
+  'Growth': 2,
   'Withdrawal': 3,
   'Spend': 4,
   'Income': 5,
