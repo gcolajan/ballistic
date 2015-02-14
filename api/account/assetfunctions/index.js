@@ -71,19 +71,24 @@ function generateAssetDistributionStatistics(categories, assetStatistics, statis
   }
 
   if(statistics.count < categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Purchase}}).then(function(sum){
-      var percentOfInvestments = (sum / assetStatistics.balance) * 100;
-      if(percentOfInvestments > 0){
-        statistics.categories.push({value: sum, label: categories[statistics.count].name, percentage: percentOfInvestments});
-      }
-      statistics.count++;
-      generateAssetDistributionStatistics(categories, assetStatistics, statistics, callback);
+    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Purchase, TRANSACTION.Appreciation]}}).then(function(categoryValue){
+      models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Sale, TRANSACTION.Depreciation]}}).then(function(categoryValueLost){
+        categoryValue = categoryValue || 0;
+        categoryValueLost = categoryValueLost || 0;
+        var value = categoryValue - categoryValueLost;
+        var percentOfInvestments = (value / assetStatistics.balance) * 100;
+        if(percentOfInvestments > 0){
+          statistics.categories.push({value: value, name: categories[statistics.count].name, percentage: percentOfInvestments});
+        }
+        statistics.count++;
+        generateAssetDistributionStatistics(categories, assetStatistics, statistics, callback);
+      });
     });
   } else if (statistics.count == categories.length){
     models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Purchase}}).then(function(sum){
       var percentOfInvestments = (sum / assetStatistics.balance) * 100;
       if(percentOfInvestments > 0){
-        statistics.categories.push({value: sum, label: 'None', percentage: percentOfInvestments});
+        statistics.categories.push({value: sum, name: 'None', percentage: percentOfInvestments});
       }
       statistics.count++;
       generateAssetDistributionStatistics(categories, assetStatistics, statistics, callback);

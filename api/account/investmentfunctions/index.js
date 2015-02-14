@@ -70,7 +70,7 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
     models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Investment}}).then(function(sum){
       var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
       if(percentOfInvestments > 0){
-        statistics.categories.push({value: sum, label: categories[statistics.count].name, percentage: percentOfInvestments});
+        statistics.categories.push({value: sum, name: categories[statistics.count].name, percentage: percentOfInvestments});
       }
       statistics.count++;
       generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
@@ -79,7 +79,7 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
     models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Investment}}).then(function(sum){
       var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
       if(percentOfInvestments > 0){
-        statistics.categories.push({value: sum, label: 'None', percentage: percentOfInvestments});
+        statistics.categories.push({value: sum, name: 'None', percentage: percentOfInvestments});
       }
       statistics.count++;
       generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);

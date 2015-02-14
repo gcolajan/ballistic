@@ -57,6 +57,17 @@ ul.nav li {
   font-size: 1.5rem;
 }
 
+ul.asset-list {
+  margin: 0;
+  padding: 0;
+}
+
+ul.asset-list li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 ul.transaction-list {
   margin: 0;
   padding: 0;

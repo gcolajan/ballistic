@@ -174,11 +174,12 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
             $scope.account = response.account;
             $scope.transactions = response.transactions;
             $scope.statistics = response.statistics;
-            for(var i = 0; i < response.statistics.distributionStatistics.categories.length; i++){
-              response.statistics.distributionStatistics.categories[i].color = SOLID_COLORS[i];
-              response.statistics.distributionStatistics.categories[i].label += ' - ' + $filter('number')(response.statistics.distributionStatistics.categories[i].percentage, 2) + ' %';
+            var categories = response.statistics.distributionStatistics.categories;
+            for(var i = 0; i < categories.length; i++){
+              categories[i].color = SOLID_COLORS[i];
+              categories[i].label = categories[i].name + ' - ' + $filter('number')(categories[i].percentage, 2) + ' %';
             }
-            $scope.distributionData = response.statistics.distributionStatistics.categories;
+            $scope.distributionData = categories;
 
             switch($scope.account.type){
               case $scope.ACCOUNT_TYPES.General:

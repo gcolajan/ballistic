@@ -73,7 +73,7 @@ function generateGeneralDistributionStatistics(categories, generalStatistics, da
       var percentOfSpend = (sum / generalStatistics.monthlySpend) * 100;
       debug(percentOfSpend);
       if(percentOfSpend > 0) {
-        statistics.categories.push({value: sum, label: categories[statistics.count].name, percentage: percentOfSpend});
+        statistics.categories.push({value: sum, name: categories[statistics.count].name, percentage: percentOfSpend});
       } 
       statistics.count++;
       generateGeneralDistributionStatistics(categories, generalStatistics, date, statistics, callback);
@@ -82,7 +82,7 @@ function generateGeneralDistributionStatistics(categories, generalStatistics, da
     models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Spend, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}}}).then(function(sum){
       var percentOfSpend = (sum / generalStatistics.monthlySpend) * 100;
       if(percentOfSpend > 0) {
-        statistics.categories.push({value: sum, label: 'None', percentage: percentOfSpend});
+        statistics.categories.push({value: sum, name: 'None', percentage: percentOfSpend});
       }
       statistics.count++;
       generateGeneralDistributionStatistics(categories, generalStatistics, date, statistics, callback);
