@@ -68,8 +68,8 @@ function generateLiabilityDistributionStatistics(categories, liabilityStatistics
   }
 
   if(statistics.count < categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Debt, TRANSACTION.Interest], AccountId: categories[statistics.count].AccountId}}).then(function(categoryValue){
-      models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Payment, AccountId: categories[statistics.count].AccountId}}).then(function(categoryValuePaid){
+    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Debt, TRANSACTION.Interest]}}).then(function(categoryValue){
+      models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Payment}}).then(function(categoryValuePaid){
         categoryValue = categoryValue || 0;
         categoryValuePaid = categoryValuePaid || 0;
         var value = categoryValue - categoryValuePaid;
@@ -82,8 +82,8 @@ function generateLiabilityDistributionStatistics(categories, liabilityStatistics
       });
     });
   } else if (statistics.count == categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Debt, TRANSACTION.Interest], AccountId: categories[statistics.count].AccountId}}).then(function(categoryValue){
-      models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Payment, AccountId: categories[statistics.count].AccountId}}).then(function(categoryValuePaid){
+    models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Debt, TRANSACTION.Interest], AccountId: categories[statistics.count - 1].AccountId}}).then(function(categoryValue){
+      models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Payment, AccountId: categories[statistics.count -1].AccountId}}).then(function(categoryValuePaid){
         categoryValue = categoryValue || 0;
         categoryValuePaid = categoryValuePaid || 0;
         var value = categoryValue - categoryValuePaid;

@@ -71,27 +71,32 @@ function generateAssetDistributionStatistics(categories, assetStatistics, statis
   }
 
   if(statistics.count < categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Purchase, TRANSACTION.Appreciation], AccountId: categories[statistics.count].AccountId}}).then(function(categoryValue){
-      models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Sale, TRANSACTION.Depreciation], AccountId: categories[statistics.count].AccountId}}).then(function(categoryValueLost){
+    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Purchase, TRANSACTION.Appreciation]}}).then(function(categoryValue){
+      models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Sale, TRANSACTION.Depreciation]}}).then(function(categoryValueLost){
         categoryValue = categoryValue || 0;
         categoryValueLost = categoryValueLost || 0;
         var value = categoryValue - categoryValueLost;
-        var percentOfInvestments = (value / assetStatistics.balance) * 100;
-        if(percentOfInvestments > 0){
-          statistics.categories.push({value: value, name: categories[statistics.count].name, percentage: percentOfInvestments});
+        var percentOfAssets = (value / assetStatistics.balance) * 100;
+        if(percentOfAssets > 0){
+          statistics.categories.push({value: value, name: categories[statistics.count].name, percentage: percentOfAssets});
         }
         statistics.count++;
         generateAssetDistributionStatistics(categories, assetStatistics, statistics, callback);
       });
     });
   } else if (statistics.count == categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Purchase, AccountId: categories[statistics.count].AccountId}}).then(function(sum){
-      var percentOfInvestments = (sum / assetStatistics.balance) * 100;
-      if(percentOfInvestments > 0){
-        statistics.categories.push({value: sum, name: 'None', percentage: percentOfInvestments});
-      }
-      statistics.count++;
-      generateAssetDistributionStatistics(categories, assetStatistics, statistics, callback);
+    models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Purchase, TRANSACTION.Appreciation], AccountId: categories[statistics.count - 1].AccountId}}).then(function(categoryValue){
+      models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Sale, TRANSACTION.Depreciation], AccountId: categories[statistics.count - 1].AccountId}}).then(function(categoryValueLost){
+        categoryValue = categoryValue || 0;
+        categoryValueLost = categoryValueLost || 0;
+        var value = categoryValue - categoryValueLost;
+        var percentOfAssets = (value / assetStatistics.balance) * 100;
+        if(percentOfAssets > 0){
+          statistics.categories.push({value: value, name: 'None', percentage: percentOfAssets});
+        }
+        statistics.count++;
+        generateAssetDistributionStatistics(categories, assetStatistics, statistics, callback);
+      });
     });
   } else {
     callback(statistics);
