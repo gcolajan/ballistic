@@ -67,7 +67,7 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
   }
 
   if(statistics.count < categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Investment}}).then(function(sum){
+    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Investment, AccountId: categories[statistics.count].AccountId}}).then(function(sum){
       var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
       if(percentOfInvestments > 0){
         statistics.categories.push({value: sum, name: categories[statistics.count].name, percentage: percentOfInvestments});
@@ -76,7 +76,7 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
       generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
     });
   } else if (statistics.count == categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Investment}}).then(function(sum){
+    models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Investment, AccountId: categories[statistics.count].AccountId}}).then(function(sum){
       var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
       if(percentOfInvestments > 0){
         statistics.categories.push({value: sum, name: 'None', percentage: percentOfInvestments});

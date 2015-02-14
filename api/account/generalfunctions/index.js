@@ -69,7 +69,7 @@ function generateGeneralDistributionStatistics(categories, generalStatistics, da
   var nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 0, 0, 0, 0);
 
   if(statistics.count < categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Spend, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}}}).then(function(sum){
+    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Spend, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}, AccountId: categories[statistics.count].AccountId}}).then(function(sum){
       var percentOfSpend = (sum / generalStatistics.monthlySpend) * 100;
       debug(percentOfSpend);
       if(percentOfSpend > 0) {
@@ -79,7 +79,7 @@ function generateGeneralDistributionStatistics(categories, generalStatistics, da
       generateGeneralDistributionStatistics(categories, generalStatistics, date, statistics, callback);
     });
   } else if (statistics.count == categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Spend, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}}}).then(function(sum){
+    models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Spend, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}, AccountId: categories[statistics.count].AccountId}}).then(function(sum){
       var percentOfSpend = (sum / generalStatistics.monthlySpend) * 100;
       if(percentOfSpend > 0) {
         statistics.categories.push({value: sum, name: 'None', percentage: percentOfSpend});
