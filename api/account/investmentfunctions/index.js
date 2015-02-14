@@ -45,8 +45,8 @@ function generateInvestmentStatistics(account, date, callback){
     date = new Date();
   }
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Growth, date: {lte: date.toDateString()}} }).then(function(totalInvestments) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {lte: date.toDateString()}} }).then(function(totalInterest) {
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {lte: date.toDateString()}} }).then(function(totalInvestments) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Growth, date: {lte: date.toDateString()}} }).then(function(totalInterest) {
       models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {lte: date.toDateString()}} }).then(function(totalWithdrawals) {
         statistics.totalInvestments = totalInvestments || 0;
         statistics.totalInterest = totalInterest || 0;
@@ -67,7 +67,7 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
   }
 
   if(statistics.count < categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Growth, TRANSACTION.Interest]}}).then(function(sum){
+    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Investment, TRANSACTION.Growth]}}).then(function(sum){
       var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
       if(percentOfInvestments > 0){
         statistics.categories.push({value: sum, name: categories[statistics.count].name, percentage: percentOfInvestments});
@@ -76,7 +76,7 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
       generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
     });
   } else if (statistics.count == categories.length && categories.length > 0){
-    models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Growth, TRANSACTION.Interest], AccountId: categories[statistics.count - 1].AccountId}}).then(function(sum){
+    models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Investment, TRANSACTION.Growth], AccountId: categories[statistics.count - 1].AccountId}}).then(function(sum){
       var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
       if(percentOfInvestments > 0){
         statistics.categories.push({value: sum, name: 'None', percentage: percentOfInvestments});
@@ -93,8 +93,8 @@ function generateMonthlyInvestmentStatistics(account, date, callback){
   var statistics = {};
   var nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 0, 0, 0, 0);
 
-  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Growth, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyInvestments) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyInterest) {
+  models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyInvestments) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Growth, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyInterest) {
       models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyWithdrawls) {
         statistics.monthlyInvestments = monthlyInvestments || 0;
         statistics.monthlyInterest = monthlyInterest || 0;
@@ -113,8 +113,8 @@ function generateYearlyInvestmentStatistics(account, callback){
   var daysDifferent = dateDiffInDays(yearStart, today);
 
   models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gt: yearStart} } }).then(function(yearlyWithdrawals) {
-    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Growth, date: {gt: yearStart} } }).then(function(yearlyContributions) {
-      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Interest, date: {gt: yearStart} } }).then(function(yearlyGrowth) {
+    models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gt: yearStart} } }).then(function(yearlyContributions) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Growth, date: {gt: yearStart} } }).then(function(yearlyGrowth) {
         statistics.yearlyWithdrawals = yearlyWithdrawals || 0;
         statistics.yearlyContributions = yearlyContributions || 0;
         statistics.yearlyGrowth = yearlyGrowth || 0;

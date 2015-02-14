@@ -9,7 +9,7 @@
             <div class="row">
               <div class = "one-half column">
                 <p><b>Amount:</b> {{transaction.amount}}
-                <br><b>Type:</b> {{transaction.amount}}
+                <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
                 <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span></p>
               </div>
               <div class = "one-half column">
