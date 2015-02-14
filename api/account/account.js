@@ -2,6 +2,7 @@ var models  = require('../../models');
 var investmentFunctions  = require('./investmentfunctions');
 var generalFunctions  = require('./generalfunctions');
 var assetFunctions  = require('./assetfunctions');
+var liabilityFunctions  = require('./liabilityfunctions');
 var debug = require('debug')('ballistic');
 var constants = require(__dirname + '/../../config/constants.json');
 var ACCOUNT = constants.ACCOUNT;
@@ -54,6 +55,11 @@ exports.get = function(req, res) {
               res.send({success: true, account: account, transactions: transactions, statistics: statistics, historicalStatistics: historicalSatistics});
             });
           break;
+          case ACCOUNT.Liability:
+            liabilityFunctions.getAccountInfo(account, transactions, function(account, transactions, statistics, historicalSatistics){
+              res.send({success: true, account: account, transactions: transactions, statistics: statistics, historicalStatistics: historicalSatistics});
+            });
+          break;
         }
       });
     });
@@ -65,6 +71,7 @@ function generateUserStatistics(accounts, statistics, index, callback){
     statistics = {
       netWorth: 0, 
       totalAssets: 0,
+      totalLiabilities: 0,
       totalInvestments: 0,
       investmentInterest: 0, 
       yearlyInvestmentIncome: 0,
@@ -97,15 +104,33 @@ function generateUserStatistics(accounts, statistics, index, callback){
           accounts[index].statistics = accountStatistics;
           statistics.totalAssets += accounts[index].statistics.balance;
           statistics.netWorth += accounts[index].statistics.balance;
-          // if(!statistics.historicalIncomeSpend){
-          //   statistics.historicalIncomeSpend = accounts[index].statistics.historicalSatistics;
-          // } else {
-          //   for (var i = statistics.historicalIncomeSpend.income.data.length - 1; i >= 0; i--) {
-          //     statistics.historicalIncomeSpend.income.data[i] += accounts[index].statistics.historicalSatistics.income.data[i];
-          //     statistics.historicalIncomeSpend.spend.data[i] += accounts[index].statistics.historicalSatistics.spend.data[i];
-          //     statistics.historicalIncomeSpend.balance.data[i] += accounts[index].statistics.historicalSatistics.balance.data[i];
-          //   };
-          // }
+          if(!statistics.historicalAssets){
+            statistics.historicalAssets = accounts[index].statistics.historicalSatistics;
+          } else {
+            for (var i = statistics.historicalAssets.income.data.length - 1; i >= 0; i--) {
+              statistics.historicalAssets.purchasesAndAppreciation.data[i] += accounts[index].statistics.historicalSatistics.purchasesAndAppreciation.data[i];
+              statistics.historicalAssets.salesAndDepreciation.data[i] += accounts[index].statistics.historicalSatistics.salesAndDepreciation.data[i];
+              statistics.historicalAssets.balance.data[i] += accounts[index].statistics.historicalSatistics.balance.data[i];
+            };
+          }
+          generateUserStatistics(accounts, statistics, ++index, callback);
+        });
+      break;
+      case ACCOUNT.Liability:
+        liabilityFunctions.generateAccountStatistics(accounts[index], function(accountStatistics){
+          accounts[index].statistics = accountStatistics;
+          statistics.totalLiabilities += accounts[index].statistics.balance;
+          statistics.netWorth -= accounts[index].statistics.balance;
+          if(!statistics.historicalLiabilities){
+            statistics.historicalLiabilities = accounts[index].statistics.historicalSatistics;
+          } else {
+            for (var i = statistics.historicalLiabilities.income.data.length - 1; i >= 0; i--) {
+              statistics.historicalLiabilities.debt.data[i] += accounts[index].statistics.historicalSatistics.debt.data[i];
+              statistics.historicalLiabilities.interest.data[i] += accounts[index].statistics.historicalSatistics.interest.data[i];
+              statistics.historicalLiabilities.payments.data[i] += accounts[index].statistics.historicalSatistics.payments.data[i];
+              statistics.historicalLiabilities.balance.data[i] += accounts[index].statistics.historicalSatistics.balance.data[i];
+            };
+          }
           generateUserStatistics(accounts, statistics, ++index, callback);
         });
       break;
@@ -161,6 +186,9 @@ exports.statistics = function(req, res) {
             statistics.investmentInterest += accounts[i].statistics.percentOfInvestments * accounts[i].interest / 100;
           } else if(accounts[i].type == ACCOUNT.Asset){
             accounts[i].statistics.percentOfAssets = accounts[i].statistics.balance / statistics.totalAssets * 100;
+          }
+          else if(accounts[i].type == ACCOUNT.Liability){
+            accounts[i].statistics.percentOfLiabilities = accounts[i].statistics.balance / statistics.totalLiabilities * 100;
           }
         }
         statistics.investmentGoal = req.usermeta.goal / (statistics.investmentInterest / 100);

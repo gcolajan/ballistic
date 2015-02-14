@@ -136,6 +136,75 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
           },
         ]
       }
+
+      $scope.debtData = {
+        labels: response.statistics.historicalLiabilities.labels,
+        datasets: [
+          {
+            label: "New Debt",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalLiabilities.debt.data
+          },
+          {
+            label: "Interest",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalLiabilities.interest.data
+          },
+          {
+            label: "Payments",
+            fillColor: "rgba(123,122,212,0.2)",
+            strokeColor: "rgba(123,122,212,1)",
+            pointColor: "rgba(123,122,212,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalLiabilities.payments.data
+          },
+          {
+            label: "Balance",
+            fillColor: "rgba(43,222,31,0.2)",
+            strokeColor: "rgba(43,222,31,1)",
+            pointColor: "rgba(43,222,31,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalLiabilities.balance.data
+          },
+        ]
+      }
+
+      $scope.assetData = {
+        labels: response.statistics.historicalAssets.labels,
+        datasets: [
+          {
+            label: "Purchases &amp; Appreciation",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalAssets.purchasesAndAppreciation.data
+          },
+          {
+            label: "Sales &amp; Depreciation",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalAssets.salesAndDepreciation.data
+          },
+          {
+            label: "Worth",
+            fillColor: "rgba(43,222,31,0.2)",
+            strokeColor: "rgba(43,222,31,1)",
+            pointColor: "rgba(43,222,31,1)",
+            pointStrokeColor: "#fff",
+            data: response.statistics.historicalAssets.balance.data
+          },
+        ]
+      }
+
       console.log(response);
     }
   );
@@ -236,7 +305,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                       data: response.historicalStatistics.salesAndDepreciation.data
                     },
                     {
-                      label: "Balance",
+                      label: "Worth",
                       fillColor: "rgba(43,222,31,0.2)",
                       strokeColor: "rgba(43,222,31,1)",
                       pointColor: "rgba(43,222,31,1)",
@@ -248,6 +317,43 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
               break;
               case $scope.ACCOUNT_TYPES.Liability:
                 $scope.transaction = {type: $scope.TRANSACTION_TYPES.Payment};
+                $scope.historicalDebtData = {
+                  labels: response.historicalStatistics.labels,
+                  datasets: [
+                    {
+                      label: "New Debt",
+                      fillColor: "rgba(151,187,205,0.2)",
+                      strokeColor: "rgba(151,187,205,1)",
+                      pointColor: "rgba(151,187,205,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.debt.data
+                    },
+                    {
+                      label: "Interest",
+                      fillColor: "rgba(220,220,220,0.2)",
+                      strokeColor: "rgba(220,220,220,1)",
+                      pointColor: "rgba(220,220,220,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.interest.data
+                    },
+                    {
+                      label: "Payments",
+                      fillColor: "rgba(123,122,212,0.2)",
+                      strokeColor: "rgba(123,122,212,1)",
+                      pointColor: "rgba(123,122,212,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.payments.data
+                    },
+                    {
+                      label: "Balance",
+                      fillColor: "rgba(43,222,31,0.2)",
+                      strokeColor: "rgba(43,222,31,1)",
+                      pointColor: "rgba(43,222,31,1)",
+                      pointStrokeColor: "#fff",
+                      data: response.historicalStatistics.balance.data
+                    },
+                  ]
+                }
               break;
               case $scope.ACCOUNT_TYPES.Investment:
                 $scope.transaction = {type: $scope.TRANSACTION_TYPES.Investment};

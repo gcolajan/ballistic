@@ -56,12 +56,13 @@
           <div class = "one-half column">
             <p><b>Amount:</b> {{transaction.amount | currency:user.meta.currency}}
             <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
-            <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span></p>
+            </p>
           </div>
           <div class = "one-half column">
             <p><b>Date:</b> {{transaction.date | date:'longDate'}}
             <br><b>Category:</b> <span ng-show = "transaction.Category">{{transaction.Category.name}}</span><span ng-hide = "transaction.Category">None</span></p>
           </div>
+          <p><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span></p>
         </div>
       </li>
     </ul>

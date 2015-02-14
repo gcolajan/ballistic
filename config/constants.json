@@ -16,7 +16,7 @@
     "Depreciation": 8,
     "Sale": 9,
     "Debt": 10,
-    "PrincipalPayment": 11,
-    "InterestPayment": 12
+    "Payment": 11,
+    "Interest": 12
   }
 }

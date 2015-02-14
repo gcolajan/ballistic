@@ -38,8 +38,8 @@ var app = angular.module('ballistic', [
   8: 'Depreciation',
   9: 'Sale',
   10: 'Debt',
-  11: 'PrincipalPayment',
-  12: 'InterestPayment',
+  11: 'Payment',
+  12: 'Interest',
   'Investment': 1,
   'Interest': 2,
   'Withdrawal': 3,
@@ -50,8 +50,8 @@ var app = angular.module('ballistic', [
   'Depreciation': 8,
   'Sale': 9,
   'Debt': 10,
-  'PrincipalPayment': 11,
-  'InterestPayment': 12
+  'Payment': 11,
+  'Interest': 12
 }).constant('SOLID_COLORS', {
   0: '#1abc9c',
   1: '#3498db',

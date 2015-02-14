@@ -122,7 +122,6 @@ function generateYearlyAssetStatistics(account, callback){
   var today = new Date();
   var yearStart = new Date(today.getFullYear(), 0, 0, 0, 0, 0, 0);
   var statistics = {};
-  var daysDifferent = dateDiffInDays(yearStart, today);
 
   models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Purchase, date: {gt: yearStart} } }).then(function(yearlyPurchases) {
     models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Sale, date: {gt: yearStart} } }).then(function(yearlySales) {
@@ -170,13 +169,6 @@ function generateHistoricalAssetStatistics(account, historicalSatistics, date, c
   } else {
     callback(historicalSatistics);
   }
-}
-
-function dateDiffInDays(a, b) {
-  // Discard the time and time-zone information.
-  var utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-  var utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-  return Math.floor((utc2 - utc1) / 86400000);
 }
 
 function mergeObjects(a, b) {
