@@ -93,6 +93,12 @@ var app = angular.module('ballistic', [
   return {
     link: link
   };
+}).directive('datePicker', function() {
+  return {
+    link: function(scope, element, attrs) {
+      $(element).datepicker({format: 'yyyy/mm/dd'});
+    }
+  };
 }).service('Session', function () {
   this.create = function (userID, username) {
     this.userID = userID;
