@@ -28,6 +28,7 @@ exports.create = function(req, res) {
           models.User.create({ username: req.body.username, password: hash }).then(function(user) {
             models.UserMeta.create({}).then(function(usermeta){
               usermeta.setUser(user);
+              req.session.userID = user.id;
               res.send({success: true, user: buildReplyUser(user, usermeta)});
             });
           });
@@ -46,13 +47,13 @@ exports.authenticate = function(req, res) {
         res.send({success: false, error: 'user not found'});
       } else {
         models.User.checkPassword(req.body.password, user.password, function(err, match) {
-          if(match){
-            req.session.userID = user.id;
+          if (!match) {
+            res.send({success: false, error: 'password incorrect'});
+          } else {
             user.getUserMetum().then(function(usermeta){
+              req.session.userID = user.id;
               res.send({success: true, user: buildReplyUser(user, usermeta)});
             }); 
-          } else {
-            res.send({success: false, error: 'password incorrect'});
           }
         });
       }

@@ -15,7 +15,7 @@
             <option value="4">Investment</option>
           </select>
           <div ng-show="account.type == 4">
-            <label for="interest">Yearly Interest/Growth (percentage)</label>
+            <label for="interest">Average Yearly Growth Estimate (percentage)</label>
             <input class="u-full-width" type="text" placeholder="6.5" value = "6.5" id="interest" ng-model="account.interest">
           </div>
         </div>
@@ -28,18 +28,12 @@
       <h5>Account Types</h5>
       <p>There are four account types. They are:</p>
       <ul>
-        <li><b>General:</b> Used for chequing and savings accounts. Determines your monthly spend/income.</li>
-        <li><b>Asset:</b> Used for tracking things which hold significant value, like a car or house. Included in your assets, but not in your monthly spend/income.</li>
-        <li><b>Liability:</b> Used tracking your debts, like a student loan or mortgage. Used to calculate your liabilities and net worth. Not included in your monthly spend/income.</li>
-        <li><b>Investment:</b> Used for tracking your investments, like a retirement savings plan. Investment accounts also ask you for an interest rate. This interest rate is used to estimate the growth of your investments. By default, we suggest an interest rate of 6.5%, since it is close to the average return on index funds. You can choose a higher or lower interest rate if you're feeling more optimistic or pessimistic than us.</li>
+        <li><b>General:</b> Used for day to day transactions.</li>
+          <li><b>Investment:</b> Used for tracking your investments.</li>
+          <li><b>Asset:</b> Used for tracking things that you own which hold significant value.</li>
+          <li><b>Liability:</b> Used for tracking your debts.</li>
       </ul>
-      <p>Most people would have at least four accounts:</p>
-      <ul>
-        <li>General: Bank Account (ex. Chequing)</li>
-        <li>Investment: Investment Account (ex. Retirement Savings)</li>
-        <li>Liability: General Liabilities (ex. Student Loan, Mortgage, etc)</li>
-        <li>Asset: General Assets (ex. House, Car, etc)</li>
-      </ul>
+      <p>Most people would have one of each account type.</p>
     </div>
   </div>
 </div>

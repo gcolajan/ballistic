@@ -212,6 +212,10 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
   );
 }]);
 
+angular.module('ballistic').controller('WelcomeCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
+ 
+}]);
+
 angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', 'API', 'Session', 'AUTH_EVENTS', function ($scope, $location, API, Session, AUTH_EVENTS) {
   $scope.$on(AUTH_EVENTS.Authenticated, function (event, next) {
     console.log($scope.user);

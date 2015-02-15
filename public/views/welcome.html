@@ -1,0 +1,73 @@
+<div class="container">  
+  <div class = "welcome">
+    <div class="row">
+      <h1>Welcome to Ballistic Finance</h1>
+      <p>Before you get started, you should know a bit about the philosophy behind ballistic.</p>
+      <p>Ballistic is not about budgeting or tracking your transactions with absolute accuracy. Its purpose is only to inform you of your financial health and cause you to reflect more often on it.</p>
+      <p>With this in mind, you are encouraged not to take it too seriously. The only requirement when working with your accounts is that their balances match your real balances at the end of every month. If you want to write out every credit card transaction you make in a month, that's fine, but it's also fine to just lump them together and enter the total.</p>
+      <p>If you get too concerned about absolute accuracy, then you are less likely to continue tracking your transactions. This is much worse than tracking them poorly. As long as you are thinking about your financials at least monthly, you are doing well.</p>
+      <h2>Financial Freedom</h2>
+      <p>Ballistic is built around the idea of reaching financial freedom. Financial freedom is the point when your investments earn enough to replace your income. This means you are not longer required to work to live.</p>
+      <p>Financial freedom is different from most retirement plans in that there is no calculated date where you will not longer need the income (i.e. at death). Your investments will earn you income indefinitely, assuming the economy remains in good health. This means that not only will your future be secure, but potentially the future of your descendants as well. Most of the super rich are super rich due to having ancestors who saved instead of spent.</p>
+      <h2>Getting Set Up</h2>
+      In order to make ballistic useful to you, you will need to answer some questions. First of all, some general questions about you:
+      <form ng-submit="setUpAccounts(meta, accounts)">
+        <div class="row inline-form">
+          <div class = "four columns">
+            <label for="goal">Goal</label>
+            <input class="u-full-width" type="text" placeholder="26000.00" id="goal" ng-model="meta.goal">
+            <p>This is the yearly amount you want to earn from your investments. Don't be too ambitious.</p>
+          </div>
+          <div class = "four columns">
+            <label for="age">Age</label>
+            <input class="u-full-width" type="text" placeholder="26" id="age" ng-model="meta.age">
+            <p>Your current age. It's used to show how old you will be when you reach your goal.</p>
+          </div>
+          <div class = "four columns">
+            <label for="currency">Currency Symbol</label>
+            <input class="u-full-width" type="text" placeholder="$" id="currency" ng-model="meta.currency">
+            <p>This is the currency symbol used when displaying amounts.</p>
+          </div>
+        </div>
+        <p>Next we'll need some information about your accounts. There are four types of accounts on Ballistic. They are:</p>
+        <ul>
+          <li><b>General:</b> Used for day to day transactions.</li>
+          <li><b>Investment:</b> Used for tracking your investments.</li>
+          <li><b>Asset:</b> Used for tracking things that you own which hold significant value.</li>
+          <li><b>Liability:</b> Used for tracking your debts.</li>
+        </ul>
+        <p>We recommend adding one of each account type. We've prefilled the forms below, but feel free to edit them if you'd like. Don't worry if it doesn't match your real world situation perfectly. You can add, delete, or edit accounts as needed later.</p>
+        <div class="row inline-form">
+          <div class = "three columns">
+            <h5>General Account</h5>
+            <label for="general-name">Account Name</label>
+            <input class="u-full-width" type="text" placeholder="checking account" id="general-name" ng-model="accounts.general.name">
+            <label for="general-balance">Current Balance</label>
+            <input class="u-full-width" type="text" placeholder="6.5" value = "6.5" id="general-balance" ng-model="accounts.general.balance">
+            <p>An estimate is fine for now.</p>
+          </div>
+          <div class = "three columns">
+            <h5>Investment Account</h5>
+            <label for="investment-name">Account Name</label>
+            <input class="u-full-width" type="text" placeholder="checking account" id="investment-name" ng-model="accounts.investment.name">
+            <label for="investment-interest">Average Yearly Growth</label>
+            <input class="u-full-width" type="text" placeholder="6.5" value = "6.5" id="investment-interest" ng-model="accounts.investment.interest">
+            <p>Estimate your average yearly return on your investments (percentage).</p>
+          </div>
+          <div class = "three columns">
+            <h5>Asset Account</h5>
+            <label for="asset-name">Account Name</label>
+            <input class="u-full-width" type="text" placeholder="checking account" id="asset-name" ng-model="accounts.asset.name">
+          </div>
+          <div class = "three columns">
+            <h5>Liability Account</h5>
+            <label for="liability-name">Account Name</label>
+            <input class="u-full-width" type="text" placeholder="checking account" id="liability-name" ng-model="accounts.liability.name">
+          </div>
+        </div>
+        <p>That's everything! Go ahead and click the button below to start using ballistic.</p>
+        <input class="button-primary" type="submit" value="Submit &amp; Continue">
+      </form>
+    </div>
+  </div>
+</div>

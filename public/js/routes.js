@@ -5,6 +5,12 @@ angular.module('ballistic').config(function($routeProvider, $locationProvider, U
     data: {
       authorizedRoles: [USER_ROLES.all]
     }
+  }).when('/welcome', {
+    templateUrl: 'views/welcome.html',
+    controller: 'WelcomeCtrl',
+    data: {
+      authorizedRoles: [USER_ROLES.user]
+    }
   }).when('/dashboard', {
     templateUrl: 'views/dashboard.html',
     controller: 'DashboardCtrl',

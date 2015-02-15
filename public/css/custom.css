@@ -134,3 +134,11 @@ p.small-gray {
   margin: 0 0 1em;
   color: #8B1820;
 }
+
+.welcome {
+  margin: 4rem 0;
+}
+
+.inline-form {
+  padding-top: 2rem;
+}
