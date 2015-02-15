@@ -56,7 +56,19 @@ var app = angular.module('ballistic', [
   0: '#1abc9c',
   1: '#3498db',
   2: '#9b59b6',
-  3: '#e74c3c'
+  3: '#34495e',
+  4: '#2ecc71',
+  5: '#f1c40f',
+  6: '#e74c3c',
+  7: '#72CBDB',
+  8: '#55134E',
+  9: '#A0596B',
+  10: '#FEC343',
+  11: '#EF7351',
+  12: '#231F20',
+  13: '#006295',
+  14: '#9BE1FB',
+  15: '#593E1A'
 }).directive('graph', function() {
   var data;
 

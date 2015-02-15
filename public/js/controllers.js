@@ -34,7 +34,7 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$rootScope', '$sco
             Session.create(response.user.id, response.user.username);
             $rootScope.user = response.user;
             $rootScope.$broadcast(AUTH_EVENTS.Authenticated);
-            $location.path('/dashboard')
+            $location.path('/dashboard');
           } else {
             $scope.registerError = response.error;
           }
@@ -54,7 +54,7 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$rootScope', '$sco
             Session.create(response.user.id, response.user.username);
             $rootScope.user = response.user;
             $rootScope.$broadcast(AUTH_EVENTS.Authenticated);
-            $location.path('/dashboard')
+            $location.path('/dashboard');
           } else {
             $scope.loginError = response.error;
           }
@@ -213,6 +213,58 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
 }]);
 
 angular.module('ballistic').controller('WelcomeCtrl', ['$scope', '$location', 'API', 'Session', function ($scope, $location, API, Session) {
+  $scope.accounts = {
+    general: {
+      name: 'Checkings',
+      balance: 0
+    },
+    investment: {
+      name: 'Investments',
+      interest: 6.5
+    },
+    asset: {
+      name: 'Assets'
+    },
+    liability: {
+      name: 'Debts'
+    }
+  }
+
+  $scope.meta = {
+    currency: '$'
+  }
+
+  $scope.firstTimeSetUp = function(meta, accounts) {
+    if (!meta || !meta.goal || !meta.age || !meta.currency){
+      $scope.error = "you must answer all general questions"
+    } else if (!accounts.general.name || !accounts.investment.name || !accounts.investment.interest || !accounts.asset.name || !accounts.liability.name) {
+      $scope.error = "account forms left blank"
+    } else {
+      API.update({resource: 'usermeta', action: 'update'},
+        {goal: meta.goal, age: meta.age, currency: meta.currency},
+        function (response, err) {
+          saveAccount(accounts.general, function(){
+            saveAccount(accounts.investment, function(){
+              saveAccount(accounts.asset, function(){
+                saveAccount(accounts.liability, function(){
+                  $location.path('/dashboard');
+                })
+              })
+            })
+          })
+        }
+      );
+    }
+  }
+
+  function saveAccount(account, callback) {
+    API.save({resource: 'accounts', action: 'create'},
+      {name: account.name, type: account.type, interest: account.interest},
+      function (response, err) {
+        callback();
+      }
+    );
+  }
  
 }]);
 
@@ -223,8 +275,7 @@ angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', '
   });
 
   $scope.saveMeta = function (meta) {
-    console.log(meta);
-    if(meta && meta.goal && meta.age && meta.currency != 4){
+    if(meta && meta.goal && meta.age && meta.currency){
       API.update({resource: 'usermeta', action: 'update'},
         {goal: meta.goal, age: meta.age, currency: meta.currency},
         function (response, err) {
@@ -419,7 +470,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
         {name: account.name, type: account.type, interest: account.interest},
         function (response, err) {
           if(response.success){
-            $location.path('/account/' + response.account.id)
+            $location.path('/account/' + response.account.id);
           }
         }
       );
