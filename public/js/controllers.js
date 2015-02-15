@@ -31,15 +31,17 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$rootScope', '$sco
         {username: credentials.username, password: credentials.password},
         function (response, err) {
           if(response.success == true){
-            console.log("true: creating session");
             Session.create(response.user.id, response.user.username);
             $rootScope.user = response.user;
             $rootScope.$broadcast(AUTH_EVENTS.Authenticated);
-            console.log("true: redirecting");
             $location.path('/dashboard')
+          } else {
+            $scope.registerError = response.error;
           }
         }
       );
+    } else {
+      $scope.registerError = "fields left empty";
     }
   }
 
@@ -49,17 +51,17 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$rootScope', '$sco
         {username: credentials.username, password: credentials.password},
         function (response, err) {
           if(response.success == true){
-            console.log("true: creating session");
             Session.create(response.user.id, response.user.username);
-            console.log(response.user)
             $rootScope.user = response.user;
             $rootScope.$broadcast(AUTH_EVENTS.Authenticated);
-            console.log("true: redirecting");
             $location.path('/dashboard')
+          } else {
+            $scope.loginError = response.error;
           }
-          console.log(response)
         }
       );
+    } else {
+      $scope.loginError = "fields left empty";
     }
   }
 }]);

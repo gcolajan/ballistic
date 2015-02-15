@@ -14,7 +14,10 @@
               <input class="u-full-width" type="password" placeholder="password" id="login-password" ng-model="logCredentials.password">
             </div>
           </div>
-          <input class="button-primary" type="submit" value="Login">
+          <div class = "row">
+            <p ng-show = "loginError" class = "error">Error: {{loginError}}.</p>
+            <input class="button-primary" type="submit" value="Login">
+          </div>
         </form>
       </div>
       <div class="one-half column">
@@ -30,7 +33,10 @@
               <input class="u-full-width" type="password" placeholder="password" id="register-password" ng-model="regCredentials.password">
             </div>
           </div>
-          <input class="button-primary" type="submit" value="Register">
+          <div class = "row">
+            <p ng-show = "registerError" class = "error">Error: {{registerError}}.</p>
+            <input class="button-primary" type="submit" value="Register">
+          </div>
         </form>
       </div>
     </div>

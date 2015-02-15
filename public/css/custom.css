@@ -129,3 +129,8 @@ p.small-gray {
 .money-align {
   text-align: right;
 }
+
+.error {
+  margin: 0 0 1em;
+  color: #8B1820;
+}

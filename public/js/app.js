@@ -134,7 +134,10 @@ var app = angular.module('ballistic', [
   });
 
   $rootScope.$on(AUTH_EVENTS.notAuthenticated, function (event, next) {
-    event.preventDefault();
-    $location.path('/')
+    if($location.path() != '/') {
+      event.preventDefault();
+      $rootScope.loginError = 'session expired, please log back in';
+      $location.path('/')
+    }
   });
 })

@@ -1,5 +1,6 @@
 var models  = require('../../models');
 var debug = require('debug')('ballistic');
+var validator = require('validator');
 
 function buildReplyUser(user, usermeta) {
   var replyUser = {};
@@ -10,40 +11,57 @@ function buildReplyUser(user, usermeta) {
 }
 
 exports.create = function(req, res) {
-  debug(req.body)
-  if(req.body.username && req.body.password){
-    models.User.hash(req.body.password, function(err, hash){
-      models.User.create({ username: req.body.username, password: hash }).then(function(user) {
-        models.UserMeta.create({}).then(function(usermeta){
-          usermeta.setUser(user);
-          res.send({success: true, user: buildReplyUser(user, usermeta)});
+  if (!req.body.username || !req.body.password) {
+    res.send({success: false, error: 'fields left empty'});
+  } else if (req.body.password.length < 8) {
+    res.send({success: false, error: 'password too short'});
+  } else if (req.body.username.length < 2) {
+    res.send({success: false, error: 'username too short'});
+  } else if (!validator.isAlphanumeric(req.body.username)) {
+    res.send({success: false, error: 'username must contain only letters and numbers'});
+  } else {
+    models.User.find({ where: {username: {ilike: req.body.username}} }).then(function(user) {
+      if (user) {
+        res.send({success: false, error: 'username already taken'});
+      } else {
+        models.User.hash(req.body.password, function(err, hash){
+          models.User.create({ username: req.body.username, password: hash }).then(function(user) {
+            models.UserMeta.create({}).then(function(usermeta){
+              usermeta.setUser(user);
+              res.send({success: true, user: buildReplyUser(user, usermeta)});
+            });
+          });
         });
-      });
+      }
     });
   }
 }
 
 exports.authenticate = function(req, res) {
-  if(req.body.username && req.body.password){
+  if (!req.body.username || !req.body.password) {
+    res.send({success: false, error: 'fields left empty'});
+  } else {
     models.User.find({ where: {username: {ilike: req.body.username}} }).then(function(user) {
-      models.User.checkPassword(req.body.password, user.password, function(err, match) {
-        if(match){
-          debug('authenticated');
-          req.session.userID = user.id;
-          user.getUserMetum().then(function(usermeta){
-            res.send({success: true, user: buildReplyUser(user, usermeta)});
-          }); 
-        } else {
-          debug('password did not match');
-          res.send({success: false, error: 'password did not match'});
-        }
-      });
+      if (!user) {
+        res.send({success: false, error: 'user not found'});
+      } else {
+        models.User.checkPassword(req.body.password, user.password, function(err, match) {
+          if(match){
+            req.session.userID = user.id;
+            user.getUserMetum().then(function(usermeta){
+              res.send({success: true, user: buildReplyUser(user, usermeta)});
+            }); 
+          } else {
+            res.send({success: false, error: 'password incorrect'});
+          }
+        });
+      }
     });
   }
 }
 
 exports.session = function(req, res) {
-  if(req.user){
+  if (req.user) {
     models.User.find(req.session.userID).then(function(user){
       user.getUserMetum().then(function(usermeta){
         res.send({success: true, user: buildReplyUser(user, usermeta)});
@@ -56,7 +74,7 @@ exports.session = function(req, res) {
 }
 
 exports.logout = function(req, res) {
-  if(req.user){
+  if (req.user) {
     req.session.userID = null;
     res.send({success: true});
   } else {
