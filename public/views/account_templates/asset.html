@@ -67,6 +67,7 @@
         </div>
         <label for="description">Description (optional)</label>
         <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
+        <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
         <input class="button-primary" type="submit" value="Add">
       </div>
     </form>

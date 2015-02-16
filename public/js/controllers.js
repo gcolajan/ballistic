@@ -479,13 +479,17 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
 
   $scope.createTransaction = function (transaction) {
     console.log(transaction);
-    if(transaction && transaction.amount && transaction.date && transaction.type){
+    if(!transaction || !transaction.amount || !transaction.date || !transaction.type){
+      $scope.transactionError = "fields left empty";
+    } else {
       API.save({resource: 'transactions', action: 'create'},
         {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type, category: transaction.category, description: transaction.description},
         function (response, err) {
           if(response.success) {
             refresh();
             $scope.transaction = {type: 1};
+          } else {
+            $scope.transactionError = response.error;
           }
         }
       );
