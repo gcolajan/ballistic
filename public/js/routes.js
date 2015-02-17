@@ -9,7 +9,7 @@ angular.module('ballistic').config(function($routeProvider, $locationProvider, U
     templateUrl: 'views/welcome.html',
     controller: 'WelcomeCtrl',
     data: {
-      authorizedRoles: [USER_ROLES.user]
+      authorizedRoles: [USER_ROLES.newUser]
     }
   }).when('/dashboard', {
     templateUrl: 'views/dashboard.html',

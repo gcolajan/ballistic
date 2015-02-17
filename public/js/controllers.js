@@ -34,7 +34,7 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$rootScope', '$sco
             Session.create(response.user.id, response.user.username);
             $rootScope.user = response.user;
             $rootScope.$broadcast(AUTH_EVENTS.Authenticated);
-            $location.path('/dashboard');
+            $location.path('/welcome');
           } else {
             $scope.registerError = response.error;
           }
@@ -206,8 +206,6 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
           },
         ]
       }
-
-      console.log(response);
     }
   );
 }]);
@@ -216,17 +214,21 @@ angular.module('ballistic').controller('WelcomeCtrl', ['$scope', '$location', 'A
   $scope.accounts = {
     general: {
       name: 'Checkings',
-      balance: 0
+      balance: 0,
+      type: $scope.ACCOUNT_TYPES.General
     },
     investment: {
       name: 'Investments',
-      interest: 6.5
+      interest: 6.5,
+      type: $scope.ACCOUNT_TYPES.Investment
     },
     asset: {
-      name: 'Assets'
+      name: 'Assets',
+      type: $scope.ACCOUNT_TYPES.Asset
     },
     liability: {
-      name: 'Debts'
+      name: 'Debts',
+      type: $scope.ACCOUNT_TYPES.Liability
     }
   }
 
@@ -236,22 +238,23 @@ angular.module('ballistic').controller('WelcomeCtrl', ['$scope', '$location', 'A
 
   $scope.firstTimeSetUp = function(meta, accounts) {
     if (!meta || !meta.goal || !meta.age || !meta.currency){
-      $scope.error = "you must answer all general questions"
+      $scope.error = 'you must answer all general questions';
     } else if (!accounts.general.name || !accounts.investment.name || !accounts.investment.interest || !accounts.asset.name || !accounts.liability.name) {
-      $scope.error = "account forms left blank"
+      $scope.error = 'account forms left blank';
     } else {
       API.update({resource: 'usermeta', action: 'update'},
         {goal: meta.goal, age: meta.age, currency: meta.currency},
         function (response, err) {
+          $scope.user.meta = response.usermeta;
           saveAccount(accounts.general, function(){
             saveAccount(accounts.investment, function(){
               saveAccount(accounts.asset, function(){
                 saveAccount(accounts.liability, function(){
                   $location.path('/dashboard');
-                })
-              })
-            })
-          })
+                });
+              });
+            });
+          });
         }
       );
     }
@@ -261,11 +264,20 @@ angular.module('ballistic').controller('WelcomeCtrl', ['$scope', '$location', 'A
     API.save({resource: 'accounts', action: 'create'},
       {name: account.name, type: account.type, interest: account.interest},
       function (response, err) {
-        callback();
+        if(account.type == $scope.ACCOUNT_TYPES.General){
+          var now = new Date();
+          API.save({resource: 'transactions', action: 'create'},
+            {accountID: response.account.id, amount: account.balance, date: now, type: $scope.TRANSACTION_TYPES.Income, category: 'Initial Deposit', description: 'Initial Deposit.'},
+            function (response, err) {
+              callback();
+            }
+          );
+        } else {
+          callback();
+        }
       }
     );
   }
- 
 }]);
 
 angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', 'API', 'Session', 'AUTH_EVENTS', function ($scope, $location, API, Session, AUTH_EVENTS) {
@@ -275,11 +287,20 @@ angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', '
   });
 
   $scope.saveMeta = function (meta) {
-    if(meta && meta.goal && meta.age && meta.currency){
+    $scope.error = null;
+    $scope.message = null;
+
+    if (!meta || !meta.goal || !meta.age || !meta.currency) {
+      $scope.error = 'fields left empty';
+    } else {
       API.update({resource: 'usermeta', action: 'update'},
         {goal: meta.goal, age: meta.age, currency: meta.currency},
         function (response, err) {
-          console.log(response)
+          if (response.success) {
+            $scope.message = 'Saved!';
+          } else {
+            $scope.error = response.error;
+          }
         }
       );
     }
@@ -293,7 +314,6 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
     $scope.today = new Date();
 
     if($routeParams.id){
-      console.log("getting account info")
       API.get({resource: 'accounts', action: $routeParams.id},
         function(response, err) {
           if(response.success){
@@ -454,23 +474,24 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
               break;
             }
           }
-        console.log(response);
       });
     } else {
-      console.log("no id")
       $scope.account = {type: $scope.ACCOUNT_TYPES.General}
     }
   }
 
 
   $scope.createAccount = function (account) {
-    console.log(account);
-    if(account && account.name && account.type && (account.type != 4 || account.interest)){
+    if(!account || !account.name || !account.type || !(account.type != $scope.ACCOUNT_TYPES.Investment || account.interest)){
+      $scope.accountError = 'fields left empty';
+    } else {
       API.save({resource: 'accounts', action: 'create'},
         {name: account.name, type: account.type, interest: account.interest},
         function (response, err) {
           if(response.success){
             $location.path('/account/' + response.account.id);
+          } else {
+            $scope.accountError = response.error;
           }
         }
       );
@@ -478,9 +499,8 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
   }
 
   $scope.createTransaction = function (transaction) {
-    console.log(transaction);
     if(!transaction || !transaction.amount || !transaction.date || !transaction.type){
-      $scope.transactionError = "fields left empty";
+      $scope.transactionError = 'fields left empty';
     } else {
       API.save({resource: 'transactions', action: 'create'},
         {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type, category: transaction.category, description: transaction.description},
@@ -504,14 +524,12 @@ angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location
     $scope.transaction = null
 
     if($routeParams.id){
-      console.log("getting account info")
       API.get({resource: 'accounts', action: $routeParams.id, action2: 'listtransactions'},
         function(response, err) {
           if(response.success){
             $scope.account = response.account;
             $scope.transactions = response.transactions;
           }
-          console.log(response);
       });
     }
   }

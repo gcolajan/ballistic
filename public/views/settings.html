@@ -12,6 +12,8 @@
           <label for="currency">Currency Symbol</label>
           <input class="u-full-width" type="text" placeholder="$" id="currency" ng-model="meta.currency">
         </div>
+        <p ng-show = "error" class = "error">Error: {{error}}.</p>
+        <p ng-show = "message" class = "message">{{message}}.</p>
         <input class="button-primary" type="submit" value="Save">
       </form>
     </div>

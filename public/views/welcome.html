@@ -43,7 +43,7 @@
             <label for="general-name">Account Name</label>
             <input class="u-full-width" type="text" placeholder="checking account" id="general-name" ng-model="accounts.general.name">
             <label for="general-balance">Current Balance</label>
-            <input class="u-full-width" type="text" placeholder="6.5" value = "6.5" id="general-balance" ng-model="accounts.general.balance">
+            <input class="u-full-width" type="text" placeholder="4000" value = "0" id="general-balance" ng-model="accounts.general.balance">
             <p>An estimate is fine for now.</p>
           </div>
           <div class = "three columns">
@@ -66,6 +66,7 @@
           </div>
         </div>
         <p>That's everything! Go ahead and click the button below to start using ballistic.</p>
+        <p ng-show = "error" class = "error">Error: {{error}}.</p>
         <input class="button-primary" type="submit" value="Submit &amp; Continue">
       </form>
     </div>

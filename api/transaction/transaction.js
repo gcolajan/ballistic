@@ -23,18 +23,14 @@ exports.create = function(req, res) {
                 models.Category.create({name: req.body.category}).then(function(category){
                   category.setAccount(account);
                   transaction.setCategory(category);
-                  debug(transaction);
-                  debug(category);
                   res.send({success: true, transaction: transaction});
                 });
               } else {
                 transaction.setCategory(category);
-                debug(transaction);
                 res.send({success: true, transaction: transaction});
               }
             });
           } else {
-            debug(transaction);
             res.send({success: true, transaction: transaction});
           }
         });
@@ -47,6 +43,10 @@ exports.update = function(req, res) {
   debug(req.body)
   if (!req.body.amount || !req.body.date || !req.body.type) {
     res.send({success: false, error: 'fields left empty'});
+  } else if (!validator.isDate(req.body.date)) {
+    res.send({success: false, error: 'invalid date'});
+  } else if (!validator.isNumeric(req.body.amount)) {
+    res.send({success: false, error: 'amount must be a number'});
   } else {
     models.Transaction.find(req.params.id).then(function(transaction){
       transaction.amount = req.body.amount;
@@ -61,7 +61,11 @@ exports.update = function(req, res) {
 
 exports.get = function(req, res) {
   models.Transaction.find(req.params.id).then(function(transaction){
-    res.send({success: true, transaction: transaction});
+    if(!transaction){
+      res.send({success: false, error: 'transaction not found'});
+    } else {
+      res.send({success: true, transaction: transaction});
+    }
   }); 
 }
 
