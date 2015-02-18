@@ -26,6 +26,8 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$rootScope', '$sco
   });
 
   $scope.register = function (credentials) {
+    $scope.registerError = null;
+
     if(credentials && credentials.username && credentials.password){
       API.save({resource: 'users', action: 'create'},
         {username: credentials.username, password: credentials.password},
@@ -46,6 +48,8 @@ angular.module('ballistic').controller('LoginRegisterCtrl', ['$rootScope', '$sco
   }
 
   $scope.login = function (credentials) {
+    $scope.loginError = null;
+
     if(credentials && credentials.username && credentials.password){
       API.save({resource: 'users', action: 'authenticate'},
         {username: credentials.username, password: credentials.password},
@@ -237,6 +241,8 @@ angular.module('ballistic').controller('WelcomeCtrl', ['$scope', '$location', 'A
   }
 
   $scope.firstTimeSetUp = function(meta, accounts) {
+    $scope.error = null;
+
     if (!meta || !meta.goal || !meta.age || !meta.currency){
       $scope.error = 'you must answer all general questions';
     } else if (!accounts.general.name || !accounts.investment.name || !accounts.investment.interest || !accounts.asset.name || !accounts.liability.name) {
@@ -482,6 +488,8 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
 
 
   $scope.createAccount = function (account) {
+    $scope.accountError = null;
+
     if(!account || !account.name || !account.type || !(account.type != $scope.ACCOUNT_TYPES.Investment || account.interest)){
       $scope.accountError = 'fields left empty';
     } else {
@@ -499,6 +507,8 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
   }
 
   $scope.createTransaction = function (transaction) {
+    $scope.transactionError = null;
+
     if(!transaction || !transaction.amount || !transaction.date || !transaction.type){
       $scope.transactionError = 'fields left empty';
     } else {
