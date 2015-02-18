@@ -142,3 +142,25 @@ p.small-gray {
 .inline-form {
   padding-top: 2rem;
 }
+
+.button.button-warning,
+button.button-warning,
+input[type="submit"].button-warning,
+input[type="reset"].button-warning,
+input[type="button"].button-warning {
+  color: #FFF;
+  background-color: #D32F2F;
+  border-color: #D32F2F; }
+.button.button-warning:hover,
+button.button-warning:hover,
+input[type="submit"].button-warning:hover,
+input[type="reset"].button-warning:hover,
+input[type="button"].button-warning:hover,
+.button.button-warning:focus,
+button.button-warning:focus,
+input[type="submit"].button-warning:focus,
+input[type="reset"].button-warning:focus,
+input[type="button"].button-warning:focus {
+  color: #FFF;
+  background-color: #F44336;
+  border-color: #F44336; }

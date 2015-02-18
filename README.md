@@ -14,11 +14,15 @@ Features
 * Debt Account Tracking
 * Time to Investment Goal Prediction
 * Account and Global Statistics
+* Delete Transaction
 
 ### In Progress
 
-* Edit/Delete Transactions
+* Edit Transactions
 * Edit/Delete Accounts
+* Validation
+* Improvements to transaction handling for Asset, Debt, and Investment accounts
+* General Improvements
 
 Installation
 =======
@@ -31,4 +35,4 @@ In order to run Ballistic, follow these steps:
 
 Ballistic should now be running on port 3000.
 
-**IMPORTANT:** Ballistic is not ready for production use.
+**IMPORTANT:** Ballistic is not ready for production use. If you're using it in production anyway, be sure to update `config/security.json` with new secret tokens.

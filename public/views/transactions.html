@@ -52,10 +52,6 @@
                     <label for="category">Category</label>
                     <input class="u-full-width" type="text" placeholder="Food, Contract Work, etc" id="category" ng-model="transaction.editCategory">
                   </div>
-                  <label for="description">Description (optional)</label>
-                  <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.editDescription">
-                  <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
-                  <input class="button-primary" type="submit" value="Save">
                 </div>
               </div>
               <div ng-switch-when="2">
@@ -113,10 +109,6 @@
                     <label for="category">Debt Name</label>
                     <input class="u-full-width" type="text" placeholder="Student loan, car, etc" id="category" ng-model="transaction.category">
                   </div>
-                  <label for="description">Description (optional)</label>
-                  <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
-                  <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
-                  <input class="button-primary" type="submit" value="Add">
                 </div>
               </div>
               <div ng-switch-when="4">
@@ -143,11 +135,12 @@
                     <label for="category">Fund Name</label>
                     <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.category">
                   </div>
-                  <label for="description">Description (optional)</label>
-                  <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
-                  <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
-                  <input class="button-primary" type="submit" value="Add">
                 </div>
+              </div>
+              <label for="description">Description (optional)</label>
+              <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.editDescription">
+              <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
+              <input class="button-primary" type="submit" value="Save"> <a class="button button-warning" ng-click="deleteTransaction(transaction)"><span ng-if="transaction.deleteWarning">Click again to delete</span><span ng-if="!transaction.deleteWarning">Delete</span></a>
             </div>
           </form>
         </div>

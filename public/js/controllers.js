@@ -556,15 +556,19 @@ angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location
 
   $scope.deleteTransaction = function (transaction) {
     console.log(transaction);
-    if(transaction){
-      API.delete({resource: 'transactions', action: transaction.id},
-        function (response, err) {
-          console.log(response);
-          if(response.success) {
-            refresh();
+    if (transaction) {
+      if (!transaction.deleteWarning) {
+        transaction.deleteWarning = true;
+      } else {
+        API.delete({resource: 'transactions', action: transaction.id},
+          function (response, err) {
+            console.log(response);
+            if(response.success) {
+              refresh();
+            }
           }
-        }
-      );
+        );
+      } 
     }
   }
 }]);
