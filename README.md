@@ -14,11 +14,10 @@ Features
 * Debt Account Tracking
 * Time to Investment Goal Prediction
 * Account and Global Statistics
-* Delete Transaction
+* Edit/Delete Transaction
 
 ### In Progress
 
-* Edit Transactions
 * Edit/Delete Accounts
 * Validation
 * Improvements to transaction handling for Asset, Debt, and Investment accounts

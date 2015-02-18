@@ -554,6 +554,26 @@ angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location
     $scope.transaction.editDescription = transaction.description;
   }
 
+  $scope.editTransaction = function (transaction) {
+    $scope.transactionError = null;
+
+    if(!transaction || !transaction.editAmount || !transaction.editDate || !transaction.editType){
+      $scope.transactionError = 'fields left empty';
+    } else {
+      API.update({resource: 'transactions', action: transaction.id},
+        {accountID: $scope.account.id, amount: transaction.editAmount, date: transaction.editDate, type: transaction.editType, category: transaction.editCategory, description: transaction.editDescription},
+        function (response, err) {
+          if(response.success) {
+            refresh();
+            $scope.transaction = null;
+          } else {
+            $scope.transactionError = response.error;
+          }
+        }
+      );
+    }
+  }
+
   $scope.deleteTransaction = function (transaction) {
     console.log(transaction);
     if (transaction) {

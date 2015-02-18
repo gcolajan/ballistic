@@ -15,24 +15,11 @@ exports.create = function(req, res) {
         res.send({success: false, error: 'account not found'});
       } else {
         models.Transaction.create({ amount: req.body.amount, date: req.body.date, type: req.body.type, description: req.body.description}).then(function(transaction) {
-          transaction.setAccount(account);
-
-          if(req.body.category) {
-            models.Category.find({where: {AccountId: account.id, name: {ilike: req.body.category}}}).then(function(category){
-              if (!category) {
-                models.Category.create({name: req.body.category}).then(function(category){
-                  category.setAccount(account);
-                  transaction.setCategory(category);
-                  res.send({success: true, transaction: transaction});
-                });
-              } else {
-                transaction.setCategory(category);
-                res.send({success: true, transaction: transaction});
-              }
+          transaction.setAccount(account).then(function(){
+            createIfNotExistsAndAssociate(account, transaction, req.body.category, function(transaction){
+              res.send({success: true, transaction: transaction});
             });
-          } else {
-            res.send({success: true, transaction: transaction});
-          }
+          });
         });
       }
     });
@@ -48,12 +35,25 @@ exports.update = function(req, res) {
   } else if (!validator.isFloat(req.body.amount)) {
     res.send({success: false, error: 'amount must be a number'});
   } else {
-    models.Transaction.find(req.params.id).then(function(transaction){
-      transaction.amount = req.body.amount;
-      transaction.date = req.body.date;
-      transaction.type = req.body.type;
-      transaction.save().then(function(transaction){
-        res.send({success: true, transaction: transaction})
+    models.Transaction.find({where: { id: req.params.id}, include: [ models.Category ]}).then(function(transaction){
+      models.Account.find({where: {id: transaction.AccountId, UserId: req.user.id}}).then(function(account){
+        transaction.amount = req.body.amount;
+        transaction.date = req.body.date;
+        transaction.type = req.body.type;
+        transaction.description = req.body.description;
+        transaction.save().then(function(){
+          if (req.body.category) {
+            createIfNotExistsAndAssociate(account, transaction, req.body.category, function(transaction){
+              res.send({success: true, transaction: transaction});
+            });
+          } else {
+            transaction.setCategory(null).then(function(){
+              res.send({success: true, transaction: transaction});
+            });
+          }
+
+          removeCategoryIfNotUsed(transaction.Category);
+        });
       });
     });
   }
@@ -70,9 +70,41 @@ exports.get = function(req, res) {
 }
 
 exports.delete = function(req, res) {
-  models.Transaction.find(req.params.id).then(function(transaction){
+  models.Transaction.find({where: { id: req.params.id}, include: [ models.Category ]}).then(function(transaction){
     transaction.destroy().then(function(){
+      removeCategoryIfNotUsed(transaction.Category);
       res.send({success: true});
     });
+
+    
   }); 
+}
+
+function createIfNotExistsAndAssociate(account, transaction, categoryName, callback) {
+  if(categoryName) {
+    models.Category.find({where: {AccountId: account.id, name: {ilike: categoryName}}}).then(function(category){
+      if (!category) {
+        models.Category.create({name: categoryName}).then(function(category){
+          category.setAccount(account).then(function(){
+            transaction.setCategory(category).then(function(){
+              callback(transaction);
+            });
+          });
+        });
+      } else {
+        transaction.setCategory(category);
+        callback(transaction);
+      }
+    });
+  } else {
+    callback(transaction);
+  }
+}
+
+function removeCategoryIfNotUsed(category){
+  category.getTransactions(function(transactions) {
+    if (!transactions) {
+      category.destroy();
+    }
+  });
 }
