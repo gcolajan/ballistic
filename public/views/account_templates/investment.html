@@ -4,20 +4,30 @@
     <h3>Contributions &amp; Growth</h3>
     <span graph="historicalInvestmentData" type = "line"></span>
     <h3>Portfolio Distribution</h3>
-    <span graph="distributionData" type = "pie"></span>
+    <div ng-if="distributionData.length > 0">
+      <span graph="distributionData" type = "pie"></span>
+    </div>
+    <div ng-if="distributionData.length == 0">
+      <p>There are currently no investments in this account.</p>
+    </div>
     <h3>Portfolio</h3>
-    <ul class = "debt-list">
-      <li ng-repeat="investment in distributionData | orderBy:'value':true">
-        <div class="row">
-          <div class = "one-half column">
-            <h5>{{investment.name}}</h5>
+    <div ng-if="distributionData.length > 0">
+      <ul class = "debt-list">
+        <li ng-repeat="investment in distributionData | orderBy:'value':true">
+          <div class="row">
+            <div class = "one-half column">
+              <h5>{{investment.name}}</h5>
+            </div>
+            <div class = "one-half column">
+              <h5 class = "money-align">{{investment.value | currency:user.meta.currency}}</h5>
+            </div>
           </div>
-          <div class = "one-half column">
-            <h5 class = "money-align">{{investment.value | currency:user.meta.currency}}</h5>
-          </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
+    <div ng-if="distributionData.length == 0">
+      <p>There are currently no investments in this account.</p>
+    </div>
   </div>
   <div class="six columns">
     <h3>Account Info</h3>

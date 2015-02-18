@@ -4,20 +4,30 @@
     <h3>Interest &amp; Payments</h3>
     <span graph="historicalDebtData" type = "line"></span>
     <h3>Debt Distribution</h3>
-    <span graph="distributionData" type = "pie"></span>
+    <div ng-if="distributionData.length > 0">
+      <span graph="distributionData" type = "pie"></span>
+    </div>
+    <div ng-if="distributionData.length == 0">
+      <p>This account does not currently have any debts.</p>
+    </div>
     <h3>Liability List</h3>
-    <ul class = "debt-list">
-      <li ng-repeat="debt in distributionData | orderBy:'value':true">
-        <div class="row">
-          <div class = "one-half column">
-            <h5>{{debt.name}}</h5>
+    <div ng-if="distributionData.length > 0">
+      <ul class = "debt-list">
+        <li ng-repeat="debt in distributionData | orderBy:'value':true">
+          <div class="row">
+            <div class = "one-half column">
+              <h5>{{debt.name}}</h5>
+            </div>
+            <div class = "one-half column">
+              <h5 class = "money-align">{{debt.value | currency:user.meta.currency}}</h5>
+            </div>
           </div>
-          <div class = "one-half column">
-            <h5 class = "money-align">{{debt.value | currency:user.meta.currency}}</h5>
-          </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
+    <div ng-if="distributionData.length == 0">
+      <p>This account does not currently have any debts.</p>
+    </div>
   </div>
   <div class="six columns">
     <h3>Account Info</h3>

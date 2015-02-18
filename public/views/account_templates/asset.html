@@ -4,20 +4,30 @@
     <h3>Purchases &amp; Appreciation</h3>
     <span graph="historicalInvestmentData" type = "line"></span>
     <h3>Asset Worth Distribution</h3>
-    <span graph="distributionData" type = "pie"></span>
+    <div ng-if="distributionData.length > 0">
+      <span graph="distributionData" type = "pie"></span>
+    </div>
+    <div ng-if="distributionData.length == 0">
+      <p>This account does not currently have any assets.</p>
+    </div>
     <h3>Asset List</h3>
-    <ul class = "asset-list">
-      <li ng-repeat="asset in distributionData | orderBy:'value':true">
-        <div class="row">
-          <div class = "one-half column">
-            <h5>{{asset.name}}</h5>
+    <div ng-if="distributionData.length > 0">
+      <ul class = "asset-list">
+        <li ng-repeat="asset in distributionData | orderBy:'value':true">
+          <div class="row">
+            <div class = "one-half column">
+              <h5>{{asset.name}}</h5>
+            </div>
+            <div class = "one-half column">
+              <h5 class = "money-align">{{asset.value | currency:user.meta.currency}}</h5>
+            </div>
           </div>
-          <div class = "one-half column">
-            <h5 class = "money-align">{{asset.value | currency:user.meta.currency}}</h5>
-          </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
+    <div ng-if="distributionData.length == 0">
+      <p>This account does not currently have any assets.</p>
+    </div>
   </div>
   <div class="six columns">
     <h3>Account Info</h3>
