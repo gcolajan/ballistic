@@ -527,7 +527,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
   }
 }]);
 
-angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location', '$routeParams', 'API', 'Session', function ($scope, $location, $routeParams, API, Session) {
+angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location', '$filter', '$routeParams', 'API', 'Session', function ($scope, $location, $filter, $routeParams, API, Session) {
   refresh();
   
   function refresh() {
@@ -539,9 +539,19 @@ angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location
           if(response.success){
             $scope.account = response.account;
             $scope.transactions = response.transactions;
+            console.log(response.transactions);
           }
       });
     }
+  }
+
+  $scope.showEditTransaction = function (transaction) {
+    $scope.transaction = transaction;
+    $scope.transaction.editDate = $filter('date')($scope.transaction.date, 'yyyy/MM/dd');
+    $scope.transaction.editCategory = transaction.Category.name;
+    $scope.transaction.editType = $scope.transaction.type;
+    $scope.transaction.editAmount = transaction.amount;
+    $scope.transaction.editDescription = transaction.description;
   }
 
   $scope.deleteTransaction = function (transaction) {
