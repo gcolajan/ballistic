@@ -24,8 +24,8 @@
           </li>
         </ul>
       </div>
-      <div class="six columns">
-        <div ng-show = "transaction">
+      <div class="six columns" >
+        <div ng-show = "transaction" id = "edit-transaction">
           <h3>Edit Transaction</h3>
           <form ng-submit="editTransaction(transaction)">
             <div class="row">
@@ -106,3 +106,9 @@
     </div>
   </div>
 </div>
+<script>
+  $(window).scroll(function() { 
+    console.log($(this).scrollTop())
+    $('#edit-transaction').css("top", $(this).scrollTop());
+  })
+</script>
