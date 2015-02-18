@@ -15,23 +15,30 @@
       <div class="six columns">
         <h3>Net Worth: {{statistics.netWorth | currency:user.meta.currency}}</h3>
         <h3>Goal Progress</h3>
-        <p>Your goal of {{user.meta.goal | currency:user.meta.currency}} in passive income requires an investment of approximately {{statistics.investmentGoal | currency:user.meta.currency}}. Here's how you're doing so far:</p>
-        <div class = "row">
-          <div class = "one-half column">
-            <h6>Current Investments:</h6>
-            <h5>{{statistics.totalInvestments | currency:user.meta.currency}}</h5> 
-            <h6>Current Investment Income:</h6>
-            <h5>{{statistics.yearlyInvestmentIncome | currency:user.meta.currency}} per year</h5> 
-            <h6>Percentage of Goal:</h6>
-            <h5>{{statistics.goalPercentage | number:2}} %</h5> 
+        <div ng-if="statistics.totalInvestments">
+          <p>Your goal of {{user.meta.goal | currency:user.meta.currency}} in passive income requires an investment of approximately {{statistics.investmentGoal | currency:user.meta.currency}}. Here's how you're doing so far:</p>
+          <div class = "row">
+            <div class = "one-half column">
+              <h6>Current Investments:</h6>
+              <h5>{{statistics.totalInvestments | currency:user.meta.currency}}</h5> 
+              <h6>Current Investment Income:</h6>
+              <h5>{{statistics.yearlyInvestmentIncome | currency:user.meta.currency}} per year</h5> 
+              <h6>Percentage of Goal:</h6>
+              <h5>{{statistics.goalPercentage | number:2}} %</h5> 
+            </div>
+            <div class = "one-half column">
+              <h6>Time Until Goal Reached:</h6> 
+              <h4>{{statistics.estimatedYearsRemaining | number:2}} Years</h4>
+              <p class = "small-gray">(you will be {{statistics.goalAge | number:0}} at this time)</p>
+            </div>
           </div>
-          <div class = "one-half column">
-            <h6>Time Until Goal Reached:</h6> 
-            <h4>{{statistics.estimatedYearsRemaining | number:2}} Years</h4>
-            <p class = "small-gray">(you will be {{statistics.goalAge | number:0}} at this time)</p>
-          </div>
+          <p class = "small-gray">These estimates are made with the interest rates set on your investments. They also assume that you maintain your current distribution of funds.
         </div>
-        <p class = "small-gray">These estimates are made with the interest rates set on your investments. They also assume that you maintain your current distribution of funds.
+        <div ng-if="!statistics.totalInvestments">
+          <p>Once you add some investments, this section will tell you how long it will take to reach your goal of {{user.meta.goal | currency:user.meta.currency}} in passive income.</p>
+          <p>Don't have any investments? Go open an investment account right now. Seriously, due to the way <a href = "http://en.wikipedia.org/wiki/Compound_interest" target="_window">compound interest</a> works, the sooner you start saving, the quicker you'll reach your goal.</p>
+          <p>In any case, you should start adding transactions to your accounts below by clicking on the account you want to work with. Remember: Don't take things too seriously.</p>
+        </div>
         <h3>Accounts</h3>
         <ul class = "account-list">
           <li ng-repeat="account in accounts | orderBy:['type', 'name']" ng-click = "changePath('account/' + account.id)">
@@ -42,40 +49,60 @@
                   <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}</p>
                 </div>
                 <div class = "one-half column">
-                  <p><b>Income for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyIncome | currency:user.meta.currency}}
-                  <br><b>Spend for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlySpend | currency:user.meta.currency}}
+                  <p>
+                    <b>Income for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyIncome | currency:user.meta.currency}}
+                    <br><b>Spend for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlySpend | currency:user.meta.currency}}
+                  </p>
                 </div>
               </div>
               <div ng-switch-when="2">
                 <div class = "one-half column">
-                  <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
-                  <br><b>Share of Assets:</b><br> {{account.statistics.percentOfAssets | number:2}} %</p>
+                  <p>
+                    <b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
+                    <span ng-if="account.statistics.percentOfLiabilities">
+                      <br><b>Share of Assets:</b><br> {{account.statistics.percentOfLiabilities | number:2}} %
+                    </span>
+                  </p>
                 </div>
                 <div class = "one-half column">
-                  <p><b>Purchases &amp; Appreciation for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyPurchases + account.statistics.yearlyAppreciation | currency:user.meta.currency}}
-                  <br><b>Sale &amp; Depreciation for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlySales + account.statistics.yearlyDepreciation | currency:user.meta.currency}}
+                  <p>
+                    <b>Purchases &amp; Appreciation for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyPurchases + account.statistics.yearlyAppreciation | currency:user.meta.currency}}
+                    <br><b>Sale &amp; Depreciation for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlySales + account.statistics.yearlyDepreciation | currency:user.meta.currency}}
+                  </p>
                 </div>
               </div>
               <div ng-switch-when="3">
                 <div class = "one-half column">
-                  <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
-                  <br><b>Share of Liabilities:</b><br> {{account.statistics.percentOfLiabilities | number:2}} %</p>
+                  <p>
+                    <b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
+                    <span ng-if="account.statistics.percentOfLiabilities">
+                      <br><b>Share of Liabilities:</b><br> {{account.statistics.percentOfLiabilities | number:2}} %
+                    </span>
+                  </p>
                 </div>
                 <div class = "one-half column">
-                  <p><b>New Debt for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyDebt | currency:user.meta.currency}}
-                  <br><b>Interest for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyInterest | currency:user.meta.currency}}
-                  <br><b>Payments for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyPayments | currency:user.meta.currency}}
+                  <p>
+                    <b>New Debt for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyDebt | currency:user.meta.currency}}
+                    <br><b>Interest for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyInterest | currency:user.meta.currency}}
+                    <br><b>Payments for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyPayments | currency:user.meta.currency}}
+                  </p>
                 </div>
               </div>
               <div ng-switch-when="4">
                 <div class = "one-half column">
-                  <p><b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
-                  <br><b>Share of Investments:</b><br> {{account.statistics.percentOfInvestments | number:2}} %</p>
+                  <p>
+                    <b>Balance:</b><br> {{account.statistics.balance | currency:user.meta.currency}}
+                    <span ng-if="account.statistics.percentOfInvestments">
+                      <br><b>Share of Investments:</b><br> {{account.statistics.percentOfInvestments | number:2}} %
+                    </span>
+                  </p>
                 </div>
                 <div class = "one-half column">
-                  <p><b>Contributions for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyContributions | currency:user.meta.currency}}
-                  <br><b>Withdrawals for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyWithdrawals | currency:user.meta.currency}}
-                  <br><b>Interest for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyGrowth | currency:user.meta.currency}}</p>
+                  <p>
+                    <b>Contributions for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyContributions | currency:user.meta.currency}}
+                    <br><b>Withdrawals for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyWithdrawals | currency:user.meta.currency}}
+                    <br><b>Interest for {{today.getFullYear()}}:</b><br> {{account.statistics.yearlyGrowth | currency:user.meta.currency}}
+                  </p>
                 </div>
               </div>
             </div>
