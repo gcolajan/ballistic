@@ -45,7 +45,7 @@ exports.update = function(req, res) {
     res.send({success: false, error: 'fields left empty'});
   } else if (!validator.isDate(req.body.date)) {
     res.send({success: false, error: 'invalid date'});
-  } else if (!validator.isNumeric(req.body.amount)) {
+  } else if (!validator.isFloat(req.body.amount)) {
     res.send({success: false, error: 'amount must be a number'});
   } else {
     models.Transaction.find(req.params.id).then(function(transaction){

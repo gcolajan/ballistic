@@ -5,7 +5,7 @@ var validator = require('validator');
 exports.update = function(req, res) {
   if(!req.body.currency || !req.body.goal || !req.body.age){
     res.send({success: false, error: 'fields left empty'});
-  } else if (!validator.isNumeric(req.body.goal)) {
+  } else if (!validator.isFloat(req.body.goal)) {
     res.send({success: false, error: 'goal must be a number'});
   } else if (!validator.isNumeric(req.body.age)) {
     res.send({success: false, error: 'age must be a number'});
