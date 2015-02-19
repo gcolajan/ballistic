@@ -11,7 +11,7 @@ exports.create = function(req, res) {
   } else if (!validator.isDate(req.body.date)) {
     res.send({success: false, error: 'invalid date'});
   } else if (!validator.isFloat(req.body.amount)) {
-    res.send({success: false, error: 'amount must be a number'});
+    res.send({success: false, error: 'amount must be a number (no commas)'});
   } else {
     models.Account.find({where: {id: req.body.accountID, UserId: req.user.id}}).then(function(account){
       if(!account){
@@ -32,13 +32,12 @@ exports.create = function(req, res) {
 }
 
 exports.update = function(req, res) {
-  debug(req.body)
   if (!req.body.amount || !req.body.date || !req.body.type) {
     res.send({success: false, error: 'fields left empty'});
   } else if (!validator.isDate(req.body.date)) {
     res.send({success: false, error: 'invalid date'});
   } else if (!validator.isFloat(req.body.amount)) {
-    res.send({success: false, error: 'amount must be a number'});
+    res.send({success: false, error: 'amount must be a number (no commas)'});
   } else {
     models.Transaction.find({where: { id: req.params.id}, include: [ models.Category ]}).then(function(transaction){
       models.Account.find({where: {id: transaction.AccountId, UserId: req.user.id}}).then(function(account){

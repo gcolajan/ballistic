@@ -303,7 +303,7 @@ angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', '
         {goal: meta.goal, age: meta.age, currency: meta.currency},
         function (response, err) {
           if (response.success) {
-            $scope.message = 'Saved!';
+            $scope.message = 'Saved';
           } else {
             $scope.error = response.error;
           }
@@ -332,7 +332,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
             for(var i = 0; i < categories.length; i++){
               switch($scope.account.type){
                 case $scope.ACCOUNT_TYPES.Asset:
-                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Appreciation, category: categories[i].name};
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Appreciation, category: categories[i].name, value: categories[i].value};
                   break;
                 case $scope.ACCOUNT_TYPES.Liability:
                   $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Payment, category: categories[i].name};
@@ -523,19 +523,23 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
   }
 
   $scope.createTransaction = function (transaction) {
-    $scope.transactionError = null;
+    transaction.error = null;
+
+    if(transaction.type == $scope.TRANSACTION_TYPES.Sale) {
+      transaction.amount = transaction.value;
+    }
 
     if(!transaction || !transaction.amount || !transaction.date || !transaction.type){
-      $scope.transactionError = 'fields left empty';
+      transaction.error = 'fields left empty';
     } else {
       API.save({resource: 'transactions', action: 'create'},
         {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type, category: transaction.category, description: transaction.description},
         function (response, err) {
           if(response.success) {
             refresh();
-            $scope.transaction = {type: 1};
+            transaction = {type: 1};
           } else {
-            $scope.transactionError = response.error;
+            transaction.error = response.error;
           }
         }
       );

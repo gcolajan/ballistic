@@ -21,6 +21,31 @@
             <div class = "one-half column">
               <h5 class = "money-align">{{asset.value | currency:user.meta.currency}}</h5>
             </div>
+            <form ng-submit="createTransaction(categoryTransactions[asset.name])">
+              <div class="row">
+                <div class = "one-third column">
+                  <label for="amount">Amount</label>
+                  <span ng-show = "categoryTransactions[asset.name].type == TRANSACTION_TYPES.Sale">{{asset.value | currency:user.meta.currency}}</span>
+                  <span ng-hide = "categoryTransactions[asset.name].type == TRANSACTION_TYPES.Sale">
+                    <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="categoryTransactions[asset.name].amount">
+                  </span>
+                </div>
+                <div class = "one-third column">
+                  <label for="date">Date</label>
+                  <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" ng-model="categoryTransactions[asset.name].date" date-picker>
+                </div>
+                <div class = "one-third column">
+                  <label>Type</label>
+                  <select class="u-full-width" id="type"  ng-model="categoryTransactions[asset.name].type">
+                    <option value="7">Appreciation</option>
+                    <option value="8">Depreciation</option>
+                    <option value="9">Sale</option>
+                  </select>
+                </div>
+              </div>
+              <p ng-show = "categoryTransactions[asset.name].error" class = "error">Error: {{categoryTransactions[asset.name].error}}.</p>
+              <input class="button-primary" type="submit" value="Update">
+            </form>
           </div>
         </li>
       </ul>
@@ -49,7 +74,7 @@
         <h4>{{statistics.yearlyNet | currency:user.meta.currency}}</h4>
       </div>
     </div>
-    <h3>Add Transaction</h3>
+    <h3>Purchase Asset</h3>
     <form ng-submit="createTransaction(transaction)">
       <div class="row">
         <div class = "one-half column">
@@ -63,21 +88,12 @@
       </div>
       <div class="row">
         <div class = "one-half column">
-          <label for="type">Type</label>
-          <select class="u-full-width" id="type" ng-model="transaction.type">
-            <option value="7">Appreciation</option>
-            <option value="8">Depreciation</option>
-            <option value="6">Purchase</option>
-            <option value="9">Sale</option>
-          </select>
-        </div>
-        <div class = "one-half column">
           <label for="category">Asset Name</label>
           <input class="u-full-width" type="text" placeholder="House, car, etc" id="category" ng-model="transaction.category">
         </div>
         <label for="description">Description (optional)</label>
         <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
-        <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
+        <p ng-show = "transaction.error" class = "error">Error: {{transaction.error}}.</p>
         <input class="button-primary" type="submit" value="Add">
       </div>
     </form>
