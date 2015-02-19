@@ -1,6 +1,9 @@
 var models  = require('../../models');
 var debug = require('debug')('ballistic');
 var validator = require('validator');
+var constants = require(__dirname + '/../../config/constants.json');
+var ACCOUNT = constants.ACCOUNT;
+var TRANSACTION = constants.TRANSACTION;
 
 exports.create = function(req, res) {
   if (!req.body.accountID || !req.body.amount || !req.body.date || !req.body.type){
@@ -13,6 +16,8 @@ exports.create = function(req, res) {
     models.Account.find({where: {id: req.body.accountID, UserId: req.user.id}}).then(function(account){
       if(!account){
         res.send({success: false, error: 'account not found'});
+      } else if(!req.body.category && (account.type == ACCOUNT.Investment || account.type == ACCOUNT.Asset || account.type == ACCOUNT.Liability)) {
+        res.send({success: false, error: 'name field is required'});
       } else {
         models.Transaction.create({ amount: req.body.amount, date: req.body.date, type: req.body.type, description: req.body.description}).then(function(transaction) {
           transaction.setAccount(account).then(function(){

@@ -98,7 +98,11 @@
               <label for="description">Description (optional)</label>
               <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.editDescription">
               <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
-              <input class="button-primary" type="submit" value="Save"> <a class="button button-warning" ng-click="deleteTransaction(transaction)"><span ng-if="transaction.deleteWarning">Click again to delete</span><span ng-if="!transaction.deleteWarning">Delete</span></a>
+              <input class="button-primary" type="submit" value="Save">
+              <a class="button button-warning pull-right" ng-click="deleteTransaction(transaction)">
+                <span ng-if="transaction.deleteWarning">Click again to delete</span>
+                <span ng-if="!transaction.deleteWarning">Delete</span>
+              </a>
             </div>
           </form>
         </div>

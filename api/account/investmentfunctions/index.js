@@ -67,22 +67,34 @@ function generateInvestmentDistributionStatistics(categories, investmentStatisti
   }
 
   if(statistics.count < categories.length){
-    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Investment, TRANSACTION.Growth]}}).then(function(sum){
-      var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
-      if(percentOfInvestments > 0){
-        statistics.categories.push({value: sum, name: categories[statistics.count].name, percentage: percentOfInvestments});
-      }
-      statistics.count++;
-      generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
+    models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: [TRANSACTION.Investment, TRANSACTION.Growth]}}).then(function(investmentsAndGrowth){
+      models.Transaction.sum('amount', {where: {CategoryId: categories[statistics.count].id, type: TRANSACTION.Withdrawal}}).then(function(withdrawals){
+        investmentsAndGrowth = investmentsAndGrowth || 0;
+        withdrawals = withdrawals || 0;
+
+        var sum = investmentsAndGrowth - withdrawals;
+        var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
+        if(percentOfInvestments > 0){
+          statistics.categories.push({value: sum, name: categories[statistics.count].name, percentage: percentOfInvestments});
+        }
+        statistics.count++;
+        generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
+      });
     });
   } else if (statistics.count == categories.length && categories.length > 0){
-    models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Investment, TRANSACTION.Growth], AccountId: categories[statistics.count - 1].AccountId}}).then(function(sum){
-      var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
-      if(percentOfInvestments > 0){
-        statistics.categories.push({value: sum, name: 'None', percentage: percentOfInvestments});
-      }
-      statistics.count++;
-      generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
+    models.Transaction.sum('amount', {where: {CategoryId: null, type: [TRANSACTION.Investment, TRANSACTION.Growth], AccountId: categories[statistics.count - 1].AccountId}}).then(function(investmentsAndGrowth){
+      models.Transaction.sum('amount', {where: {CategoryId: null, type: TRANSACTION.Withdrawal, AccountId: categories[statistics.count - 1].AccountId}}).then(function(withdrawals){
+        investmentsAndGrowth = investmentsAndGrowth || 0;
+        withdrawals = withdrawals || 0;
+        
+        var sum = investmentsAndGrowth - withdrawals;
+        var percentOfInvestments = (sum / investmentStatistics.balance) * 100;
+        if(percentOfInvestments > 0){
+          statistics.categories.push({value: sum, name: 'None', percentage: percentOfInvestments});
+        }
+        statistics.count++;
+        generateInvestmentDistributionStatistics(categories, investmentStatistics, statistics, callback);
+      });
     });
   } else {
     callback(statistics);

@@ -82,8 +82,8 @@
       </div>
     </form>
     <h3>Recent Transactions</h3>
-    <ul class = "transaction-list">
-      <li ng-repeat="transaction in transactions | orderBy:'date':true" ng-click = "changePath('account/' + account.id + '/transactions/' + transaction.id)">
+    <ul class = "recent-transactions">
+      <li ng-repeat="transaction in transactions | orderBy:'date':true">
         <div class="row">
           <div class = "one-half column">
             <p><b>Amount:</b> {{transaction.amount | currency:user.meta.currency}}

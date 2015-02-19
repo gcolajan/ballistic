@@ -15,12 +15,33 @@
       <ul class = "debt-list">
         <li ng-repeat="investment in distributionData | orderBy:'value':true">
           <div class="row">
-            <div class = "one-half column">
+            <div class = "seven columns">
               <h5>{{investment.name}}</h5>
             </div>
-            <div class = "one-half column">
+            <div class = "five columns">
               <h5 class = "money-align">{{investment.value | currency:user.meta.currency}}</h5>
             </div>
+            <form ng-submit="createTransaction(categoryTransactions[investment.name])">
+              <div class="row">
+                <div class = "one-third column">
+                  <label for="amount">Amount</label>
+                  <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="categoryTransactions[investment.name].amount">
+                </div>
+                <div class = "one-third column">
+                  <label for="date">Date</label>
+                  <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" ng-model="categoryTransactions[investment.name].date" date-picker>
+                </div>
+                <div class = "one-third column">
+                  <label>Type</label>
+                  <select class="u-full-width" id="type"  ng-model="categoryTransactions[investment.name].type">
+                    <option value="2">Growth</option>
+                    <option value="3">Withdrawl</option>
+                  </select>
+                </div>
+              </div>
+              <p ng-show = "categoryTransactions[investment.name].error" class = "error">Error: {{categoryTransactions[investment.name].error}}.</p>
+              <input class="button-primary" type="submit" value="Update">
+            </form>
           </div>
         </li>
       </ul>
@@ -47,7 +68,7 @@
         <h4>{{statistics.balance * account.interest / 100 | currency:user.meta.currency}}</h4>
       </div>
     </div>
-    <h3>Add Transaction</h3>
+    <h3>Purchase Investment</h3>
     <form ng-submit="createTransaction(transaction)">
       <div class="row">
         <div class = "one-half column">
@@ -60,18 +81,8 @@
         </div>
       </div>
       <div class="row">
-        <div class = "one-half column">
-          <label for="type">Type</label>
-          <select class="u-full-width" id="type"  ng-model="transaction.type">
-            <option value="1">Investment</option>
-            <option value="2">Growth</option>
-            <option value="3">Withdrawal</option>
-          </select>
-        </div>
-        <div class = "one-half column">
-          <label for="category">Fund Name</label>
-          <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.category">
-        </div>
+        <label for="category">Fund Name</label>
+        <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.category">
         <label for="description">Description (optional)</label>
         <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
         <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
@@ -79,8 +90,8 @@
       </div>
     </form>
     <h3>Recent Transactions</h3>
-    <ul class = "transaction-list">
-      <li ng-repeat="transaction in transactions | orderBy:'date':true" ng-click = "changePath('account/' + account.id + '/transactions/' + transaction.id)">
+    <ul class = "recent-transactions">
+      <li ng-repeat="transaction in transactions | orderBy:'date':true">
         <div class="row">
           <div class = "one-half column">
             <p><b>Amount:</b> {{transaction.amount | currency:user.meta.currency}}

@@ -79,6 +79,23 @@ ul.debt-list li {
   padding: 0;
 }
 
+ul.recent-transactions {
+  margin: 0;
+  padding: 0;
+}
+
+ul.recent-transactions li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 2rem;
+}
+
+ul.recent-transactions li p {
+  padding-bottom: 0rem;
+  margin-bottom: 0rem;
+}
+
 ul.transaction-list {
   margin: 0;
   padding: 0;
@@ -147,6 +164,10 @@ p.small-gray {
   position: relative;
 }
 
+.pull-right {
+  float: right;
+}
+
 .button.button-warning,
 button.button-warning,
 input[type="submit"].button-warning,
@@ -156,6 +177,7 @@ input[type="button"].button-warning {
   background-color: #D32F2F;
   border-color: #D32F2F;
 }
+
 .button.button-warning:hover,
 button.button-warning:hover,
 input[type="submit"].button-warning:hover,

@@ -323,14 +323,30 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
       API.get({resource: 'accounts', action: $routeParams.id},
         function(response, err) {
           if(response.success){
+            $scope.categoryTransactions = {};
             $scope.account = response.account;
             $scope.transactions = response.transactions;
             $scope.statistics = response.statistics;
             var categories = response.statistics.distributionStatistics.categories;
+
             for(var i = 0; i < categories.length; i++){
+              switch($scope.account.type){
+                case $scope.ACCOUNT_TYPES.Asset:
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Appreciation, category: categories[i].name};
+                  break;
+                case $scope.ACCOUNT_TYPES.Liability:
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Payment, category: categories[i].name};
+                  break;
+                case $scope.ACCOUNT_TYPES.Investment:
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Growth, category: categories[i].name};
+                  break;
+              }
+  
               categories[i].color = SOLID_COLORS[i];
               categories[i].label = categories[i].name + ' - ' + $filter('number')(categories[i].percentage, 2) + ' %';
             }
+
+            console.log($scope.categoryTransactions)
             $scope.distributionData = categories;
 
             switch($scope.account.type){
@@ -367,7 +383,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                 }
               break;
               case $scope.ACCOUNT_TYPES.Asset:
-                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Appreciation};
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Purchase};
                 $scope.historicalInvestmentData = {
                   labels: response.historicalStatistics.labels,
                   datasets: [
@@ -399,7 +415,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                 }
               break;
               case $scope.ACCOUNT_TYPES.Liability:
-                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Payment};
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Debt};
                 $scope.historicalDebtData = {
                   labels: response.historicalStatistics.labels,
                   datasets: [
@@ -539,7 +555,6 @@ angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location
           if(response.success){
             $scope.account = response.account;
             $scope.transactions = response.transactions;
-            console.log(response.transactions);
           }
       });
     }
