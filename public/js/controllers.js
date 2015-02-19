@@ -318,6 +318,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
   
   function refresh() {
     $scope.today = new Date();
+    var todayFormat = $filter('date')($scope.today, 'yyyy/MM/dd');
 
     if($routeParams.id){
       API.get({resource: 'accounts', action: $routeParams.id},
@@ -332,13 +333,13 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
             for(var i = 0; i < categories.length; i++){
               switch($scope.account.type){
                 case $scope.ACCOUNT_TYPES.Asset:
-                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Appreciation, category: categories[i].name, value: categories[i].value};
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Appreciation, date: todayFormat, category: categories[i].name, value: categories[i].value};
                   break;
                 case $scope.ACCOUNT_TYPES.Liability:
-                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Payment, category: categories[i].name};
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Payment, date: todayFormat, category: categories[i].name};
                   break;
                 case $scope.ACCOUNT_TYPES.Investment:
-                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Growth, category: categories[i].name};
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Growth, date: todayFormat, category: categories[i].name};
                   break;
               }
   
@@ -351,7 +352,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
 
             switch($scope.account.type){
               case $scope.ACCOUNT_TYPES.General:
-                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Spend};
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Spend, date: todayFormat};
                 $scope.historicalInvestmentData = {
                   labels: response.historicalStatistics.labels,
                   datasets: [
@@ -383,7 +384,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                 }
               break;
               case $scope.ACCOUNT_TYPES.Asset:
-                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Purchase};
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Purchase, date: todayFormat};
                 $scope.historicalInvestmentData = {
                   labels: response.historicalStatistics.labels,
                   datasets: [
@@ -415,7 +416,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                 }
               break;
               case $scope.ACCOUNT_TYPES.Liability:
-                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Debt};
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Debt, date: todayFormat};
                 $scope.historicalDebtData = {
                   labels: response.historicalStatistics.labels,
                   datasets: [
@@ -455,7 +456,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                 }
               break;
               case $scope.ACCOUNT_TYPES.Investment:
-                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Investment};
+                $scope.transaction = {type: $scope.TRANSACTION_TYPES.Investment, date: todayFormat};
                 $scope.historicalInvestmentData = {
                   labels: response.historicalStatistics.labels,
                   datasets: [
@@ -536,8 +537,40 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
         {accountID: $scope.account.id, amount: transaction.amount, date: transaction.date, type: transaction.type, category: transaction.category, description: transaction.description},
         function (response, err) {
           if(response.success) {
+            var category = null;
+            var todayFormat = $filter('date')($scope.today, 'yyyy/MM/dd');
             refresh();
-            transaction = {type: 1};
+
+            //if this is a category transaction
+            if(transaction.value){
+              switch($scope.account.type){
+                case $scope.ACCOUNT_TYPES.Asset:
+                  transaction = {type: $scope.TRANSACTION_TYPES.Appreciation, date: todayFormat, category: transaction.category, value: transaction.value};
+                  break;
+                case $scope.ACCOUNT_TYPES.Liability:
+                  transaction = {type: $scope.TRANSACTION_TYPES.Payment, date: todayFormat, category: transaction.category};
+                  break;
+                case $scope.ACCOUNT_TYPES.Investment:
+                  transaction = {type: $scope.TRANSACTION_TYPES.Growth, date: todayFormat, category: transaction.category};
+                  break;
+              }
+            } else {
+              switch($scope.account.type){
+                case $scope.ACCOUNT_TYPES.General:
+                  $scope.transaction = {type: $scope.TRANSACTION_TYPES.Spend, date: todayFormat};
+                break;
+                case $scope.ACCOUNT_TYPES.Asset:
+                  $scope.transaction = {type: $scope.TRANSACTION_TYPES.Purchase, date: todayFormat};
+                break;
+                case $scope.ACCOUNT_TYPES.Liability:
+                  $scope.transaction = {type: $scope.TRANSACTION_TYPES.Debt, date: todayFormat};
+                  
+                break;
+                case $scope.ACCOUNT_TYPES.Investment:
+                  $scope.transaction = {type: $scope.TRANSACTION_TYPES.Investment, date: todayFormat};
+                break;
+              }
+            }            
           } else {
             transaction.error = response.error;
           }
