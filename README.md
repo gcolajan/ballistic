@@ -19,9 +19,12 @@ Features
 ### In Progress
 
 * Edit/Delete Accounts
-* Validation
-* Improvements to transaction handling for Asset, Debt, and Investment accounts
-* General Improvements
+* Additional Validation
+
+### To Do
+
+* Code Cleanup/Commenting
+* Better Transaction Editing
 
 Installation
 =======
@@ -34,4 +37,4 @@ In order to run Ballistic, follow these steps:
 
 Ballistic should now be running on port 3000.
 
-**IMPORTANT:** Ballistic is not ready for production use. If you're using it in production anyway, be sure to update `config/security.json` with new secret tokens.
+**IMPORTANT:** If you're using ballistic in production, be sure to update `config/security.json` with new secret tokens.
