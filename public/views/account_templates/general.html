@@ -1,6 +1,18 @@
 <div class="row">
   <div class="six columns">
-    <h1>{{account.name}}</h1>
+    <h1>{{account.name}} <a class="button button-primary" ng-click="account.edit = true;" ng-hide="account.edit">Edit</a></h1>
+    <form ng-submit="editAccount(account)" ng-show="account.edit">
+      <div class="row">
+        <label for="name">Account Name</label>
+        <input class="u-full-width" type="text" placeholder="Account Name" id="name" ng-model="account.name">
+      </div>
+      <p ng-show = "account.error" class = "error">Error: {{account.error}}.</p>
+      <input class="button-primary" type="submit" value="Save">
+      <a class="button button-warning pull-right" ng-click="deleteAccount(account)">
+        <span ng-if="account.deleteWarning">Click again to delete</span>
+        <span ng-if="!account.deleteWarning">Delete this account</span>
+      </a>
+    </form>
     <h3>Income &amp; Spend</h3>
     <span graph="historicalInvestmentData" type = "line"></span>
     <h3>Last Month's Spend</h3>

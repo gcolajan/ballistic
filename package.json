@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "run": "DEBUG=ballistic node app.js"
+    "start": "DEBUG=ballistic node app.js"
   },
   "dependencies": {
     "bcrypt": "^0.8.1",

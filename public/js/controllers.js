@@ -523,6 +523,41 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
     }
   }
 
+  $scope.editAccount = function (account) {
+    account.error = null;
+
+    if(!account || !account.name || !(account.type != $scope.ACCOUNT_TYPES.Investment || account.interest)){
+      account.error = 'fields left empty';
+    } else {
+      API.update({resource: 'accounts', action: account.id},
+        {name: account.name, interest: account.interest},
+        function (response, err) {
+          if(response.success){
+            refresh();
+          } else {
+            account.error = response.error;
+          }
+        }
+      );
+    }
+  }
+
+  $scope.deleteAccount = function (account) {
+    if (account) {
+      if (!account.deleteWarning) {
+        account.deleteWarning = true;
+      } else {
+        API.delete({resource: 'accounts', action: account.id},
+          function (response, err) {
+            if(response.success) {
+              $location.path('/dashboard');
+            }
+          }
+        );
+      } 
+    }
+  }
+
   $scope.createTransaction = function (transaction) {
     transaction.error = null;
 
@@ -627,14 +662,12 @@ angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location
   }
 
   $scope.deleteTransaction = function (transaction) {
-    console.log(transaction);
     if (transaction) {
       if (!transaction.deleteWarning) {
         transaction.deleteWarning = true;
       } else {
         API.delete({resource: 'transactions', action: transaction.id},
           function (response, err) {
-            console.log(response);
             if(response.success) {
               refresh();
             }

@@ -15,10 +15,10 @@ Features
 * Time to Investment Goal Prediction
 * Account and Global Statistics
 * Edit/Delete Transaction
+* Edit/Delete Accounts
 
 ### In Progress
 
-* Edit/Delete Accounts
 * Additional Validation
 
 ### To Do
@@ -33,7 +33,7 @@ In order to run Ballistic, follow these steps:
 
 1. Set up a PostgreSQL database and update the database credentials located in `config/db.json`.
 2. Run `npm install`.
-3. Run `npm run run`.
+3. Run `npm start`.
 
 Ballistic should now be running on port 3000.
 

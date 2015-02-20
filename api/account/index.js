@@ -6,6 +6,8 @@ var router = express.Router();
 
 router.get('/statistics', controller.statistics);
 router.post('/create', controller.create);
+router.put('/:id', controller.update);
+router.delete('/:id', controller.delete);
 router.get('/list', controller.list);
 router.get('/:id/listtransactions', controller.getTransactions);
 router.get('/:id', controller.get);

@@ -41,23 +41,27 @@ exports.update = function(req, res) {
   } else {
     models.Transaction.find({where: { id: req.params.id}, include: [ models.Category ]}).then(function(transaction){
       models.Account.find({where: {id: transaction.AccountId, UserId: req.user.id}}).then(function(account){
-        transaction.amount = req.body.amount;
-        transaction.date = req.body.date;
-        transaction.type = req.body.type;
-        transaction.description = req.body.description;
-        transaction.save().then(function(){
-          if (req.body.category) {
-            createIfNotExistsAndAssociate(account, transaction, req.body.category, function(transaction){
-              res.send({success: true, transaction: transaction});
-            });
-          } else {
-            transaction.setCategory(null).then(function(){
-              res.send({success: true, transaction: transaction});
-            });
-          }
+        if(!account){
+          res.send({success: false, error: 'account for this transaction not found'});
+        } else {
+          transaction.amount = req.body.amount;
+          transaction.date = req.body.date;
+          transaction.type = req.body.type;
+          transaction.description = req.body.description;
+          transaction.save().then(function(){
+            if (req.body.category) {
+              createIfNotExistsAndAssociate(account, transaction, req.body.category, function(transaction){
+                res.send({success: true, transaction: transaction});
+              });
+            } else {
+              transaction.setCategory(null).then(function(){
+                res.send({success: true, transaction: transaction});
+              });
+            }
 
-          removeCategoryIfNotUsed(transaction.Category);
-        });
+            removeCategoryIfNotUsed(transaction.Category);
+          });
+        }
       });
     });
   }
@@ -75,12 +79,16 @@ exports.get = function(req, res) {
 
 exports.delete = function(req, res) {
   models.Transaction.find({where: { id: req.params.id}, include: [ models.Category ]}).then(function(transaction){
-    transaction.destroy().then(function(){
-      removeCategoryIfNotUsed(transaction.Category);
-      res.send({success: true});
+    models.Account.find({where: {id: transaction.AccountId, UserId: req.user.id}}).then(function(account){
+      if(!account){
+        res.send({success: false, error: 'account for this transaction not found'});
+      } else {
+        transaction.destroy().then(function(){
+          removeCategoryIfNotUsed(transaction.Category);
+          res.send({success: true});
+        });
+      }
     });
-
-    
   }); 
 }
 

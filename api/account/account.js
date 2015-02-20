@@ -9,8 +9,7 @@ var ACCOUNT = constants.ACCOUNT;
 var TRANSACTION = constants.TRANSACTION;
 
 exports.create = function(req, res) {
-  debug(req.body)
-  if(!req.body.name || !req.body.type || (req.body.type == ACCOUNT.Investment && !req.body.interest)){
+  if (!req.body.name || !req.body.type || (req.body.type == ACCOUNT.Investment && !req.body.interest)) {
     res.send({success: false, error: 'fields left empty'});
   } else {
     models.Account.create({ name: req.body.name, type: req.body.type, interest: req.body.interest}).then(function(account) {
@@ -21,20 +20,52 @@ exports.create = function(req, res) {
   }
 }
 
+exports.update = function(req, res) {
+  models.Account.find({where: {id: req.params.id, UserId: req.user.id}}).then(function(account) {
+    if (!account) {
+      res.send({success: false, error: 'account not found'});
+    } else if (!req.body.name || (account.type == ACCOUNT.Investment && !req.body.interest)) {
+      res.send({success: false, error: 'fields left empty'});
+    } else {
+      account.name = req.body.name;
+      account.interest = req.body.interest;
+      account.save().then(function(){
+        res.send({success: true, account: account});
+      });
+    }
+  });
+}
+
+exports.delete = function(req, res) {
+  models.Account.find({where: {id: req.params.id, UserId: req.user.id}}).then(function(account) {
+    if (!account) {
+      res.send({success: false, error: 'account not found'});
+    } else {
+      models.Category.destroy({where: {AccountId: account.id}}).then(function(affectedCategories){
+        console.log(affectedCategories);
+        models.Transaction.destroy({where: {AccountId: account.id}}).then(function(affectedTransactions){
+          console.log(affectedTransactions);
+          account.destroy().then(function(){
+            res.send({success: true});
+          });
+        });
+      });
+    }
+  });
+}
+
 exports.list = function(req, res) {
-  debug(req.body)
   if(!req.user){
     res.send({success: false, error: 'must be logged in'});
   } else {
     req.user.getAccounts().then(function(accounts) {
-      debug(accounts);
       res.send({success: true, accounts: accounts});
     });
   }
 }
 
 exports.get = function(req, res) {
-  if(!req.user){
+  if (!req.user) {
     res.send({success: false, error: 'must be logged in'});
   } else {
     models.Account.find({include: [ models.Category ], where: {id: req.params.id, UserId: req.user.id}}).then(function(account) {
@@ -67,7 +98,7 @@ exports.get = function(req, res) {
 }
 
 function generateUserStatistics(accounts, statistics, index, callback){
-  if(statistics === null){
+  if (statistics === null) {
     statistics = {
       netWorth: 0, 
       totalAssets: 0,
@@ -163,7 +194,7 @@ function generateUserStatistics(accounts, statistics, index, callback){
 }
 
 exports.getTransactions = function(req, res) {
-  if(!req.user){
+  if (!req.user) {
     res.send({success: false, error: 'must be logged in'});
   } else {
     models.Account.find({where: {id: req.params.id, UserId: req.user.id}}).then(function(account) {
@@ -175,7 +206,7 @@ exports.getTransactions = function(req, res) {
 }
 
 exports.statistics = function(req, res) {
-  if(!req.user){
+  if (!req.user) {
     res.send({success: false, error: 'must be logged in'});
   } else {
     req.user.getAccounts().then(function(accounts) {
@@ -204,8 +235,8 @@ exports.statistics = function(req, res) {
 }
 
 function estimateMonthsRemaining(currentAmount, monthlyContribution, goalAmount, interest, count){
-  if(count < 2400){
-    if(currentAmount > goalAmount){
+  if (count < 2400) {
+    if (currentAmount > goalAmount) {
       return count;
     } else {
       return estimateMonthsRemaining(currentAmount + monthlyContribution + (monthlyContribution * interest), monthlyContribution, goalAmount, interest, count + 1);

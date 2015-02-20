@@ -235,6 +235,11 @@ ul.typeahead li.active a {
   padding-right: 30px;
 }
 
+h1 .button {
+  vertical-align: middle;
+  margin-left: 15px;
+}
+
 .button.button-warning,
 button.button-warning,
 input[type="submit"].button-warning,
