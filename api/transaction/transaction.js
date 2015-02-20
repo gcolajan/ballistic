@@ -67,16 +67,6 @@ exports.update = function(req, res) {
   }
 }
 
-exports.get = function(req, res) {
-  models.Transaction.find(req.params.id).then(function(transaction){
-    if(!transaction){
-      res.send({success: false, error: 'transaction not found'});
-    } else {
-      res.send({success: true, transaction: transaction});
-    }
-  }); 
-}
-
 exports.delete = function(req, res) {
   models.Transaction.find({where: { id: req.params.id}, include: [ models.Category ]}).then(function(transaction){
     models.Account.find({where: {id: transaction.AccountId, UserId: req.user.id}}).then(function(account){

@@ -11,6 +11,8 @@ var TRANSACTION = constants.TRANSACTION;
 exports.create = function(req, res) {
   if (!req.body.name || !req.body.type || (req.body.type == ACCOUNT.Investment && !req.body.interest)) {
     res.send({success: false, error: 'fields left empty'});
+  } else if (req.body.type != ACCOUNT.General && req.body.type != ACCOUNT.Asset && req.body.type != ACCOUNT.Liability && req.body.type != ACCOUNT.Investment) {
+    res.send({success: false, error: 'invalid account type'});
   } else {
     models.Account.create({ name: req.body.name, type: req.body.type, interest: req.body.interest}).then(function(account) {
       account.setUser(req.user);
@@ -52,16 +54,6 @@ exports.delete = function(req, res) {
       });
     }
   });
-}
-
-exports.list = function(req, res) {
-  if(!req.user){
-    res.send({success: false, error: 'must be logged in'});
-  } else {
-    req.user.getAccounts().then(function(accounts) {
-      res.send({success: true, accounts: accounts});
-    });
-  }
 }
 
 exports.get = function(req, res) {
