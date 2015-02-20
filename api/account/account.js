@@ -37,7 +37,7 @@ exports.get = function(req, res) {
   if(!req.user){
     res.send({success: false, error: 'must be logged in'});
   } else {
-    models.Account.find({where: {id: req.params.id, UserId: req.user.id}}).then(function(account) {
+    models.Account.find({include: [ models.Category ], where: {id: req.params.id, UserId: req.user.id}}).then(function(account) {
       account.getTransactions({ include: [ models.Category ], limit: 5, order: 'date DESC' }).then(function(transactions) {
         switch(account.type){
           case ACCOUNT.Investment:

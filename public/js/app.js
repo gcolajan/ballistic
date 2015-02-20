@@ -74,9 +74,11 @@ var app = angular.module('ballistic', [
 
   function link(scope, element, attrs) {
     scope.$watch(attrs.graph, function(value) {
-      element.html('<canvas id="' + attrs.graph +'"></canvas><div id = "' + attrs.graph + '-legend" class = "legend"></div>');
-      data = value;
-      renderGraph(data, attrs.graph, attrs.type);
+      if (value) {
+        element.html('<canvas id="' + attrs.graph +'"></canvas><div id = "' + attrs.graph + '-legend" class = "legend"></div>');
+        data = value;
+        renderGraph(data, attrs.graph, attrs.type);
+      }
     });
 
     function renderGraph(data, elementName, type){
@@ -100,6 +102,38 @@ var app = angular.module('ballistic', [
         
       $('#' + elementName + '-legend').html(chart.generateLegend());
     }
+  }
+
+  return {
+    link: link
+  };
+}).directive('options', function($compile) {
+  function link(scope, element, attrs) {
+    scope.$watch(attrs.options, function(value) {
+      $('#' + attrs.id + '-combobox').remove();
+      
+      if (value) {
+        var html = '<select class="combobox" id = "' + attrs.id + '"><option value>' + attrs.placeholder + '</option>';
+        var caret = '<span class="caret" />';
+
+        for(var i = 0; i < value.length; i++) {
+          html += '<option value="' + value[i].name + '">' + value[i].name + '</option>'
+        }
+
+        html += '</select>'
+
+        $(element).html(html);
+
+        //if there's no categories, then we don't want to display the dropdown caret
+        if(value.length == 0){
+          caret = '';
+        }
+
+        $('#' + attrs.id).combobox({template: function() { return '<div class="combobox-container" id = "' + attrs.id + '-combobox"> <input type="hidden" /> <div class="input-group"> <input type="text" autocomplete="off" ng-model="' + attrs.model + '" class="u-full-width"/> <span class="input-group-addon dropdown-toggle" data-dropdown="dropdown"> ' + caret + ' <span class="glyphicon glyphicon-remove" /> </span> </div> </div>';}});
+
+        $compile($('#' + attrs.id + '-combobox').contents())(scope);
+      }     
+    });
   }
 
   return {

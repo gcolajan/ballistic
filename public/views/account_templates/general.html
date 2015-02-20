@@ -34,7 +34,7 @@
         </div>
         <div class = "one-half column">
           <label for="date">Date</label>
-          <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" ng-model="transaction.date" date-picker>
+          <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" value="{{transaction.date}}" ng-model="transaction.date" date-picker>
         </div>
       </div>
       <div class="row">
@@ -47,7 +47,7 @@
         </div>
         <div class = "one-half column">
           <label for="category">Category</label>
-          <input class="u-full-width" type="text" placeholder="Food, Contract Work, etc" id="category" ng-model="transaction.category">
+          <span options="account.Categories" id = "category" model = "transaction.category" placeholder = "Food, Contract Work, etc"></span>
         </div>
         <label for="description">Description (optional)</label>
         <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">

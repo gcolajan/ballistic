@@ -29,7 +29,7 @@
                 </div>
                 <div class = "one-third column">
                   <label for="date">Date</label>
-                  <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" ng-model="categoryTransactions[debt.name].date" date-picker>
+                  <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" value="{{categoryTransactions[debt.name].date}}" ng-model="categoryTransactions[debt.name].date" date-picker>
                 </div>
                 <div class = "one-third column">
                   <label>Type</label>
@@ -77,7 +77,7 @@
         </div>
         <div class = "one-half column">
           <label for="date">Date</label>
-          <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" ng-model="transaction.date" date-picker>
+          <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" value="{{transaction.date}}" ng-model="transaction.date" date-picker>
         </div>
       </div>
       <div class="row">
