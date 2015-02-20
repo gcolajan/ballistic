@@ -111,7 +111,7 @@ var app = angular.module('ballistic', [
   function link(scope, element, attrs) {
     scope.$watch(attrs.options, function(value) {
       $('#' + attrs.id + '-combobox').remove();
-      
+
       if (value) {
         var html = '<select class="combobox" id = "' + attrs.id + '"><option value>' + attrs.placeholder + '</option>';
         var caret = '<span class="caret" />';
@@ -143,6 +143,10 @@ var app = angular.module('ballistic', [
   return {
     link: function(scope, element, attrs) {
       $(element).datepicker({format: 'yyyy/mm/dd'});
+
+      scope.$watch(attrs.ngModel, function (value) {
+        $(element).datepicker('update', value);
+      });
     }
   };
 }).service('Session', function () {
