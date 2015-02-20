@@ -109,7 +109,7 @@ ul.transaction-list li {
   padding-bottom: 2rem;
 }
 
-ul.transaction-list li:hover {
+ul.transaction-list .transaction:hover {
   background-color: #EEE;
 }
 
@@ -160,16 +160,24 @@ p.small-gray {
   padding-top: 2rem;
 }
 
-#edit-transaction {
-  position: relative;
-}
-
 .pull-right {
   float: right;
 }
 
 .input-group {
   position: relative;
+}
+
+#edit-transaction {
+  border-top: 1px solid #D1D1D1;
+  border-bottom: 1px solid #D1D1D1;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+#edit-transaction form {
+  margin: 0;
+  padding: 0;
 }
 
 .caret {

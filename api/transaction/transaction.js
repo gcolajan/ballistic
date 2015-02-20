@@ -74,7 +74,9 @@ exports.delete = function(req, res) {
         res.send({success: false, error: 'account for this transaction not found'});
       } else {
         transaction.destroy().then(function(){
-          removeCategoryIfNotUsed(transaction.Category);
+          if(transaction.Category){
+            removeCategoryIfNotUsed(transaction.Category);
+          }
           res.send({success: true});
         });
       }
@@ -104,8 +106,8 @@ function createIfNotExistsAndAssociate(account, transaction, categoryName, callb
 }
 
 function removeCategoryIfNotUsed(category){
-  category.getTransactions(function(transactions) {
-    if (!transactions) {
+  models.Transaction.find({where: {CategoryId: category.id}}).then(function(transaction){
+    if (!transaction) {
       category.destroy();
     }
   });

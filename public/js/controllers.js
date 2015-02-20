@@ -633,28 +633,34 @@ angular.module('ballistic').controller('TransactionsCtrl', ['$scope', '$location
   }
 
   $scope.showEditTransaction = function (transaction) {
-    $scope.transaction = transaction;
-    $scope.transaction.editDate = $filter('date')($scope.transaction.date, 'yyyy/MM/dd');
-    $scope.transaction.editCategory = transaction.Category.name;
-    $scope.transaction.editType = $scope.transaction.type;
-    $scope.transaction.editAmount = transaction.amount;
-    $scope.transaction.editDescription = transaction.description;
+    if($scope.tempTransaction && $scope.tempTransaction.id == transaction.id){
+      $scope.tempTransaction = null
+    } else {
+      $scope.tempTransaction = transaction;
+      $scope.tempTransaction.editDate = $filter('date')(transaction.date, 'yyyy/MM/dd');
+      if (transaction.Category) {
+        $scope.tempTransaction.editCategory = transaction.Category.name;
+      }
+      $scope.tempTransaction.editType = transaction.type;
+      $scope.tempTransaction.editAmount = transaction.amount;
+      $scope.tempTransaction.editDescription = transaction.description;
+    }
   }
 
   $scope.editTransaction = function (transaction) {
-    $scope.transactionError = null;
+    transaction.error = null;
 
     if(!transaction || !transaction.editAmount || !transaction.editDate || !transaction.editType){
-      $scope.transactionError = 'fields left empty';
+      $transaction.error = 'fields left empty';
     } else {
       API.update({resource: 'transactions', action: transaction.id},
         {accountID: $scope.account.id, amount: transaction.editAmount, date: transaction.editDate, type: transaction.editType, category: transaction.editCategory, description: transaction.editDescription},
         function (response, err) {
           if(response.success) {
             refresh();
-            $scope.transaction = null;
+            $scope.tempTransaction = null
           } else {
-            $scope.transactionError = response.error;
+            transaction.error = response.error;
           }
         }
       );

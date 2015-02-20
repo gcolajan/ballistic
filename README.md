@@ -19,12 +19,7 @@ Features
 
 ### In Progress
 
-* Additional Validation
-
-### To Do
-
 * Code Cleanup/Commenting
-* Better Transaction Editing
 
 Installation
 =======

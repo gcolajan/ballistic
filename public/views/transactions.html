@@ -3,115 +3,106 @@
   <div class = "dashboard" ng-switch="account.type">
     <h1>{{account.name}} Transactions</h1>
     <div class="row">
-      <div class="six columns">
-        <ul class = "transaction-list">
-          <li ng-repeat="transaction in transactions | orderBy:'date':true" ng-click="showEditTransaction(transaction)">
-            <div class="row" id = "transaction-{{transaction.id}}">
-              <div class = "one-half column">
-                <p>
-                  <b>Amount:</b> {{transaction.amount}}
-                  <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
-                  <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span>
-                </p>
-              </div>
-              <div class = "one-half column">
-                <p>
-                  <b>Date:</b> {{transaction.date | date:'longDate'}}
-                  <br><b>Category:</b> <span ng-show = "transaction.Category.name">{{transaction.Category.name}}</span><span ng-hide = "transaction.Category.name">n/a</span>
-                </p>
-              </div>
+      <ul class = "transaction-list">
+        <li ng-repeat="transaction in transactions | orderBy:'date':true">
+          <div class="row" class = "transaction" id = "transaction-{{transaction.id}}" ng-click="showEditTransaction(transaction)">
+            <div class = "one-half column">
+              <p>
+                <b>Amount:</b> {{transaction.amount}}
+                <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
+                <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span>
+              </p>
             </div>
-          </li>
-        </ul>
-      </div>
-      <div class="six columns" >
-        <div ng-show = "transaction" id = "edit-transaction">
-          <h3>Edit Transaction</h3>
-          <form ng-submit="editTransaction(transaction)">
-            <div class="row">
-              <div class = "one-half column">
-                <label for="amount">Amount</label>
-                <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="transaction.editAmount">
-              </div>
-              <div class = "one-half column">
-                <label for="date">Date</label>
-                <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" value="{{transaction.editDate}}" ng-model="transaction.editDate" date-picker>
-              </div>
+            <div class = "one-half column">
+              <p>
+                <b>Date:</b> {{transaction.date | date:'longDate'}}
+                <br><b>Category:</b> <span ng-show = "transaction.Category.name">{{transaction.Category.name}}</span><span ng-hide = "transaction.Category.name">n/a</span>
+              </p>
             </div>
-            <div class="row" ng-switch="account.type">
-              <div ng-switch-when="1">
+          </div>
+          <div ng-if= "transaction.id == tempTransaction.id" id = "edit-transaction">
+            <form ng-submit="editTransaction(tempTransaction)">
+              <div class="row">
                 <div class = "one-half column">
-                  <label for="type">Type</label>
-                  <select class="u-full-width" id="type"  ng-model="transaction.editType">
-                    <option value="4">Spend</option>
-                    <option value="5">Income</option>
-                  </select>
+                  <label for="amount">Amount</label>
+                  <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="tempTransaction.editAmount">
                 </div>
                 <div class = "one-half column">
-                  <label for="category">Category</label>
-                  <input class="u-full-width" type="text" placeholder="Food, Contract Work, etc" id="category" ng-model="transaction.editCategory">
-                </div>
-              </div>
-              <div ng-switch-when="2">
-                <div class = "one-half column">
-                  <label for="type">Type</label>
-                  <select class="u-full-width" id="type" ng-model="transaction.editType">
-                    <option value="7">Appreciation</option>
-                    <option value="8">Depreciation</option>
-                    <option value="6">Purchase</option>
-                    <option value="9">Sale</option>
-                  </select>
-                </div>
-                <div class = "one-half column">
-                  <label for="category">Asset Name</label>
-                  <input class="u-full-width" type="text" placeholder="House, car, etc" id="category" ng-model="transaction.editCategory">
+                  <label for="date">Date</label>
+                  <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" value="{{tempTransaction.editDate}}" ng-model="tempTransaction.editDate" date-picker>
                 </div>
               </div>
-              <div ng-switch-when="3">
-                <div class = "one-half column">
-                  <label for="type">Type</label>
-                  <select class="u-full-width" id="type" ng-model="transaction.editType">
-                    <option value="11">Payment</option>
-                    <option value="10">New Debt</option>
-                    <option value="12">Interest</option>
-                  </select>
+              <div class="row" ng-switch="account.type">
+                <div ng-switch-when="1">
+                  <div class = "one-half column">
+                    <label for="type">Type</label>
+                    <select class="u-full-width" id="type"  ng-model="tempTransaction.editType">
+                      <option value="4">Spend</option>
+                      <option value="5">Income</option>
+                    </select>
+                  </div>
+                  <div class = "one-half column">
+                    <label for="category">Category</label>
+                    <input class="u-full-width" type="text" placeholder="Food, Contract Work, etc" id="category" ng-model="tempTransaction.editCategory">
+                  </div>
                 </div>
-                <div class = "one-half column">
-                  <label for="category">Debt Name</label>
-                  <input class="u-full-width" type="text" placeholder="Student loan, car, etc" id="category" ng-model="transaction.editCategory">
+                <div ng-switch-when="2">
+                  <div class = "one-half column">
+                    <label for="type">Type</label>
+                    <select class="u-full-width" id="type" ng-model="tempTransaction.editType">
+                      <option value="7">Appreciation</option>
+                      <option value="8">Depreciation</option>
+                      <option value="6">Purchase</option>
+                      <option value="9">Sale</option>
+                    </select>
+                  </div>
+                  <div class = "one-half column">
+                    <label for="category">Asset Name</label>
+                    <input class="u-full-width" type="text" placeholder="House, car, etc" id="category" ng-model="tempTransaction.editCategory">
+                  </div>
                 </div>
+                <div ng-switch-when="3">
+                  <div class = "one-half column">
+                    <label for="type">Type</label>
+                    <select class="u-full-width" id="type" ng-model="tempTransaction.editType">
+                      <option value="11">Payment</option>
+                      <option value="10">New Debt</option>
+                      <option value="12">Interest</option>
+                    </select>
+                  </div>
+                  <div class = "one-half column">
+                    <label for="category">Debt Name</label>
+                    <input class="u-full-width" type="text" placeholder="Student loan, car, etc" id="category" ng-model="tempTransaction.editCategory">
+                  </div>
+                </div>
+                <div ng-switch-when="4">
+                  <div class = "one-half column">
+                    <label for="type">Type</label>
+                    <select class="u-full-width" id="type"  ng-model="tempTransaction.editType">
+                      <option value="1">Investment</option>
+                      <option value="2">Growth</option>
+                      <option value="3">Withdrawal</option>
+                    </select>
+                  </div>
+                  <div class = "one-half column">
+                    <label for="category">Fund Name</label>
+                    <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="tempTransaction.editCategory">
+                  </div>
+                </div>
+                <label for="description">Description (optional)</label>
+                <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="tempTransaction.editDescription">
+                <p ng-show = "tempTransaction.error" class = "error">Error: {{tempTransaction.error}}.</p>
+                <input class="button-primary" type="submit" value="Save">
+                <a class="button button-warning pull-right" ng-click="deleteTransaction(tempTransaction)">
+                  <span ng-if="tempTransaction.deleteWarning">Click again to delete</span>
+                  <span ng-if="!tempTransaction.deleteWarning">Delete</span>
+                </a>
               </div>
-              <div ng-switch-when="4">
-                <div class = "one-half column">
-                  <label for="type">Type</label>
-                  <select class="u-full-width" id="type"  ng-model="transaction.editType">
-                    <option value="1">Investment</option>
-                    <option value="2">Growth</option>
-                    <option value="3">Withdrawal</option>
-                  </select>
-                </div>
-                <div class = "one-half column">
-                  <label for="category">Fund Name</label>
-                  <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.editCategory">
-                </div>
-              </div>
-              <label for="description">Description (optional)</label>
-              <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.editDescription">
-              <p ng-show = "transactionError" class = "error">Error: {{transactionError}}.</p>
-              <input class="button-primary" type="submit" value="Save">
-              <a class="button button-warning pull-right" ng-click="deleteTransaction(transaction)">
-                <span ng-if="transaction.deleteWarning">Click again to delete</span>
-                <span ng-if="!transaction.deleteWarning">Delete</span>
-              </a>
-            </div>
-          </form>
-        </div>
-      </div>
+            </form>
+          </div>
+        </li>
+      </ul>
+      <a class="button" href = "/account/{{account.id}}">Return to Account</a>
     </div>
   </div>
 </div>
-<script>
-  $(window).scroll(function() { 
-    $('#edit-transaction').css("top", $(this).scrollTop());
-  })
-</script>
