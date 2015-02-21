@@ -5,7 +5,7 @@
     <div class="row">
       <ul class = "transaction-list">
         <li ng-repeat="transaction in transactions | orderBy:'date':true">
-          <div class="row" class = "transaction" id = "transaction-{{transaction.id}}" ng-click="showEditTransaction(transaction)">
+          <div class="row transaction" id="transaction-{{transaction.id}}" ng-click="showEditTransaction(transaction)">
             <div class = "one-half column">
               <p>
                 <b>Amount:</b> {{transaction.amount}}

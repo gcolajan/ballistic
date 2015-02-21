@@ -70,7 +70,7 @@
   </div>
   <div class="six columns">
     <h3>Account Info</h3>
-    <div class = "row">
+    <div class = "row account-info">
       <div class = "one-half column">
         <h6>Contributions for {{today.getFullYear()}}:</h6>
         <h5>{{statistics.yearlyContributions | currency:user.meta.currency}}</h5> 
@@ -87,6 +87,7 @@
       </div>
     </div>
     <h3>Purchase Investment</h3>
+    <p ng-if="transactions.length == 0"><b>Please note:</b> Ballistic uses your investment purchases for the current year in order to calculate your goal progess. Therefore, although it is fine to group your purchases prior to {{today.getFullYear()}} as single transactions, purchases made during {{today.getFullYear()}} should be entered on the date they are made to ensure accurate estimates.</p>
     <form ng-submit="createTransaction(transaction)">
       <div class="row">
         <div class = "one-half column">
