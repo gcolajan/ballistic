@@ -21,6 +21,7 @@ Features
 
 * Code Cleanup/Commenting
 * Allow Users to Change Password
+* Implement Caching for Stats
 
 Installation
 =======
