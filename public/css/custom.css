@@ -187,6 +187,13 @@ p.small-gray {
   margin-top: 10px;
 }
 
+img.screenshot {
+  border: 1px solid #D1D1D1;
+  max-width: 300px;
+  float: left;
+  margin-bottom: 30px;
+}
+
 #edit-transaction form {
   margin: 0;
   padding: 0;
