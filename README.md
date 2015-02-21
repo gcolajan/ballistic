@@ -20,6 +20,7 @@ Features
 ### In Progress
 
 * Code Cleanup/Commenting
+* Allow Users to Change Password
 
 Installation
 =======
@@ -30,6 +31,6 @@ In order to run Ballistic, follow these steps:
 2. Run `npm install`.
 3. Run `npm start`.
 
-Ballistic should now be running on port 3000.
+Ballistic should now be running on port 3000. By default it will run in development mode.
 
 **IMPORTANT:** If you're using ballistic in production, be sure to update `config/security.json` with new secret tokens.
