@@ -109,7 +109,7 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
         labels: response.statistics.historicalInvestments.labels,
         datasets: [
           {
-            label: "Withdrawls",
+            label: "Withdrawals",
             fillColor: "rgba(151,187,205,0.2)",
             strokeColor: "rgba(151,187,205,1)",
             pointColor: "rgba(151,187,205,1)",
@@ -461,7 +461,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                   labels: response.historicalStatistics.labels,
                   datasets: [
                     {
-                      label: "Withdrawls",
+                      label: "Withdrawals",
                       fillColor: "rgba(151,187,205,0.2)",
                       strokeColor: "rgba(151,187,205,1)",
                       pointColor: "rgba(151,187,205,1)",
