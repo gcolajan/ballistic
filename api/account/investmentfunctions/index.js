@@ -107,11 +107,11 @@ function generateMonthlyInvestmentStatistics(account, date, callback){
 
   models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Investment, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyInvestments) {
     models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Growth, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyInterest) {
-      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyWithdrawls) {
+      models.Transaction.sum('amount', { where: { AccountId:  account.id, type: TRANSACTION.Withdrawal, date: {gte: date.toDateString(), lte: nextMonth.toDateString()}} }).then(function(monthlyWithdrawals) {
         statistics.monthlyInvestments = monthlyInvestments || 0;
         statistics.monthlyInterest = monthlyInterest || 0;
-        statistics.monthlyWithdrawls = monthlyWithdrawls || 0;
-        statistics.net = statistics.monthlyInvestments + statistics.monthlyInterest - statistics.monthlyWithdrawls;
+        statistics.monthlyWithdrawals = monthlyWithdrawals || 0;
+        statistics.net = statistics.monthlyInvestments + statistics.monthlyInterest - statistics.monthlyWithdrawals;
         callback(statistics);
       });
     });
@@ -159,7 +159,7 @@ function generateHistoricalInvestmentStatistics(account, historicalSatistics, da
       debug(statistics);
       historicalSatistics.labels.push(monthNames[date.getMonth()]);
       historicalSatistics.contributions.data.push(statistics.monthlyInvestments);
-      historicalSatistics.withdrawals.data.push(statistics.monthlyWithdrawls);
+      historicalSatistics.withdrawals.data.push(statistics.monthlyWithdrawals);
       historicalSatistics.interest.data.push(statistics.monthlyInterest);
       historicalSatistics.balance.data.push(statistics.net + historicalSatistics.startingBalance);
       historicalSatistics.startingBalance += statistics.net;
