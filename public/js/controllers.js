@@ -74,8 +74,24 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
   API.get({resource: 'accounts', action: 'statistics'},
     function (response, err) {
       $scope.accounts = response.accounts;
+      
+      angular.forEach($scope.accounts, function(value, key) {
+          if(value.type == $scope.ACCOUNT_TYPES.Investment){
+              $scope.hasInvestmentAccounts = true;
+          }
+          else if(value.type == $scope.ACCOUNT_TYPES.Asset){
+              $scope.hasAssetAccounts = true;
+          }
+          else if(value.type == $scope.ACCOUNT_TYPES.Liability){
+              $scope.hasLiabilityAccounts = true;
+          }
+          else if(value.type == $scope.ACCOUNT_TYPES.General){
+              $scope.hasGeneralAccounts = true;
+          }
+      });
+      
       $scope.statistics = response.statistics;
-      $scope.incomeSpendData = {
+      $scope.incomeSpendData = response.statistics.historicalIncomeSpend == undefined ? undefined : {
         labels: response.statistics.historicalIncomeSpend.labels,
         datasets: [
           {
@@ -104,8 +120,8 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
           },
         ]
       }
-
-      $scope.investmentData = {
+    
+      $scope.investmentData = response.statistics.historicalInvestments == undefined ? undefined : {
         labels: response.statistics.historicalInvestments.labels,
         datasets: [
           {
@@ -143,7 +159,7 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
         ]
       }
 
-      $scope.debtData = {
+      $scope.debtData = response.statistics.historicalLiabilities == undefined ? undefined : {
         labels: response.statistics.historicalLiabilities.labels,
         datasets: [
           {
@@ -181,7 +197,7 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
         ]
       }
 
-      $scope.assetData = {
+      $scope.assetData = response.statistics.historicalAssets == undefined ? undefined : {
         labels: response.statistics.historicalAssets.labels,
         datasets: [
           {

@@ -3,15 +3,23 @@
   <div class = "dashboard">
     <div class="row">
       <div class="six columns">
-        <h3>Investment Accounts</h3>
-        <span graph="investmentData" type = "line"></span>
-        <h3>General Accounts</h3>
-        <span graph="incomeSpendData" type = "line"></span>
-        <h3>Assets</h3>
-        <span graph="assetData" type = "line"></span>
-        <h3>Liabilities</h3>
-        <span graph="debtData" type = "line"></span>
-      </div>
+        <section ng-if="hasInvestmentAccounts">
+            <h3>Investment Accounts</h3>
+            <span graph="investmentData" type = "line" ></span>
+        </section>
+        <section ng-if="hasGeneralAccounts">
+            <h3>General Accounts</h3>
+            <span graph="incomeSpendData" type = "line"></span>
+        </section>
+        <section ng-if="hasAssetAccounts">
+            <h3>Assets</h3>
+            <span graph="assetData" type = "line"></span>
+        </section>
+        <section ng-if="hasLiabilityAccounts">
+            <h3>Liabilities</h3>
+            <span graph="debtData" type = "line"></span>
+        </section>
+        </div>
       <div class="six columns">
         <h3>Net Worth: {{statistics.netWorth | currency:user.meta.currency}}</h3>
         <h3>Goal Progress</h3>
