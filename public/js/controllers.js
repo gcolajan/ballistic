@@ -75,11 +75,6 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
     function (response, err) {
       $scope.accounts = response.accounts;
       
-      $scope.hasGeneralAccounts = false;
-      $scope.hasAssetAccounts = false;
-      $scope.hasLiabilityAccounts = false;
-      $scope.hasInvestmentAccounts = false;
-      
       angular.forEach($scope.accounts, function(value, key) {
           if(value.type == $scope.ACCOUNT_TYPES.Investment){
               $scope.hasInvestmentAccounts = true;
