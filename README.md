@@ -1,12 +1,10 @@
 Ballistic Finance Manager
 =======
 
-Ballistic tracks investments, assets, debts, and general accounts. It can also calculate the growth of investments and time until investment goals are reached based on past behaviour.
+Ballistic tracks investments, assets, debts, and general accounts. It can also calculate the growth of investments and time until investment goals are reached based on past behaviour. A hosted instance of the application is available at [ballisticfinance.com](https://ballisticfinance.com/).
 
 Features
 =====
-
-### Complete
 
 * General Account Tracking
 * Investment Account Tracking
@@ -14,14 +12,6 @@ Features
 * Debt Account Tracking
 * Time to Investment Goal Prediction
 * Account and Global Statistics
-* Edit/Delete Transaction
-* Edit/Delete Accounts
-
-### In Progress
-
-* Code Cleanup/Commenting
-* Allow Users to Change Password
-* Implement Caching for Stats
 
 Installation
 =======
