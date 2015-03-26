@@ -307,6 +307,9 @@ angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', '
 
   $scope.$on(AUTH_EVENTS.Authenticated, function (event, next) {
     $scope.meta = $scope.user.meta;
+
+    $scope.meta.inflation = $scope.meta.inflation || 2;
+    $scope.meta.lifeSpan = $scope.meta.lifeSpan || 81;
   });
 
   $scope.saveMeta = function (meta) {

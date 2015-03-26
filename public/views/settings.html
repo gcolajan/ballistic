@@ -11,6 +11,22 @@
           <input class="u-full-width" type="text" placeholder="26" id="age" ng-model="meta.age">
           <label for="currency">Currency Symbol</label>
           <input class="u-full-width" type="text" placeholder="$" id="currency" ng-model="meta.currency">
+          <label for="depleting-principal">
+            <input type="checkbox" id = "depleting-principal" ng-model="meta.depletingPrincipal">
+            <span>Assume Depleting Principal</span>
+          </label>
+          <div ng-show="meta.depletingPrincipal">
+            <label for="life-span">Expected Lifespan</label>
+            <input class="u-full-width" type="text" placeholder="81" id="life-span" ng-model="meta.lifeSpan">
+          </div>
+          <label for="include-inflation">
+            <input type="checkbox" id = "include-inflation" ng-model="meta.includeInflation">
+            <span>Include Inflation in Calculations</span>
+          </label>
+          <div ng-show="meta.includeInflation">
+            <label for="inflation">Expected Rate of Inflation (percentage, yearly)</label>
+            <input class="u-full-width" type="text" placeholder="2" id="inflation" ng-model="meta.inflation">
+          </div>
         </div>
         <p ng-show = "error" class = "error">Error: {{error}}.</p>
         <p ng-show = "message" class = "message">{{message}}.</p>
