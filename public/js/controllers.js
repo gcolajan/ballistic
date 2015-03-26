@@ -316,11 +316,18 @@ angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', '
     $scope.error = null;
     $scope.message = null;
 
-    if (!meta || !meta.goal || !meta.age || !meta.currency) {
+    if (!meta || !meta.goal || !meta.age || !meta.currency || (meta.includeInflation && !meta.inflation) || (meta.depletingPrincipal && !meta.lifeSpan)) {
       $scope.error = 'fields left empty';
     } else {
       API.update({resource: 'usermeta', action: 'update'},
-        {goal: meta.goal, age: meta.age, currency: meta.currency},
+        {
+          goal: meta.goal, age: meta.age,
+          currency: meta.currency,
+          includeInflation: meta.includeInflation,
+          inflation: meta.inflation,
+          depletingPrincipal: meta.depletingPrincipal,
+          lifeSpan: meta.lifeSpan
+        },
         function (response, err) {
           if (response.success) {
             $scope.message = 'Saved';

@@ -15,6 +15,10 @@ exports.update = function(req, res) {
         usermeta.currency = req.body.currency;
         usermeta.goal = req.body.goal;
         usermeta.age = req.body.age;
+        usermeta.includeInflation = req.body.includeInflation;
+        usermeta.inflation = req.body.inflation;
+        usermeta.depletingPrincipal = req.body.depletingPrincipal;
+        usermeta.lifeSpan = req.body.lifeSpan;
         usermeta.save().then(function (){
           res.send({success: true, usermeta: usermeta});
         });
