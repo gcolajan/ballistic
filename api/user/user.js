@@ -48,7 +48,7 @@ exports.update = function(req, res) {
   } else {
     models.User.find(req.session.userID).then(function(user) {
       if (!user) {
-        res.send({success: false, error: 'user not found'});
+        res.send({success: false, error: 'session expired, please refresh to log in again'});
       } else {
         models.User.checkPassword(req.body.currentPassword, user.password, function(err, match) {
           if (!match) {
