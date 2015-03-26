@@ -6,6 +6,7 @@ var router = express.Router();
 
 router.post('/create', controller.create);
 router.post('/authenticate', controller.authenticate);
+router.put('/update', controller.update);
 router.get('/session', controller.session);
 router.post('/logout', controller.logout);
 

@@ -303,8 +303,9 @@ angular.module('ballistic').controller('WelcomeCtrl', ['$scope', '$location', 'A
 }]);
 
 angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', 'API', 'Session', 'AUTH_EVENTS', function ($scope, $location, API, Session, AUTH_EVENTS) {
+  $scope.password = {};
+
   $scope.$on(AUTH_EVENTS.Authenticated, function (event, next) {
-    console.log($scope.user);
     $scope.meta = $scope.user.meta;
   });
 
@@ -322,6 +323,28 @@ angular.module('ballistic').controller('SettingsCtrl', ['$scope', '$location', '
             $scope.message = 'Saved';
           } else {
             $scope.error = response.error;
+          }
+        }
+      );
+    }
+  }
+
+  $scope.savePassword = function (password) {
+    $scope.password.error = null;
+    $scope.password.message = null;
+
+    if (!password || !password.new || !password.current) {
+      $scope.password.error = 'fields left empty';
+    } else {
+      API.update({resource: 'users', action: 'update'},
+        {currentPassword: password.current, newPassword: password.new},
+        function (response, err) {
+          if (response.success) {
+            password.new = null;
+            password.current = null;
+            $scope.password.message = 'Password changed';
+          } else {
+            $scope.password.error = response.error;
           }
         }
       );

@@ -2,7 +2,7 @@
   <div class = "navbar" ng-include="'/views/navbar.html'"></div> 
   <div class="row">
     <div class="four columns">
-      <h4>My Settings</h4>
+      <h4>Settings</h4>
       <form ng-submit="saveMeta(meta)">
         <div class="row">
           <label for="goal">Goal</label>
@@ -15,6 +15,18 @@
         <p ng-show = "error" class = "error">Error: {{error}}.</p>
         <p ng-show = "message" class = "message">{{message}}.</p>
         <input class="button-primary" type="submit" value="Save">
+      </form>
+      <h4>Account</h4>
+      <form ng-submit="savePassword(password)">
+        <div class="row">
+          <label for="password">New Password</label>
+          <input class="u-full-width" type="password" placeholder="New Password" id="password" ng-model="password.new">
+          <label for="current-password">Enter Current Password to Confirm</label>
+          <input class="u-full-width" type="password" placeholder="Current Password" id="current-password" ng-model="password.current">
+        </div>
+        <p ng-show = "password.error" class = "error">Error: {{password.error}}.</p>
+        <p ng-show = "password.message" class = "message">{{password.message}}.</p>
+        <input class="button-primary" type="submit" value="Change">
       </form>
     </div>
     <div class="eight columns">

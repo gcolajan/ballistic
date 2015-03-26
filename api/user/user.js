@@ -38,6 +38,35 @@ exports.create = function(req, res) {
   }
 }
 
+exports.update = function(req, res) {
+  if (!req.body.currentPassword || !req.body.newPassword) {
+    res.send({success: false, error: 'fields left empty'});
+  } else if (req.body.newPassword.length < 8) {
+    res.send({success: false, error: 'password too short'});
+  } else if (req.body.newPassword.length < 8) {
+    res.send({success: false, error: 'current password did not match'});
+  } else {
+    models.User.find(req.session.userID).then(function(user) {
+      if (!user) {
+        res.send({success: false, error: 'user not found'});
+      } else {
+        models.User.checkPassword(req.body.currentPassword, user.password, function(err, match) {
+          if (!match) {
+            res.send({success: false, error: 'current password incorrect'});
+          } else {
+            models.User.hash(req.body.newPassword, function(err, hash){
+              user.password = hash;
+              user.save().then(function(){
+                res.send({success: true});
+              });
+            });
+          }
+        });
+      }
+    });
+  }
+}
+
 exports.authenticate = function(req, res) {
   if (!req.body.username || !req.body.password) {
     res.send({success: false, error: 'fields left empty'});
