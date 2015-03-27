@@ -125,8 +125,6 @@ function generateHistoricalGeneralStatistics(account, historicalSatistics, date,
   var nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 0, 0, 0, 0);
   var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 
-  debug("historical investment loop");
-
   if(historicalSatistics === null){
     historicalSatistics = {income: {data: []}, spend: {data: []}, balance: {data: []}, labels: []};
     var lastMonth = new Date(date.getFullYear(), date.getMonth(), 0, 0, 0, 0, 0);

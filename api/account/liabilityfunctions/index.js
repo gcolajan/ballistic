@@ -140,8 +140,6 @@ function generateHistoricalLiabilityStatistics(account, historicalSatistics, dat
   var nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 0, 0, 0, 0);
   var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 
-  debug("historical investment loop");
-
   if(historicalSatistics === null){
     historicalSatistics = {debt: {data: []}, interest: {data: []}, payments: {data: []}, balance: {data: []}, labels: []};
     var lastMonth = new Date(date.getFullYear(), date.getMonth(), 0, 0, 0, 0, 0);

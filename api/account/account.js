@@ -16,7 +16,6 @@ exports.create = function(req, res) {
   } else {
     models.Account.create({ name: req.body.name, type: req.body.type, interest: req.body.interest}).then(function(account) {
       account.setUser(req.user);
-      debug(account);
       res.send({success: true, account: account});
     });
   }
@@ -231,9 +230,6 @@ exports.statistics = function(req, res) {
         }
 
         statistics.yearlyInvestmentIncome = statistics.totalInvestments * (statistics.investmentInterest / 100);
-        debug("Interest:" + statistics.investmentInterest);
-        debug("Inflation:" + inflation);
-        debug("Goal:" + req.usermeta.goal);
         recursiveStatistics = estimateMonthsRemaining(statistics.totalInvestments, statistics.estimatedYearlyNetContributions / 12, Number(req.usermeta.goal), statistics.investmentInterest, inflation, remainingLife * 12,  0);
         statistics.realGoal = recursiveStatistics.goalAmount;
         statistics.investmentGoal = recursiveStatistics.neededAmount;
@@ -259,10 +255,6 @@ function estimateMonthsRemaining(currentAmount, monthlyContribution, goalAmount,
     }
   }
 
-  debug("Remaining Life:" + remainingLife);
-  debug("Current Amount:" + currentAmount);
-  debug("Goal Amount:" + goalAmount);
-  debug("Needed Amount:" + neededAmount);
   if (currentAmount > neededAmount || count >= 2400 || depletingPrincipalRetirement) {
     statistics = {goalAmount: goalAmount, neededAmount: neededAmount, monthsRemaining: count}
     return statistics;
@@ -277,10 +269,6 @@ function depletingPrincipalTest(currentAmount, goalAmount, interest, inflation, 
   goalAmount = goalAmount + goalAmount * (inflation / 100 / 12);
   remainingLife--;
 
-
-  debug("Remaining Life:" + remainingLife);
-  debug("Current Amount:" + currentAmount);
-  debug("Goal Amount:" + goalAmount);
   if (currentAmount < 0) {
     return (remainingLife <= 0);
   } else {
