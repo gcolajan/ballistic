@@ -99,7 +99,8 @@ function generateUserStatistics(accounts, statistics, index, callback){
       investmentInterest: 0, 
       yearlyInvestmentIncome: 0,
       goalPercentage: 0,
-      estimatedYearlyGrowth: 0
+      estimatedYearlyGrowth: 0,
+      estimatedYearlyNetContributions: 0
     };
   }
   
@@ -163,6 +164,7 @@ function generateUserStatistics(accounts, statistics, index, callback){
           statistics.netWorth += accounts[index].statistics.balance;
           statistics.totalInvestments += accounts[index].statistics.balance;
           statistics.estimatedYearlyGrowth += accounts[index].statistics.estimatedYearlyGrowth;
+          statistics.estimatedYearlyNetContributions += accounts[index].statistics.estimatedYearlyNetContributions
           if(!statistics.historicalInvestments){
             statistics.historicalInvestments = accounts[index].statistics.historicalSatistics;
           } else {
@@ -198,6 +200,8 @@ exports.getTransactions = function(req, res) {
 }
 
 exports.statistics = function(req, res) {
+  var inflation;
+
   if (!req.user) {
     res.send({success: false, error: 'must be logged in'});
   } else {
@@ -214,10 +218,27 @@ exports.statistics = function(req, res) {
             accounts[i].statistics.percentOfLiabilities = accounts[i].statistics.balance / statistics.totalLiabilities * 100;
           }
         }
-        statistics.investmentGoal = req.usermeta.goal / (statistics.investmentInterest / 100);
-        statistics.goalPercentage = statistics.totalInvestments / statistics.investmentGoal * 100;
+
+        if(req.usermeta.includeInflation) {
+          inflation = req.usermeta.inflation;
+        } else {
+          inflation = 0;
+        }
+        if(req.usermeta.depletingPrincipal) {
+          remainingLife = req.usermeta.lifeSpan - req.usermeta.age;
+        } else {
+          remainingLife = null;
+        }
+
         statistics.yearlyInvestmentIncome = statistics.totalInvestments * (statistics.investmentInterest / 100);
-        statistics.estimatedMonthsRemaining = estimateMonthsRemaining(statistics.totalInvestments, statistics.estimatedYearlyGrowth / 12, statistics.investmentGoal, statistics.investmentInterest / 100, 0);
+        debug("Interest:" + statistics.investmentInterest);
+        debug("Inflation:" + inflation);
+        debug("Goal:" + req.usermeta.goal);
+        recursiveStatistics = estimateMonthsRemaining(statistics.totalInvestments, statistics.estimatedYearlyNetContributions / 12, Number(req.usermeta.goal), statistics.investmentInterest, inflation, remainingLife * 12,  0);
+        statistics.realGoal = recursiveStatistics.goalAmount;
+        statistics.investmentGoal = recursiveStatistics.neededAmount;
+        statistics.goalPercentage = statistics.totalInvestments / statistics.investmentGoal * 100;
+        statistics.estimatedMonthsRemaining = recursiveStatistics.monthsRemaining;
         statistics.estimatedYearsRemaining = statistics.estimatedMonthsRemaining / 12;
         statistics.goalAge = req.usermeta.age + statistics.estimatedYearsRemaining;
         res.send({success: true, accounts: accounts, statistics: statistics});
@@ -226,14 +247,45 @@ exports.statistics = function(req, res) {
   }
 }
 
-function estimateMonthsRemaining(currentAmount, monthlyContribution, goalAmount, interest, count){
-  if (count < 2400) {
-    if (currentAmount > goalAmount) {
-      return count;
-    } else {
-      return estimateMonthsRemaining(currentAmount + monthlyContribution + (monthlyContribution * interest), monthlyContribution, goalAmount, interest, count + 1);
+function estimateMonthsRemaining(currentAmount, monthlyContribution, goalAmount, interest, inflation, remainingLife, count){
+  goalAmount = goalAmount + goalAmount * (inflation / 100 / 12);
+  var neededAmount = goalAmount / ((interest - inflation) / 100);
+  var depletingPrincipalRetirement = false;
+
+  if(remainingLife){
+    remainingLife--;
+    if(remainingLife % 6 == 0){
+      depletingPrincipalRetirement = depletingPrincipalTest(currentAmount, goalAmount, interest, inflation, remainingLife);
     }
+  }
+
+  debug("Remaining Life:" + remainingLife);
+  debug("Current Amount:" + currentAmount);
+  debug("Goal Amount:" + goalAmount);
+  debug("Needed Amount:" + neededAmount);
+  if (currentAmount > neededAmount || count >= 2400 || depletingPrincipalRetirement) {
+    statistics = {goalAmount: goalAmount, neededAmount: neededAmount, monthsRemaining: count}
+    return statistics;
   } else {
-    return count;
+    currentAmount += monthlyContribution;
+    currentAmount += currentAmount * (interest / 100 / 12);
+    return estimateMonthsRemaining(currentAmount, monthlyContribution, goalAmount, interest, inflation, remainingLife, count + 1);
+  }
+}
+
+function depletingPrincipalTest(currentAmount, goalAmount, interest, inflation, remainingLife) {
+  goalAmount = goalAmount + goalAmount * (inflation / 100 / 12);
+  remainingLife--;
+
+
+  debug("Remaining Life:" + remainingLife);
+  debug("Current Amount:" + currentAmount);
+  debug("Goal Amount:" + goalAmount);
+  if (currentAmount < 0) {
+    return (remainingLife <= 0);
+  } else {
+    currentAmount -= goalAmount / 12;
+    currentAmount += currentAmount * (interest / 100 / 12);
+    return depletingPrincipalTest(currentAmount, goalAmount, interest, inflation, remainingLife);
   }
 }

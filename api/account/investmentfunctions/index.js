@@ -130,6 +130,7 @@ function generateYearlyInvestmentStatistics(account, callback){
         statistics.yearlyWithdrawals = yearlyWithdrawals || 0;
         statistics.yearlyContributions = yearlyContributions || 0;
         statistics.yearlyGrowth = yearlyGrowth || 0;
+        statistics.estimatedYearlyNetContributions = ((statistics.yearlyContributions - statistics.yearlyWithdrawals) / daysDifferent) * 365;
         statistics.estimatedYearlyGrowth = ((statistics.yearlyContributions + statistics.yearlyGrowth - statistics.yearlyWithdrawals) / daysDifferent) * 365;
         callback(statistics);
       });
@@ -141,8 +142,6 @@ function generateHistoricalInvestmentStatistics(account, historicalSatistics, da
   var today = new Date();
   var nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 0, 0, 0, 0);
   var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
-
-  debug("historical investment loop");
 
   if(historicalSatistics === null){
     historicalSatistics = {contributions: {data: []}, withdrawals: {data: []}, interest: {data: []}, balance: {data: []}, labels: []};

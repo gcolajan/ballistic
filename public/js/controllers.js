@@ -91,6 +91,9 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
       });
       
       $scope.statistics = response.statistics;
+      if($scope.user.meta.includeInflation) {
+        $scope.statistics.inflationYear = Math.floor($scope.today.getFullYear() + $scope.statistics.estimatedYearsRemaining);
+      }
       $scope.incomeSpendData = response.statistics.historicalIncomeSpend == undefined ? undefined : {
         labels: response.statistics.historicalIncomeSpend.labels,
         datasets: [

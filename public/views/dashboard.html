@@ -24,7 +24,8 @@
         <h3>Net Worth: {{statistics.netWorth | currency:user.meta.currency}}</h3>
         <h3>Goal Progress</h3>
         <div ng-if="statistics.totalInvestments">
-          <p>Your goal of {{user.meta.goal | currency:user.meta.currency}} in passive income requires an investment of approximately {{statistics.investmentGoal | currency:user.meta.currency}}. Here's how you're doing so far:</p>
+          <p ng-if="user.meta.includeInflation">Your goal of {{user.meta.goal | currency:user.meta.currency}} ({{statistics.realGoal | currency:user.meta.currency}} in {{statistics.inflationYear}} dollars) in passive income requires an investment of approximately {{statistics.investmentGoal | currency:user.meta.currency}} in {{statistics.inflationYear}} dollars. Here's how you're doing so far:</p>
+          <p ng-if="!user.meta.includeInflation">Your goal of {{user.meta.goal | currency:user.meta.currency}} in passive income requires an investment of approximately {{statistics.investmentGoal | currency:user.meta.currency}}. Here's how you're doing so far:</p>
           <div class = "row">
             <div class = "one-half column">
               <h6>Current Investments:</h6>
