@@ -47,11 +47,15 @@
     </div>
     <div class="eight columns">
       <h5>Goal</h5>
-      <p>This is the yearly amount you want to earn from your investments.</p>
+      <p>This is the yearly amount you want to earn from your investments in today's dollars.</p>
       <h5>Age</h5>
       <p>Your current age. It's used to figure out how old you will be when you reach your goal.</p>
       <h5>Currency Symbol</h5>
       <p>This is the currency symbol used when displaying amounts.</p>
+      <h5>Assume Depleting Principal</h5>
+      <p>By default, Ballistic will assume that you expect to receive your goal income indefinitely. Selecting this option and entering your expected lifespan will cause it to instead assume that your investments will be expended when you reach the end of your estimated lifespan. This is a common feature in retirement plans based on tight budgets. <em>Note: Depleting principal calculations are more complex, so estimates are currently restricted to within six months of the real date. Accuracy to within the month will be added once caching is implemented.</em></p>
+      <h5>Include Inflation in Calculations</h5>
+      <p>By default, Ballistic will not consider inflation. By enabling this option and entering an inflation rate, Ballistic will use the rate in it's calculations. It is generally a good idea to turn this feature on. It is not on by default due to the volatility of inflation rates between currencies and even within the same currency.</p>
     </div>
   </div>
 </div>
