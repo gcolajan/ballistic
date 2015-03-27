@@ -163,7 +163,7 @@ function generateUserStatistics(accounts, statistics, index, callback){
           statistics.netWorth += accounts[index].statistics.balance;
           statistics.totalInvestments += accounts[index].statistics.balance;
           statistics.estimatedYearlyGrowth += accounts[index].statistics.estimatedYearlyGrowth;
-          statistics.estimatedYearlyNetContributions += accounts[index].statistics.estimatedYearlyNetContributions
+          statistics.estimatedYearlyNetContributions += accounts[index].statistics.estimatedYearlyNetContributions;
           if(!statistics.historicalInvestments){
             statistics.historicalInvestments = accounts[index].statistics.historicalSatistics;
           } else {
