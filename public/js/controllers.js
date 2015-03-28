@@ -144,7 +144,7 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
             data: response.statistics.historicalInvestments.contributions.data
           },
           {
-            label: "Interest",
+            label: "Value Change",
             fillColor: "rgba(123,122,212,0.2)",
             strokeColor: "rgba(123,122,212,1)",
             pointColor: "rgba(123,122,212,1)",
@@ -388,10 +388,10 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                   $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Appreciation, date: todayFormat, category: categories[i].name, value: categories[i].value};
                   break;
                 case $scope.ACCOUNT_TYPES.Liability:
-                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Payment, date: todayFormat, category: categories[i].name};
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Payment, date: todayFormat, category: categories[i].name, value: categories[i].value};
                   break;
                 case $scope.ACCOUNT_TYPES.Investment:
-                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Growth, date: todayFormat, category: categories[i].name};
+                  $scope.categoryTransactions[categories[i].name] = {type: $scope.TRANSACTION_TYPES.Growth, date: todayFormat, category: categories[i].name, value: categories[i].value, newValue: categories[i].value};
                   break;
               }
   
@@ -399,7 +399,6 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
               categories[i].label = categories[i].name + ' - ' + $filter('number')(categories[i].percentage, 2) + ' %';
             }
 
-            console.log($scope.categoryTransactions)
             $scope.distributionData = categories;
 
             switch($scope.account.type){
@@ -529,7 +528,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                       data: response.historicalStatistics.contributions.data
                     },
                     {
-                      label: "Interest",
+                      label: "Value Change",
                       fillColor: "rgba(123,122,212,0.2)",
                       strokeColor: "rgba(123,122,212,1)",
                       pointColor: "rgba(123,122,212,1)",
@@ -617,7 +616,13 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
       transaction.amount = transaction.value;
     }
 
-    if(!transaction || !transaction.amount || !transaction.date || !transaction.type){
+    if(transaction.type == $scope.TRANSACTION_TYPES.Growth) {
+      transaction.amount = transaction.newValue - transaction.value;
+    }
+
+    if (transaction.type == $scope.TRANSACTION_TYPES.Growth && transaction.amount === 0) {
+      transaction.error = 'new value must be different from current value';
+    } else if(!transaction || !transaction.amount || !transaction.date || !transaction.type){
       transaction.error = 'fields left empty';
     } else {
       API.save({resource: 'transactions', action: 'create'},
@@ -638,7 +643,7 @@ angular.module('ballistic').controller('AccountCtrl', ['$scope', '$location', '$
                   transaction = {type: $scope.TRANSACTION_TYPES.Payment, date: todayFormat, category: transaction.category};
                   break;
                 case $scope.ACCOUNT_TYPES.Investment:
-                  transaction = {type: $scope.TRANSACTION_TYPES.Growth, date: todayFormat, category: transaction.category};
+                  transaction = {type: $scope.TRANSACTION_TYPES.Growth, date: todayFormat, category: transaction.category, value: transaction.amount, newValue: transaction.amount};
                   break;
               }
             } else {

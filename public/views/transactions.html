@@ -8,7 +8,7 @@
           <div class="row transaction" id="transaction-{{transaction.id}}" ng-click="showEditTransaction(transaction)">
             <div class = "one-half column">
               <p>
-                <b>Amount:</b> {{transaction.amount}}
+                <b>Amount:</b> {{transaction.amount | currency:user.meta.currency}}
                 <br><b>Type:</b> <span class = "{{TRANSACTION_TYPES[transaction.type] | lowercase}}">{{TRANSACTION_TYPES[transaction.type]}}</span>
                 <br><b>Description:</b> <span ng-show = "transaction.description">{{transaction.description}}</span><span ng-hide = "transaction.description">n/a</span>
               </p>

@@ -42,20 +42,26 @@
             <form ng-submit="createTransaction(categoryTransactions[investment.name])">
               <div class="row">
                 <div class = "one-third column">
+                  <label>Type</label>
+                  <select class="u-full-width" id="type"  ng-model="categoryTransactions[investment.name].type">
+                    <option value="2">Value Change</option>
+                    <option value="1">Purchase</option>
+                    <option value="3">Sell</option>
+                  </select>
+                </div>
+                <div class = "one-third column" ng-hide="categoryTransactions[investment.name].type == 2">
                   <label for="amount">Amount</label>
                   <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="categoryTransactions[investment.name].amount">
+                </div>
+                <div class = "one-third column" ng-show="categoryTransactions[investment.name].type == 2">
+                  <label for="amount">New Value</label>
+                  <input class="u-full-width" type="text" placeholder="0.00" id="amount" ng-model="categoryTransactions[investment.name].newValue">
                 </div>
                 <div class = "one-third column">
                   <label for="date">Date</label>
                   <input class="u-full-width" type="text" placeholder="yyyy/mm/dd" id="date" value="{{categoryTransactions[investment.name].date}}" ng-model="categoryTransactions[investment.name].date" date-picker>
                 </div>
-                <div class = "one-third column">
-                  <label>Type</label>
-                  <select class="u-full-width" id="type"  ng-model="categoryTransactions[investment.name].type">
-                    <option value="2">Growth</option>
-                    <option value="3">Withdrawal</option>
-                  </select>
-                </div>
+                
               </div>
               <p ng-show = "categoryTransactions[investment.name].error" class = "error">Error: {{categoryTransactions[investment.name].error}}.</p>
               <input class="button-primary" type="submit" value="Update">
@@ -101,7 +107,7 @@
       </div>
       <div class="row">
         <label for="category">Fund Name</label>
-        <input class="u-full-width" type="text" placeholder="NASDAQ Index Fund, etc" id="category" ng-model="transaction.category">
+        <span options="account.Categories" id = "category" model = "transaction.category" placeholder = "NASDAQ Index Fund, etc"></span>
         <label for="description">Description (optional)</label>
         <input class="u-full-width" type="text" placeholder="Details..." id="description" ng-model="transaction.description">
         <p ng-show = "transaction.error" class = "error">Error: {{transaction.error}}.</p>
