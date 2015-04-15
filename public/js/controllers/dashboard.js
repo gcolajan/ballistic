@@ -27,26 +27,15 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
         datasets: [
           {
             label: "Income",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 151, g: 187, b: 205},
             data: response.statistics.historicalIncomeSpend.income.data
-          },
-          {
+          }, {
             label: "Spend",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 220, g: 220, b: 220},
             data: response.statistics.historicalIncomeSpend.spend.data
-          },
-          {
+          }, {
             label: "Balance",
-            fillColor: "rgba(43,222,31,0.2)",
-            strokeColor: "rgba(43,222,31,1)",
-            pointColor: "rgba(43,222,31,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 43, g: 222, b: 31},
             data: response.statistics.historicalIncomeSpend.balance.data
           },
         ]
@@ -57,34 +46,19 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
         datasets: [
           {
             label: "Withdrawals",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 151, g: 187, b: 205},
             data: response.statistics.historicalInvestments.withdrawals.data
-          },
-          {
+          }, {
             label: "Contributions",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 220, g: 220, b: 220},
             data: response.statistics.historicalInvestments.contributions.data
-          },
-          {
+          }, {
             label: "Value Change",
-            fillColor: "rgba(123,122,212,0.2)",
-            strokeColor: "rgba(123,122,212,1)",
-            pointColor: "rgba(123,122,212,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 123, g: 122, b: 212},
             data: response.statistics.historicalInvestments.interest.data
-          },
-          {
+          }, {
             label: "Balance",
-            fillColor: "rgba(43,222,31,0.2)",
-            strokeColor: "rgba(43,222,31,1)",
-            pointColor: "rgba(43,222,31,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 43, g: 222, b: 31},
             data: response.statistics.historicalInvestments.balance.data
           },
         ]
@@ -95,34 +69,19 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
         datasets: [
           {
             label: "New Debt",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 151, g: 187, b: 205},
             data: response.statistics.historicalLiabilities.debt.data
-          },
-          {
+          }, {
             label: "Interest",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 220, g: 220, b: 220},
             data: response.statistics.historicalLiabilities.interest.data
-          },
-          {
+          }, {
             label: "Payments",
-            fillColor: "rgba(123,122,212,0.2)",
-            strokeColor: "rgba(123,122,212,1)",
-            pointColor: "rgba(123,122,212,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 123, g: 122, b: 212},
             data: response.statistics.historicalLiabilities.payments.data
-          },
-          {
+          }, {
             label: "Balance",
-            fillColor: "rgba(43,222,31,0.2)",
-            strokeColor: "rgba(43,222,31,1)",
-            pointColor: "rgba(43,222,31,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 43, g: 222, b: 31},
             data: response.statistics.historicalLiabilities.balance.data
           },
         ]
@@ -133,26 +92,15 @@ angular.module('ballistic').controller('DashboardCtrl', ['$scope', '$location', 
         datasets: [
           {
             label: "Purchases &amp; Appreciation",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 151, g: 187, b: 205},
             data: response.statistics.historicalAssets.purchasesAndAppreciation.data
-          },
-          {
+          }, {
             label: "Sales &amp; Depreciation",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 220, g: 220, b: 220},
             data: response.statistics.historicalAssets.salesAndDepreciation.data
-          },
-          {
+          }, {
             label: "Worth",
-            fillColor: "rgba(43,222,31,0.2)",
-            strokeColor: "rgba(43,222,31,1)",
-            pointColor: "rgba(43,222,31,1)",
-            pointStrokeColor: "#fff",
+            colorObject: {r: 43, g: 222, b: 31},
             data: response.statistics.historicalAssets.balance.data
           },
         ]

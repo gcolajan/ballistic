@@ -16,6 +16,17 @@ angular.module('ballistic').directive('graph', function() {
       ctx.canvas.height = 240;
       Chart.defaults.global.showTooltips = false;
       var myNewChart = new Chart(ctx);
+
+      //This allows us to pass a color object as a shorthand to 
+      //set color values
+      if(data.datasets && data.datasets[0].colorObject){
+        for (var i = 0; i < data.datasets.length; i++) {
+          data.datasets[i].fillColor = 'rgba(' + data.datasets[i].colorObject.r + ', ' + data.datasets[i].colorObject.g + ', ' + data.datasets[i].colorObject.b + ', 0.2)';
+          data.datasets[i].strokeColor = 'rgba(' + data.datasets[i].colorObject.r + ', ' + data.datasets[i].colorObject.g + ', ' + data.datasets[i].colorObject.b + ', 1)';
+          data.datasets[i].pointColor = 'rgba(' + data.datasets[i].colorObject.r + ', ' + data.datasets[i].colorObject.g + ', ' + data.datasets[i].colorObject.b + ', 1)';
+          data.datasets[i].pointStrokeColor = '#fff'
+        }
+      }
       
       switch(type){
         case 'line':
