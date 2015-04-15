@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use ('/', function (req, res, next) {
+app.use ('/api', function (req, res, next) {
   debug(req.path);
   if (req.method === 'POST' || req.method === 'PUT') {
     if(req.get('X-XSRF-TOKEN') == req.session.XSRFToken){
