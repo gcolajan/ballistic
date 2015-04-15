@@ -37,7 +37,7 @@ angular.module('ballistic').config(function($routeProvider, $locationProvider, U
     }
   }).when('/account/:id/transactions', {
     templateUrl: 'views/transactions.html',
-    controller: 'TransactionsCtrl',
+    controller: 'TransactionCtrl',
     data: {
       authorizedRoles: [USER_ROLES.user]
     }

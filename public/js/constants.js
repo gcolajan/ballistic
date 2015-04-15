@@ -1,0 +1,59 @@
+angular.module('ballistic').constant('AUTH_EVENTS', {
+  notAuthenticated: 'auth-not-authenticated',
+  authenticated: 'auth-authenticated',
+  expired: 'auth-expired'
+}).constant('USER_ROLES', {
+  all: '*',
+  user: 'user'
+}).constant('ACCOUNT_TYPES', {
+  1: 'General',
+  2: 'Asset',
+  3: 'Liability',
+  4: 'Investment',
+  'General': 1,
+  'Asset': 2,
+  'Liability': 3,
+  'Investment': 4
+}).constant('TRANSACTION_TYPES', {
+  1: 'Investment',
+  2: 'Value Change',
+  3: 'Sell',
+  4: 'Spend',
+  5: 'Income',
+  6: 'Purchase',
+  7: 'Appreciation',
+  8: 'Depreciation',
+  9: 'Sale',
+  10: 'Debt',
+  11: 'Payment',
+  12: 'Interest',
+  'Investment': 1,
+  'Growth': 2,
+  'Withdrawal': 3,
+  'Spend': 4,
+  'Income': 5,
+  'Purchase': 6,
+  'Appreciation': 7,
+  'Depreciation': 8,
+  'Sale': 9,
+  'Debt': 10,
+  'Payment': 11,
+  'Interest': 12
+}).constant('SOLID_COLORS', {
+  0: '#1abc9c',
+  1: '#3498db',
+  2: '#9b59b6',
+  3: '#34495e',
+  4: '#2ecc71',
+  5: '#f1c40f',
+  6: '#e74c3c',
+  7: '#72CBDB',
+  8: '#55134E',
+  9: '#A0596B',
+  10: '#FEC343',
+  11: '#EF7351',
+  12: '#231F20',
+  13: '#006295',
+  14: '#9BE1FB',
+  15: '#593E1A'
+})
